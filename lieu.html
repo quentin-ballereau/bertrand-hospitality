@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polpo — Bertrand Hospitality</title>
+<meta name="description" content="Visitez le lieu, ses espaces et leurs capacités, et demandez un devis.">
+<link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/base.css?v=8">
+<link rel="stylesheet" href="css/menu.css?v=13">
+<style>
+html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
+.nav{color:#fff}   /* menu et « Demander un devis » en blanc sur l'image, comme sur la home */
+
+/* ---------- LA VISITE : le lieu en plein écran ---------- */
+.scene{position:fixed;inset:0;overflow:hidden;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;background:var(--ink)}
+.scene.is-dragging{cursor:grabbing}
+.layer{position:absolute;inset:0;will-change:transform,opacity}
+.layer img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
+.shade{position:fixed;inset:0;pointer-events:none;z-index:1;
+  background:linear-gradient(180deg,rgba(29,29,27,.7) 0%,rgba(29,29,27,0) 34%,rgba(29,29,27,0) 72%,rgba(29,29,27,1) 100%)}   /* bas à 100 %, comme le Figma : le nom de l'espace et les liens restent lisibles */
+
+/* points de passage d'un espace à l'autre */
+.hot{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;display:grid;place-items:center;z-index:2;cursor:pointer}
+.hot::before{content:"";width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.4)}
+.hot::after{content:"";position:absolute;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.85);animation:breathe 2.8s var(--ease) infinite}
+@keyframes breathe{0%{transform:scale(.55);opacity:0}35%{opacity:.9}100%{transform:scale(1.25);opacity:0}}
+.hot span{position:absolute;left:34px;top:50%;transform:translate(-6px,-50%);white-space:nowrap;font-size:10px;color:#fff;opacity:0;transition:opacity .35s var(--ease),transform .5s var(--expo);pointer-events:none;text-shadow:0 1px 12px rgba(0,0,0,.35)}
+.hot:hover span,.hot:focus-visible span{opacity:1;transform:translate(0,-50%)}
+
+/* bas de l'image */
+.corner{position:fixed;right:var(--gutter);bottom:30px;z-index:3;display:flex;align-items:center;gap:28px;color:#fff}
+.corner .ul{font-size:10.5px}
+
+/* lieu vide / en événement : un bloc crème glisse d'un mot à l'autre */
+.mode{position:fixed;top:96px;left:50%;transform:translateX(-50%);z-index:3;display:inline-flex;padding:3px;border:1px solid rgba(255,255,255,.5);color:#fff}
+.mode[hidden]{display:none}
+.mode button{position:relative;z-index:1;padding:9px 14px 8px;font-size:9.5px;color:#fff;transition:color .5s var(--ease)}
+.mode button[aria-pressed="true"]{color:var(--ink)}
+.mode .knob{position:absolute;top:3px;bottom:3px;left:0;width:var(--kw,0px);background:var(--cream);transform:translateX(var(--kx,3px));transition:transform .7s var(--expo),width .7s var(--expo)}
+
+/* musique : un trait qui se met à onduler doucement */
+.music{display:inline-flex;align-items:center;gap:12px;font-size:10.5px;color:#fff}
+.music[hidden]{display:none}
+.music svg{width:30px;height:12px;overflow:hidden}
+.music .amp{transform:scaleY(.08);transform-origin:50% 50%;transition:transform .9s var(--expo)}
+.music .w{fill:none;stroke:#fff;stroke-width:1.1;animation:wave 1.8s linear infinite;animation-play-state:paused}
+.music.is-playing .amp{transform:scaleY(1)}
+.music.is-playing .w{animation-play-state:running}
+@keyframes wave{to{transform:translateX(-12px)}}
+.yt{position:fixed;left:-9999px;top:0;width:1px;height:1px;overflow:hidden}
+
+/* la même vue, remplie de monde : seconde image superposée, cadrage identique */
+.layer img.evt,.space-img img.evt{opacity:0;transition:opacity 1.2s var(--ease)}
+.space-img{position:relative}
+.space-img img.evt{position:absolute;inset:0}
+.is-event .layer img.evt,.is-event .space-img img.evt{opacity:1}
+.caption em{display:block;margin-top:10px;font-style:normal;font-size:9.5px;color:rgba(255,255,255,.7);opacity:0;transition:opacity .6s}
+.is-event .caption em{opacity:1}
+.caption{position:fixed;left:calc(24px + 400px + 40px);bottom:30px;z-index:3;color:#fff;transition:opacity .4s}
+.caption small{display:block;font-size:10px;color:rgba(255,255,255,.75)}
+.caption b{display:block;margin-top:9px;font-family:var(--serif);font-weight:400;font-size:20px;letter-spacing:.02em;text-transform:uppercase}
+.hint{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;color:#fff;font-size:10.5px;padding:12px 18px;background:rgba(29,29,27,.28);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);pointer-events:none;transition:opacity .6s var(--ease)}
+.hint.is-off{opacity:0}
+
+/* ---------- LE PANNEAU ---------- */
+.panel{position:fixed;left:24px;top:96px;bottom:24px;width:400px;z-index:6;background:var(--cream);color:var(--ink);display:flex;flex-direction:column;
+  box-shadow:0 30px 70px -40px rgba(0,0,0,.6);transition:transform .8s var(--expo),opacity .5s var(--ease)}
+.panel.is-closed{transform:translateX(calc(-100% - 40px));opacity:0;pointer-events:none}
+.p-close{position:absolute;right:18px;top:18px;width:30px;height:30px;display:grid;place-items:center;color:var(--muted);transition:color .3s}
+.p-close:hover{color:var(--ink)}
+.p-close svg,.reopen svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.2}
+.p-head{padding:34px 34px 0}
+.p-place{font-size:10px;color:var(--muted)}
+.p-name{margin-top:14px;font-family:var(--serif);font-weight:400;font-size:36px;line-height:1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+.p-tag{margin-top:14px;font-size:14px;font-weight:300;line-height:1.55;color:var(--ink-soft)}
+.p-about{overflow:hidden;height:0;transition:height .6s var(--expo)}
+.p-about p{padding-top:10px;font-size:13px;font-weight:300;line-height:1.65;color:var(--ink-soft)}
+.more{margin-top:12px;font-size:9.5px;color:var(--muted)}
+.p-caps{display:flex;gap:20px;margin-top:22px}
+.capi{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;transition:color .4s}
+.capi svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.2}
+.capi.is-on{color:var(--ink)}
+
+.tabs{display:flex;gap:22px;margin:26px 34px 0;background:linear-gradient(var(--line),var(--line)) left bottom/100% 1px no-repeat;overflow-x:auto;scrollbar-width:none}   /* six onglets : la rangée défile, fondue sur le bord tant qu'il en reste à droite */
+.tabs::-webkit-scrollbar{display:none}
+.tabs.is-more{mask-image:linear-gradient(90deg,#000 80%,transparent);-webkit-mask-image:linear-gradient(90deg,#000 80%,transparent)}
+.tab{flex:0 0 auto}
+.tab{position:relative;padding:0 0 14px;font-size:10px;color:var(--muted);transition:color .3s}
+.tab:hover{color:var(--ink)}
+.tab::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--expo)}
+.tab[aria-selected="true"]{color:var(--ink)}
+.tab[aria-selected="true"]::after{transform:scaleX(1)}
+.p-body{flex:1;min-height:0;overflow:auto;padding:22px 34px 26px;scrollbar-width:thin}
+.pane{display:none}
+.pane.is-on{display:block;animation:pane-in .6s var(--expo)}
+@keyframes pane-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* espaces */
+.spaces{display:grid;grid-template-columns:1fr 1fr;gap:20px 14px}
+.space{text-align:left}
+.space-img{aspect-ratio:4/3;overflow:hidden;background:var(--cream-2);outline:1px solid transparent;outline-offset:4px;transition:outline-color .4s}
+.space-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.2s var(--expo)}
+.space:hover .space-img img{transform:scale(1.05)}
+.space.is-on .space-img{outline-color:var(--ink)}
+.space-name{margin-top:10px;font-size:13px}
+.space-cap{margin-top:5px;font-size:11.5px;font-weight:300;color:var(--muted)}
+
+/* galerie : deux colonnes de photos verticales ; un clic ouvre la visionneuse plein écran */
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.gal button{display:block;aspect-ratio:2/3;overflow:hidden;background:var(--cream-2)}
+.gal button:nth-child(4n+2),.gal button:nth-child(4n+3){aspect-ratio:3/4}
+.gal img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.2s var(--expo)}
+.gal button:hover img{transform:scale(1.05)}
+.lb{position:fixed;inset:0;z-index:80;background:rgba(29,29,27,.96);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .5s var(--ease),visibility 0s .5s}
+.lb.is-on{opacity:1;visibility:visible;transition:opacity .5s var(--ease)}
+.lb-img{max-width:calc(100vw - 200px);max-height:calc(100svh - 160px);object-fit:contain;transition:opacity .45s var(--ease)}
+.lb-img.is-out{opacity:0}
+.lb-bar{position:absolute;left:32px;right:32px;top:28px;display:flex;justify-content:space-between;align-items:center;color:#fff;font-size:10.5px}
+.lb-close{color:#fff}
+.lb-nav{position:absolute;top:50%;width:56px;height:56px;margin-top:-28px;display:flex;align-items:center;justify-content:center;color:#fff;opacity:.7;transition:opacity .3s}
+.lb-nav:hover{opacity:1}
+.lb-nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1}
+.lb-prev{left:24px}.lb-next{right:24px}
+.lb-cap{position:absolute;left:0;right:0;bottom:28px;text-align:center;color:rgba(255,255,255,.7);font-size:13px;font-weight:300}
+@media (max-width:767px){.lb-img{max-width:100vw;max-height:calc(100svh - 140px)}.lb-nav{top:auto;bottom:12px;margin:0}.lb-prev{left:8px}.lb-next{right:8px}.lb-cap{bottom:70px;padding:0 24px}.lb-bar{left:20px;right:20px}}
+
+/* capacités */
+.fmts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.fmt2{display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 4px 12px;background:var(--white);border:1px solid transparent;transition:border-color .3s}
+.fmt2 svg{width:24px;height:24px;stroke:var(--ink);fill:none;stroke-width:1.1}
+.fmt2 span{font-size:8.5px}
+.fmt2:hover{border-color:var(--line)}
+.fmt2[aria-pressed="true"]{border-color:var(--ink)}
+.guests2{display:flex;align-items:center;gap:16px;margin:22px 0 6px}
+.guests2 output{font-family:var(--serif);font-size:30px;letter-spacing:.02em;min-width:2.4ch;font-variant-numeric:tabular-nums}
+.guests2 small{font-size:12px;color:var(--muted);font-weight:300}
+.guests2 .range{flex:1}
+.fits{margin-top:18px}
+.fit{display:flex;justify-content:space-between;align-items:baseline;width:100%;padding:13px 0;border-top:1px solid var(--line);font-size:13.5px;text-align:left;transition:color .3s,padding .4s var(--expo)}
+.fit:last-child{border-bottom:1px solid var(--line)}
+.fit small{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.fit:hover{padding-left:8px}
+.fit.is-out{color:var(--muted)}
+.fit.is-out small{opacity:.6}
+
+/* offres */
+.offer-group + .offer-group{margin-top:22px}
+.offer-group h3{font-size:9.5px;color:var(--muted);font-weight:400;margin-bottom:8px}
+.offer{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-top:1px solid var(--line);font-size:13.5px}
+.offer small{display:block;margin-top:4px;font-size:11.5px;font-weight:300;color:var(--muted)}
+.offer .price{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.offer .price small{margin-top:4px}
+.legal{margin-top:22px;font-size:10.5px;font-weight:300;color:var(--muted);line-height:1.5}
+
+/* infos */
+.info-block + .info-block{margin-top:24px}
+.info-block h3{font-size:9.5px;color:var(--muted);font-weight:400;margin-bottom:10px}
+.info-block p{font-size:13.5px;line-height:1.6}
+.info-block p.soft{font-weight:300;color:var(--ink-soft)}
+.info-links{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.info-links a{display:inline-flex;align-items:center;gap:10px;font-size:13.5px}
+.info-links svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.2}
+.empty-note{font-size:13.5px;font-weight:300;line-height:1.6;color:var(--ink-soft)}
+
+.p-foot{display:flex;align-items:center;gap:22px;padding:18px 34px 24px;border-top:1px solid var(--line)}
+.p-foot .go{flex:1;height:48px;margin:0}
+.p-foot .ul{font-size:10.5px}
+
+/* panneau replié */
+.reopen{position:fixed;left:24px;top:96px;z-index:6;display:flex;align-items:center;gap:14px;height:46px;padding:0 18px 0 20px;background:var(--cream);color:var(--ink);
+  opacity:0;pointer-events:none;transform:translateX(-12px);transition:opacity .4s var(--ease),transform .6s var(--expo)}
+.reopen.is-on{opacity:1;pointer-events:auto;transform:none}
+.reopen b{font-family:var(--serif);font-weight:400;font-size:16px;letter-spacing:.02em;text-transform:uppercase}
+
+/* vue 360° */
+.sv{position:fixed;inset:0;z-index:20;background:var(--ink);opacity:0;pointer-events:none;transition:opacity .5s var(--ease)}
+.sv.is-on{opacity:1;pointer-events:auto}
+.sv iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.sv button{position:absolute;right:var(--gutter);top:28px;color:#fff;font-size:10.5px;z-index:2}
+
+/* intro */
+.js .panel{opacity:0}
+.js .nav,.js .corner,.js .caption{opacity:0}
+
+@media (max-width:767px){
+  .panel{left:0;right:0;top:auto;bottom:0;width:auto;height:62svh}
+  .panel.is-closed{transform:translateY(calc(100% - 118px));opacity:1;pointer-events:auto}
+  .panel.is-closed .p-close svg{transform:rotate(180deg)}
+  .p-head{padding:24px 20px 0}
+  .p-name{font-size:28px}
+  .tabs{margin:20px 20px 0;gap:16px;overflow-x:auto;scrollbar-width:none}
+  .p-body{padding:18px 20px 20px}
+  .p-foot{padding:14px 20px 18px}
+  .reopen{display:none}
+  .caption{left:20px;bottom:auto;top:84px}
+  .corner{right:16px;bottom:auto;top:84px;gap:16px}
+  .mode{top:80px}
+  .caption{top:136px}
+  .corner #svOpen,.corner #allLink,.music span{display:none}
+  .hint{top:34%}
+}
+</style>
+</head>
+<body class="js">
+
+<div class="scene" id="scene" aria-label="Visite du lieu"></div>
+<div class="shade" aria-hidden="true"></div>
+
+<header class="nav">
+  <button class="nav-menu caps" type="button" aria-label="Ouvrir le menu"><i class="nav-ico" aria-hidden="true"></i><span>menu</span></button>
+  <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
+  <a class="nav-cta ul caps" href="https://evenement.groupe-bertrand.com/demande-de-devis/"><span class="cta-long">Demander un </span>devis</a>
+</header>
+
+<aside class="panel" id="panel" aria-label="Le lieu">
+  <button class="p-close" id="pClose" type="button" aria-label="Replier le panneau"><svg viewBox="0 0 14 14"><path d="M9 2 4 7l5 5"/></svg></button>
+  <div class="p-head">
+    <p class="p-place caps" id="pPlace"></p>
+    <h1 class="p-name" id="pName"></h1>
+    <p class="p-tag" id="pTag"></p>
+    <div class="p-about" id="pAbout"><p id="pAboutText"></p></div>
+    <button class="more ul caps" id="more" type="button" aria-expanded="false">Lire plus</button>
+    <div class="p-caps" id="pCaps"></div>
+  </div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="p-body" id="pBody"></div>
+  <div class="p-foot">
+    <a class="go caps" href="https://evenement.groupe-bertrand.com/demande-de-devis/" id="quote">Demander un devis</a>
+    <a class="ul caps" id="brochure" target="_blank" rel="noopener">Plaquette</a>
+  </div>
+</aside>
+
+<button class="reopen" id="reopen" type="button" aria-label="Rouvrir le panneau"><b id="reName"></b><svg viewBox="0 0 14 14"><path d="m5 2 5 5-5 5"/></svg></button>
+
+<div class="caption" id="caption" aria-live="polite"><small class="caps">Vous êtes dans</small><b id="capName"></b><em class="caps">Mise en situation · photo non contractuelle</em></div>
+<div class="hint caps" id="hint">Glissez pour regarder autour</div>
+<div class="mode" id="mode" role="group" aria-label="Affichage" hidden><span class="knob" aria-hidden="true"></span>
+  <button class="caps" type="button" data-mode="vide" aria-pressed="true">Lieu vide</button>
+  <button class="caps" type="button" data-mode="event" aria-pressed="false">En événement</button></div>
+<div class="corner">
+  <button class="music" id="music" type="button" aria-pressed="false" hidden>
+    <svg viewBox="0 0 30 12" aria-hidden="true"><g class="amp"><path class="w" d="M0 6 Q3 3.5 6 6 T12 6 T18 6 T24 6 T30 6 T36 6 T42 6"/></g></svg><span class="caps">Musique</span></button>
+  <button class="ul caps" id="svOpen" type="button" hidden>Vue 360°</button>
+  <a class="ul caps" href="lieux.html" id="allLink">Tous les lieux</a>
+</div>
+<div class="yt" id="yt" aria-hidden="true"></div>
+<div class="sv" id="sv" aria-hidden="true"><button class="ul caps" id="svClose" type="button">Fermer la vue 360°</button></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="js/data.js?v=9"></script>
+<script src="js/menu.js?v=9"></script>
+<script src="js/detail.js?v=9"></script>
+<script>
+(() => {
+const {VENUES, FORMATS, BASE, fmtOf, fromQuery, toQuery} = BH;
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const mobile = () => innerWidth < 768;
+
+/* ---------- le lieu demandé ---------- */
+const params = new URLSearchParams(location.search);
+const venue = VENUES.find(v => v.slug === params.get("l")) || VENUES[0];
+const filters = fromQuery();                         // format et invites transmis depuis la recherche
+const D = BH.DETAIL[venue.slug] || {
+  // en attendant leur contenu, les autres lieux s'ouvrent sur leur photo et leurs capacités
+  tagline: venue.tag,
+  scenes: [{id:"lieu", name:venue.name, img:`assets/lieux/${venue.slug}.jpg`, thumb:`assets/lieux/${venue.slug}.jpg`,
+            desc:venue.tag, caps:{assis:venue.assis, cocktail:venue.cocktail, reunion:venue.reunion, dansant:venue.dansant}, hot:[]}],
+  page: BASE + venue.slug + "/",
+};
+document.title = `${venue.name} — Bertrand Hospitality`;
+const back = toQuery(filters);
+$("allLink").href = "lieux.html" + (back ? "?" + back : "");
+
+/* ---------- en-tête du panneau ---------- */
+$("pPlace").textContent = venue.place;
+$("pName").textContent = $("reName").textContent = venue.name;
+$("pTag").textContent = D.tagline;
+if (D.about) $("pAboutText").textContent = D.about; else $("more").hidden = true;
+$("more").addEventListener("click", () => {
+  const box = $("pAbout"), open = $("more").getAttribute("aria-expanded") === "true";
+  box.style.height = open ? "0px" : box.scrollHeight + "px";
+  $("more").setAttribute("aria-expanded", !open);
+  $("more").textContent = open ? "Lire plus" : "Lire moins";
+});
+if (D.brochure) $("brochure").href = D.brochure; else $("brochure").hidden = true;
+const capRow = () => {
+  $("pCaps").innerHTML = FORMATS.filter(f => venue[f.id]).map(f =>
+    `<span class="capi${filters.format === f.id ? " is-on" : ""}" title="${f.label}"><svg viewBox="0 0 30 30" aria-hidden="true">${f.icon}</svg>${venue[f.id]}</span>`).join("");
+};
+capRow();
+
+/* ---------- onglets ---------- */
+// « 100 assis · 100 cocktail · 60 réunion » : du repas à la réunion, toujours dans le même ordre
+const SHORT = [["assis", "assis"], ["cocktail", "cocktail"], ["reunion", "réunion"], ["dansant", "dansant"]];
+const capsTxt = c => SHORT.filter(([k]) => c[k]).map(([k, w]) => `${c[k]} ${w}`).join(" · ");
+const ICON = {
+  pin:'<svg viewBox="0 0 16 16"><path d="M8 15s5-4.6 5-8.5A5 5 0 0 0 3 6.5C3 10.4 8 15 8 15Z"/><circle cx="8" cy="6.5" r="1.8"/></svg>',
+  link:'<svg viewBox="0 0 16 16"><path d="M6.5 9.5 9.5 6.5M7 4.5l1.2-1.2a2.8 2.8 0 0 1 4 4L11 8.5M9 11.5l-1.2 1.2a2.8 2.8 0 0 1-4-4L5 7.5"/></svg>',
+  insta:'<svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="3.5"/><circle cx="8" cy="8" r="2.8"/><circle cx="11.6" cy="4.4" r=".5"/></svg>',
+  phone:'<svg viewBox="0 0 16 16"><path d="M5.5 2h-2A1.5 1.5 0 0 0 2 3.5C2 9.3 6.7 14 12.5 14a1.5 1.5 0 0 0 1.5-1.5v-2l-3-1-1.5 1.5a8 8 0 0 1-4-4L7 5.5Z"/></svg>',
+  mail:'<svg viewBox="0 0 16 16"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4 5.5 4.5L13.5 4"/></svg>',
+};
+const TABS = [
+  {id:"espaces", label:"Espaces", show:D.scenes.length > 1, html:() =>
+    `<div class="spaces">${D.scenes.map(s => `<button class="space" type="button" data-go="${s.id}">
+       <div class="space-img"><img src="${s.thumb}" alt="" loading="lazy">${s.eventOk ? `<img class="evt" src="${s.event}" alt="" loading="lazy">` : ""}</div>
+       <p class="space-name">${s.name}</p><p class="space-cap">${capsTxt(s.caps)}</p></button>`).join("")}</div>`},
+  {id:"capacites", label:"Capacités", show:true, html:() =>
+    `<div class="fmts">${FORMATS.filter(f => venue[f.id]).map(f => `<button class="fmt2" type="button" data-f="${f.id}" aria-pressed="false"><svg viewBox="0 0 30 30" aria-hidden="true">${f.icon}</svg><span class="caps">${f.label}</span></button>`).join("")}</div>
+     <div class="guests2"><output id="gOut">50</output><small>invités</small><input class="range" id="gRange" type="range" min="10" max="600" step="10" value="50" aria-label="Nombre d’invités"></div>
+     <div class="fits" id="fits"></div>`},
+  {id:"offres", label:"Offres", show:!!D.offers, html:() =>
+    (D.offers || []).map(g => `<div class="offer-group"><h3 class="caps">${g.group}</h3>${g.items.map(o =>
+      `<div class="offer"><div>${o.name}${o.note ? `<small>${o.note}</small>` : ""}</div><div class="price">${o.ttc} € TTC<small>${o.ht} € HT</small></div></div>`).join("")}</div>`).join("") +
+    `<p class="legal">L’abus d’alcool est dangereux pour la santé, à consommer avec modération.</p>`},
+  {id:"infos", label:"Infos", show:true, html:() => D.address ? `
+     <div class="info-block"><h3 class="caps">Adresse</h3><p>${D.address.join("<br>")}</p><p class="soft">${D.access}</p></div>
+     <div class="info-block"><h3 class="caps">${D.contact.role}</h3><p>${D.contact.name}</p>
+       <div class="info-links" style="margin-top:10px">
+         <a href="tel:${D.contact.phone.replace(/\s/g, "")}">${ICON.phone}${D.contact.phone}</a>
+         <a href="mailto:${D.contact.email}">${ICON.mail}${D.contact.email}</a></div></div>
+     <div class="info-block"><h3 class="caps">Le lieu en ligne</h3><div class="info-links">
+       <a href="${D.site.url}" target="_blank" rel="noopener">${ICON.link}${D.site.label}</a>
+       <a href="${D.instagram.url}" target="_blank" rel="noopener">${ICON.insta}${D.instagram.label}</a></div></div>`
+     : `<p class="empty-note">Toutes les informations pratiques de ${venue.name} sont sur sa fiche actuelle, en attendant leur intégration ici.</p>
+        <div class="info-links" style="margin-top:16px"><a class="ul caps" href="${D.page}" target="_blank" rel="noopener" style="font-size:10.5px">Voir la fiche actuelle</a></div>`},
+  {id:"avis", label:"Avis", show:true, html:() =>
+    `<p class="empty-note">Les retours de vos clients, issus des questionnaires de satisfaction, s’afficheront ici, lieu par lieu.</p>`},
+  {id:"galerie", label:"Galerie", show:!!(D.gallery && D.gallery.length), html:() =>
+    `<div class="gal">${D.gallery.map((g, i) => `<button type="button" data-g="${i}" aria-label="Agrandir : ${g.alt}"><img src="${g.thumb}" alt="${g.alt}" loading="lazy"></button>`).join("")}</div>`},
+].filter(t => t.show);
+
+$("tabs").innerHTML = TABS.map((t, i) => `<button class="tab caps" type="button" role="tab" data-tab="${t.id}" aria-selected="${i === 0}">${t.label}</button>`).join("");
+$("pBody").innerHTML = TABS.map((t, i) => `<div class="pane${i === 0 ? " is-on" : ""}" role="tabpanel" data-pane="${t.id}">${t.html()}</div>`).join("");
+function openTab(id) {
+  document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === id));
+  document.querySelectorAll(".pane").forEach(p => p.classList.toggle("is-on", p.dataset.pane === id));
+  $("pBody").scrollTop = 0;
+  const b = document.querySelector(`.tab[data-tab="${id}"]`);
+  if (b) b.scrollIntoView({block:"nearest", inline:"nearest", behavior:"smooth"});
+}
+const moreTabs = () => { const t = $("tabs"); t.classList.toggle("is-more", t.scrollLeft + t.clientWidth < t.scrollWidth - 2); };
+$("tabs").addEventListener("scroll", moreTabs, {passive:true});
+addEventListener("resize", moreTabs);
+moreTabs();
+$("tabs").addEventListener("click", e => { const b = e.target.closest(".tab"); if (b) openTab(b.dataset.tab); });
+// arrivé depuis une recherche : on ouvre directement les capacités
+if (filters.format || filters.guests) openTab("capacites");
+
+/* ---------- galerie : visionneuse plein écran (flèches, Échap, glisser sur mobile) ---------- */
+if (D.gallery && D.gallery.length) {
+  const G = D.gallery, lb = document.createElement("div");
+  lb.className = "lb"; lb.setAttribute("role", "dialog"); lb.setAttribute("aria-modal", "true"); lb.setAttribute("aria-label", "Galerie");
+  const arrow = d => `<svg viewBox="0 0 22 22"><path d="${d}"/></svg>`;
+  lb.innerHTML = `<div class="lb-bar"><span class="caps" id="lbCount"></span><button class="lb-close ul caps" type="button">Fermer</button></div>
+    <img class="lb-img" id="lbImg" alt="">
+    <button class="lb-nav lb-prev" type="button" aria-label="Photo précédente">${arrow("M14 3 6 11l8 8")}</button>
+    <button class="lb-nav lb-next" type="button" aria-label="Photo suivante">${arrow("m8 3 8 8-8 8")}</button>
+    <p class="lb-cap" id="lbCap"></p>`;
+  document.body.appendChild(lb);
+  const im = lb.querySelector("#lbImg");
+  let cur = 0, back = null;
+  const show = i => {
+    cur = (i + G.length) % G.length;
+    const g = G[cur], next = new Image();
+    im.classList.add("is-out");
+    next.onload = () => setTimeout(() => { im.src = g.src; im.alt = g.alt; im.classList.remove("is-out"); }, 180);
+    next.src = g.src;
+    $("lbCount").textContent = `${cur + 1} / ${G.length}`; $("lbCap").textContent = g.alt;
+    new Image().src = G[(cur + 1) % G.length].src;   // la suivante est préchargée
+  };
+  const open = i => { back = document.activeElement; show(i); lb.classList.add("is-on"); lb.querySelector(".lb-close").focus({preventScroll:true}); };
+  const close = () => { lb.classList.remove("is-on"); back && back.focus({preventScroll:true}); };
+  document.addEventListener("click", e => { const b = e.target.closest("[data-g]"); if (b) open(+b.dataset.g); });
+  lb.querySelector(".lb-close").addEventListener("click", close);
+  lb.querySelector(".lb-prev").addEventListener("click", () => show(cur - 1));
+  lb.querySelector(".lb-next").addEventListener("click", () => show(cur + 1));
+  lb.addEventListener("click", e => { if (e.target === lb) close(); });
+  addEventListener("keydown", e => {
+    if (!lb.classList.contains("is-on")) return;
+    if (e.key === "Escape") { e.stopImmediatePropagation(); close(); }
+    else if (e.key === "ArrowRight") show(cur + 1);
+    else if (e.key === "ArrowLeft") show(cur - 1);
+  }, true);
+  let x0 = null;
+  lb.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, {passive:true});
+  lb.addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 50) show(cur + (dx < 0 ? 1 : -1)); });
+}
+
+/* ---------- capacités : la jauge du lieu ---------- */
+const cap = {format: filters.format && venue[filters.format] ? filters.format : FORMATS.find(f => venue[f.id]).id, guests: filters.guests || 50};
+function renderFits() {
+  if (!$("fits")) return;
+  document.querySelectorAll(".fmt2").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === cap.format));
+  $("gOut").textContent = cap.guests; $("gRange").value = cap.guests;
+  $("gRange").style.setProperty("--p", ((cap.guests - 10) / 590 * 100) + "%");
+  const f = fmtOf(cap.format);
+  const rows = D.scenes.filter(s => s.caps[cap.format]).sort((a, b) => a.caps[cap.format] - b.caps[cap.format]);
+  $("fits").innerHTML = rows.map(s => `<button class="fit${s.caps[cap.format] < cap.guests ? " is-out" : ""}" type="button" data-go="${s.id}">
+      <span>${s.name}</span><small>jusqu’à ${s.caps[cap.format]} ${f.unit}</small></button>`).join("")
+    || `<p class="empty-note">Ce format n’est pas proposé ici.</p>`;
+}
+document.addEventListener("click", e => { const b = e.target.closest(".fmt2"); if (b) { cap.format = b.dataset.f; renderFits(); } });
+document.addEventListener("input", e => { if (e.target.id === "gRange") { cap.guests = +e.target.value; renderFits(); } });
+renderFits();
+
+/* ---------- la visite ---------- */
+const scene = $("scene");
+const S = 1.16;                                      // l'image déborde un peu pour pouvoir regarder autour
+let layer = null, current = null;
+const pan = {x:0, y:0}, follow = {x:0, y:0};
+let qx = null, qy = null;
+const limits = () => ({x:(S - 1) / 2 * innerWidth, y:(S - 1) / 2 * innerHeight});
+const clamp = (v, m) => Math.max(-m, Math.min(m, v));
+function applyPan() {
+  if (!qx) return;
+  const L = limits();
+  qx(clamp(pan.x + follow.x, L.x)); qy(clamp(pan.y + follow.y, L.y));
+}
+const byId = id => D.scenes.find(s => s.id === id);
+
+function show(id, first) {
+  const s = byId(id); if (!s || s.id === current) return;
+  current = s.id;
+  const el = document.createElement("div");
+  el.className = "layer";
+  el.innerHTML = `<img src="${s.img}" alt="${s.name}">` + (s.eventOk ? `<img class="evt" src="${s.event}" alt="${s.name}, en événement">` : "") + s.hot.map(h => {
+    const to = byId(h.to);
+    return `<button class="hot" type="button" style="left:${h.x}%;top:${h.y}%" data-go="${to.id}" aria-label="${to.name}"><span class="caps">${to.name}</span></button>`;
+  }).join("");
+  scene.appendChild(el);
+  const old = layer; layer = el;
+  pan.x = pan.y = 0;
+  // on « entre » dans l'espace : l'image arrive légèrement plus proche puis se pose
+  gsap.set(el, {scale:S, x:0, y:0});
+  qx = gsap.quickTo(el, "x", {duration:1.1, ease:"expo.out"});
+  qy = gsap.quickTo(el, "y", {duration:1.1, ease:"expo.out"});
+  if (reduce) { if (old) old.remove(); }
+  else {
+    gsap.fromTo(el, {opacity:0, scale:S * 1.07}, {opacity:1, scale:S, duration:first ? 2.4 : 1.5, ease:"expo.out"});
+    if (old) gsap.to(old, {opacity:0, duration:1, ease:"power2.out", onComplete:() => old.remove()});
+  }
+  $("capName").textContent = s.name;
+  document.querySelectorAll(".space").forEach(b => b.classList.toggle("is-on", b.dataset.go === s.id));
+}
+// tout ce qui porte data-go (points de passage, vignettes, lignes de capacité) mène à un espace
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-go]"); if (!b || dragged) return;
+  show(b.dataset.go);
+  if (mobile()) setPanel(false);
+});
+
+// regarder autour : glisser, et un léger suivi du curseur
+let drag = null, dragged = false;
+scene.addEventListener("pointerdown", e => {
+  if (e.button > 0) return;
+  drag = {x:e.clientX, y:e.clientY, px:pan.x, py:pan.y}; dragged = false;
+});
+addEventListener("pointermove", e => {
+  if (drag) {
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (!dragged && Math.hypot(dx, dy) > 4) { dragged = true; scene.classList.add("is-dragging"); $("hint").classList.add("is-off"); }
+    if (dragged) { const L = limits(); pan.x = clamp(drag.px + dx, L.x); pan.y = clamp(drag.py + dy, L.y); applyPan(); }
+  } else if (e.pointerType === "mouse") {
+    const L = limits();
+    follow.x = -(e.clientX / innerWidth - 0.5) * L.x * 0.5;
+    follow.y = -(e.clientY / innerHeight - 0.5) * L.y * 0.5;
+    applyPan();
+  }
+});
+addEventListener("pointerup", () => {
+  if (!drag) return;
+  drag = null; scene.classList.remove("is-dragging");
+  setTimeout(() => dragged = false, 0);
+});
+setTimeout(() => $("hint").classList.add("is-off"), 4200);
+
+/* ---------- panneau replié / ouvert ---------- */
+function setPanel(open) {
+  $("panel").classList.toggle("is-closed", !open);
+  $("reopen").classList.toggle("is-on", !open && !mobile());
+  $("pClose").setAttribute("aria-label", open ? "Replier le panneau" : "Déplier le panneau");
+  if (!mobile()) $("caption").style.left = open ? "" : "24px";
+}
+$("pClose").addEventListener("click", () => setPanel($("panel").classList.contains("is-closed")));
+$("reopen").addEventListener("click", () => setPanel(true));
+if (mobile()) setPanel(false);
+
+/* ---------- vue 360° ---------- */
+if (D.streetview) {
+  $("svOpen").hidden = false;
+  $("svOpen").addEventListener("click", () => {
+    if (!$("sv").querySelector("iframe")) $("sv").insertAdjacentHTML("afterbegin", `<iframe src="${D.streetview}" allowfullscreen loading="lazy" title="Vue 360° de ${venue.name}"></iframe>`);
+    $("sv").classList.add("is-on"); $("sv").removeAttribute("aria-hidden");
+  });
+  $("svClose").addEventListener("click", () => { $("sv").classList.remove("is-on"); $("sv").setAttribute("aria-hidden", "true"); });
+  addEventListener("keydown", e => { if (e.key === "Escape") $("svClose").click(); });
+}
+
+/* ---------- en événement : la même vue, remplie de monde ----------
+   Chaque espace peut avoir sa photo « event » au même cadrage. On vérifie lesquelles existent :
+   le bouton n'apparaît que s'il y en a au moins une. */
+const probe = src => new Promise(res => { const i = new Image(); i.onload = () => res(true); i.onerror = () => res(false); i.src = src; });
+Promise.all(D.scenes.map(sc => sc.event ? probe(sc.event).then(ok => sc.eventOk = ok) : false)).then(() => {
+  if (!D.scenes.some(sc => sc.eventOk)) return;
+  // les vignettes et la vue en cours reçoivent leur version « en événement »
+  const pane = document.querySelector('[data-pane="espaces"]');
+  if (pane) pane.innerHTML = TABS.find(t => t.id === "espaces").html();
+  document.querySelectorAll(".space").forEach(b => b.classList.toggle("is-on", b.dataset.go === current));
+  const sc = byId(current);
+  if (layer && sc.eventOk && !layer.querySelector(".evt")) layer.querySelector("img").insertAdjacentHTML("afterend", `<img class="evt" src="${sc.event}" alt="${sc.name}, en événement">`);
+  $("mode").hidden = false; placeKnob();
+});
+function placeKnob() {
+  const on = $("mode").querySelector('[aria-pressed="true"]');
+  $("mode").style.setProperty("--kw", on.offsetWidth + "px");
+  $("mode").style.setProperty("--kx", on.offsetLeft + "px");
+}
+function setMode(event) {
+  document.body.classList.toggle("is-event", event);
+  $("mode").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", (b.dataset.mode === "event") === event));
+  placeKnob();
+}
+$("mode").addEventListener("click", e => { const b = e.target.closest("[data-mode]"); if (b) setMode(b.dataset.mode === "event"); });
+addEventListener("resize", () => { if (!$("mode").hidden) placeKnob(); });
+
+/* ---------- musique d'ambiance : jamais en lecture automatique, montée et descente en fondu ---------- */
+if (D.music) {
+  const btn = $("music"), VOL = 40;
+  let player = null, playing = false;
+  const vol = {v:0};
+  btn.hidden = false;
+  const loadApi = () => new Promise(res => {
+    if (window.YT && YT.Player) return res();
+    window.onYouTubeIframeAPIReady = res;
+    const tag = document.createElement("script"); tag.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(tag);
+  });
+  const fadeTo = (to, done) => gsap.to(vol, {v:to, duration:to ? 2.2 : 1.2, ease:"power1.inOut", overwrite:true,
+    onUpdate:() => player && player.setVolume(Math.round(vol.v)), onComplete:done});
+  async function toggle() {
+    playing = !playing;
+    btn.classList.toggle("is-playing", playing); btn.setAttribute("aria-pressed", playing);
+    if (!player) {
+      await loadApi();
+      const id = D.music.youtube;
+      player = new YT.Player("yt", {videoId:id, playerVars:{autoplay:1, controls:0, loop:1, playlist:id, playsinline:1},
+        events:{onReady:e => { e.target.setVolume(0); if (playing) { e.target.playVideo(); fadeTo(VOL); } }}});
+      return;
+    }
+    if (playing) { player.playVideo(); fadeTo(VOL); } else fadeTo(0, () => player.pauseVideo());
+  }
+  btn.addEventListener("click", toggle);
+  addEventListener("keydown", e => { if ((e.key === "m" || e.key === "M") && !e.target.closest("input")) toggle(); });
+}
+
+/* ---------- arrivée ---------- */
+// le premier espace : celui qui accueille le plus d'invités dans le format recherché, sinon le premier
+const start = filters.format
+  ? [...D.scenes].filter(s => s.caps[filters.format] >= (filters.guests || 0)).sort((a, b) => a.caps[filters.format] - b.caps[filters.format])[0]
+  : null;
+show((start || D.scenes[0]).id, true);
+if (reduce) gsap.set([".panel", ".nav", ".corner", ".caption"], {opacity:1});
+else gsap.timeline({defaults:{ease:"expo.out"}, delay:.2})
+  // clearProps : une fois arrivé, le panneau rend la main au CSS, qui gère son repli
+  .fromTo(".panel", {opacity:0, x:mobile() ? 0 : -24, y:mobile() ? 24 : 0}, {opacity:1, x:0, y:0, duration:1.4, clearProps:"transform"}, .5)
+  .fromTo(".nav", {opacity:0, y:-8}, {opacity:1, y:0, duration:1.2}, .7)
+  .fromTo([".caption", ".corner"], {opacity:0, y:10}, {opacity:1, y:0, duration:1.2, stagger:.08}, 1);
+})();
+</script>
+</body>
+</html>

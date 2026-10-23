@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="fr" class="js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bertrand Hospitality — Privatisez les plus belles adresses de Paris</title>
+<meta name="description" content="Brasseries historiques, restaurants, péniche et terrasses : une trentaine de lieux à privatiser à Paris et en Île-de-France, avec un interlocuteur dédié.">
+<link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/hero-c.jpg" as="image">
+<link rel="stylesheet" href="css/base.css?v=8">
+<link rel="stylesheet" href="css/menu.css?v=13">
+<link rel="stylesheet" href="css/coverflow.css?v=9">
+<link rel="stylesheet" href="css/home.css?v=18">
+<link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css">
+<script>/* loader à l’entrée sur le site ; on le saute quand on revient d’une autre page du site */try{var r=document.referrer&&new URL(document.referrer);if(r&&r.origin===location.origin&&r.pathname!==location.pathname)document.documentElement.classList.add("no-loader")}catch(e){}</script>
+<style>
+html,body{background:var(--cream)}
+body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écran sans créer de défilement horizontal */
+
+/* ---------- LOADER (Figma « Loader ») : le logo se remplit de beige de gauche à droite, puis le rideau noir se lève — 2 s en tout ---------- */
+.loader{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#1d1d1b;clip-path:inset(0 0 0 0);transition:clip-path .5s cubic-bezier(.76,0,.24,1)}
+.loader.is-out{clip-path:inset(0 0 100% 0)}
+.loader.is-gone{display:none}
+.loader-logo{position:relative;width:184px;height:36px}
+.loader-logo img{position:absolute;inset:0;width:100%;height:100%}
+.loader-logo .lg-dim{opacity:.2}
+.loader-logo .lg-fill{clip-path:inset(0 100% 0 0);animation:lg-fill 1.5s cubic-bezier(.65,0,.35,1) .05s forwards}
+@keyframes lg-fill{to{clip-path:inset(0 0 0 0)}}
+.no-loader .loader{display:none}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;height:100svh;min-height:640px;overflow:hidden;color:var(--white);isolation:isolate}
+.hero-bg{position:absolute;inset:0;z-index:0;background:url(assets/hero-c.jpg) center/cover no-repeat;will-change:transform,translate}
+/* dégradé du Figma : un vrai calque posé au-dessus de la photo (et non un z-index négatif,
+   que certains navigateurs repassent sous la photo dès qu'elle est animée) */
+.hero-shade{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(29,29,27,.8) 0%,rgba(29,29,27,0) 100%)}
+.hero-title{z-index:2}
+
+.hero-title{position:absolute;left:50%;top:clamp(132px,23vh,192px);transform:translateX(-50%);width:min(786px,calc(100% - 2*var(--gutter)));
+  font-family:var(--serif);font-weight:400;font-size:48px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-align:center;
+  text-box:trim-both cap alphabetic}
+
+/* ---------- INTRO ---------- */
+.hero-title .w{display:inline-block;overflow:hidden;vertical-align:top;padding:.14em 0 .08em;margin:-.14em 0 -.08em}
+.hero-title .wi{display:inline-block;transform:translate3d(0,112%,0)}
+.js .hero-bg{transform:scale(1.07);filter:brightness(.55)}
+.js .nav{opacity:0;translate:0 -8px}
+.js .finder{opacity:0;translate:0 14px}
+.is-ready .hero-bg{transform:none;filter:none;transition:transform 3.2s var(--expo),filter 2.4s var(--expo)}
+.is-ready .hero-title .wi{transform:none;transition:transform 1.5s var(--expo) var(--d,0s)}
+.is-ready .nav{opacity:1;translate:0 0;transition:opacity 1.2s var(--expo) 1.1s,translate 1.2s var(--expo) 1.1s}
+.is-ready .finder{opacity:1;translate:0 0;transition:opacity 1.2s var(--expo) 1.35s,translate 1.4s var(--expo) 1.35s}
+
+/* ---------- SECTION 2 : LE PORTEFEUILLE DES LIEUX ---------- */
+.venues{position:relative;display:flex;flex-direction:column;padding:200px 0;background:var(--cream);overflow:hidden;overflow:clip}   /* 200px d'air au-dessus et en dessous */
+.v-head{text-align:center;padding:0 var(--gutter)}
+.v-eyebrow{font-size:12px;color:var(--taupe)}
+.v-title{margin:32px auto 0;font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+.v-sub{max-width:416px;margin:24px auto 0;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink-soft);text-box:trim-both cap alphabetic}
+/* Figma : 48 px sous l'en-tête, scène de 398 px, 32 px avant la fiche. La scène fait ici 420 px pour que la carte centrale
+   garde ses 640 × 360 ; les 11 px de plus de chaque côté sont repris sur les écarts (38 = 48 − 11 + 1 d’arrondi du texte). */
+.venues .cf{height:auto;margin-top:38px}
+.venues .stage{flex:none;height:420px}
+.venues .info{margin-top:21px;min-height:0}
+.venues .v-head > *{opacity:0;transform:translateY(14px)}
+
+/* départ vers la page des lieux : le hero s'efface en crème */
+.leave{position:fixed;inset:0;z-index:20;background:var(--cream);opacity:0;pointer-events:none;transition:opacity .6s var(--ease)}
+.leave.is-on{opacity:1}
+
+@media (prefers-reduced-motion:reduce){.hero-bg,.hero-title .wi,.nav,.finder{transition:none!important;transform:none!important;translate:none!important;opacity:1!important;filter:none!important}}
+@media (max-width:767px){ .hero-title{font-size:30px;top:24vh} .venues{padding:120px 0} .v-title{font-size:24px} .v-sub{font-size:13px} .venues .cf{margin-top:24px} .venues .stage{height:240px} .venues .info{margin-top:16px} }
+</style>
+</head>
+<body>
+<div class="loader" id="loader" aria-hidden="true"><div class="loader-logo"><img class="lg-dim" src="assets/logo-footer.svg" alt=""><img class="lg-fill" src="assets/logo-footer.svg" alt=""></div></div>
+
+<section class="hero" aria-label="Accueil">
+  <div class="hero-bg" role="img" aria-label="Terrasse du café Le Nemours, place Colette, le soir"></div>
+  <div class="hero-shade" aria-hidden="true"></div>
+
+  <header class="nav">
+    <button class="nav-menu caps" type="button" aria-label="Ouvrir le menu"><i class="nav-ico" aria-hidden="true"></i><span>menu</span></button>
+    <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
+    <a class="nav-cta ul caps" href="https://evenement.groupe-bertrand.com/demande-de-devis/"><span class="cta-long">Demander un </span>devis</a>
+  </header>
+
+  <h1 class="hero-title">Privatisez les plus belles adresses de Paris</h1>
+
+  <!-- Bloc de recherche : le cadre blanc du Figma -->
+  <div class="finder" id="finder"></div>
+</section>
+
+<!-- Section 2 : en faisant défiler la home, on retrouve tout le portefeuille -->
+<section class="venues" id="venues" aria-labelledby="vTitle">
+  <div class="v-head">
+    <p class="v-eyebrow caps">Nos lieux</p>
+    <h2 class="v-title" id="vTitle">Trente adresses à privatiser</h2>
+    <p class="v-sub">Brasseries historiques, restaurants, péniche et jardins, à Paris et en Île-de-France&nbsp;: un seul interlocuteur pour toutes nos maisons.</p>
+  </div>
+  <div class="cf" id="cf">
+    <div class="stage" aria-roledescription="carrousel" aria-label="Nos lieux">
+      <div class="stage-inner"></div>
+      <div class="stage-veil"></div>
+    </div>
+    <div class="info">
+      <p class="info-place caps" data-k="place"></p>
+      <h3 class="info-name" data-k="name"></h3>
+      <p class="info-tag" data-k="tag"></p>
+      <a class="info-cta cta ul caps" data-k="cta">Découvrir le lieu</a>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3 : l'accompagnement, la promesse d'un seul interlocuteur (Figma « Frame 5 ») -->
+<section class="care" aria-labelledby="careTitle">
+  <figure class="care-img"><img src="assets/home/care-main.jpg" alt="La verrière de La Lorraine, place des Ternes" loading="lazy"></figure>
+  <div class="care-txt">
+    <div class="care-head">
+      <p class="t-cta t-eyebrow rv">Notre accompagnement</p>
+      <h2 class="t-h2 rv" id="careTitle">Un interlocuteur pour toutes nos maisons</h2>
+    </div>
+    <ul class="team rv" aria-label="L’équipe événementielle">
+      <li><img src="assets/home/team-rudy.jpg" alt="Rudy Coinon, directeur commercial adjoint" width="240" height="320" loading="lazy"></li>
+      <li><img src="assets/home/team-karine.jpg" alt="Karine Anglada, responsable commerciale du Procope" width="240" height="320" loading="lazy"></li>
+      <li><img src="assets/home/team-olivier.jpg" alt="Olivier Coulibaly, responsable commercial" width="240" height="320" loading="lazy"></li>
+      <li><img src="assets/home/team-charlotte.jpg" alt="Charlotte Antoni, cheffe de projet" width="240" height="320" loading="lazy"></li>
+      <li><img src="assets/home/team-vincent.jpg" alt="Vincent Fresneau, responsable commercial de L’Île" width="240" height="320" loading="lazy"></li>
+    </ul>
+    <div class="care-foot">
+      <p class="t-text rv">Plutôt que de contacter chaque établissement, confiez votre projet à notre équipe événementielle. Elle connaît chaque salon, chaque terrasse, et vous oriente vers l’adresse juste.</p>
+      <a class="t-cta hlink ul rv" href="#">Rencontrer l’équipe</a>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3 bis : les repères chiffrés (Figma « Frame 6 »), tirés des données des lieux -->
+<section class="figures" aria-label="Bertrand Hospitality en chiffres" id="figures"></section>
+
+<!-- Section 4 : entrer par le format de l'événement -->
+<!-- Figma « Frame 7 » -->
+<section class="evts" aria-labelledby="fmtTitle">
+  <div class="sec-head">
+    <p class="t-cta t-eyebrow rv">Vos événements</p>
+    <div class="sec-head-txt">
+      <h2 class="t-h2 rv" id="fmtTitle">Chaque format a son adresse</h2>
+      <p class="t-text rv">Du comité de direction à la soirée dansante, retrouvez les lieux qui s’y prêtent, avec leur capacité pour chaque configuration.</p>
+    </div>
+  </div>
+  <div class="formats-grid" id="formatsGrid"></div>
+</section>
+
+<!-- Section 5 : entrer par le quartier (Figma « Frame 8 ») : cinq photos en quinconce -->
+<section class="areas" aria-labelledby="areaTitle">
+  <div class="sec-head">
+    <p class="t-cta t-eyebrow rv">Nos quartiers</p>
+    <div class="sec-head-txt">
+      <h2 class="t-h2 rv" id="areaTitle">De la Seine aux Champs‑Élysées</h2>
+      <p class="t-text rv">Commencez par le quartier&nbsp;: nous vous montrons les lieux qui s’y trouvent.</p>
+    </div>
+  </div>
+  <div class="areas-grid" id="areasGrid"></div>
+</section>
+
+<!-- Section 6 : le Groupe Bertrand, puis l'hôtellerie. Mécanique reprise de sobha-privy-collection.com (section « Tenets ») :
+     la scène reste fixée ; on voit d'abord la photo de fond, puis la carte (Figma « Frame 4 ») monte jusqu'au centre,
+     et l'on entre dans sa photo, qui est la section Hôtels en miniature, jusqu'au plein écran. -->
+<section class="gh" id="gh">
+  <div class="gh-stage">
+    <div class="gh-group" aria-labelledby="grpTitle">
+      <div class="gh-group-bg" role="img" aria-label="La grande salle de La Coupole, boulevard du Montparnasse"></div>
+      <div class="gh-card" id="ghCard">
+        <img class="gh-logo" src="assets/logo-groupe-bertrand.svg" alt="Groupe Bertrand" width="73" height="51">
+        <h2 class="t-h3" id="grpTitle">La force d’un grand groupe</h2>
+        <span class="gh-slot" id="ghSlot" aria-hidden="true"></span>
+        <p class="t-text">Bertrand Hospitality est la maison art de vivre du Groupe Bertrand, premier groupe français indépendant de restauration et d’hôtellerie.</p>
+      </div>
+    </div>
+    <div class="gh-hotel" aria-labelledby="hotelTitle">
+      <div class="gh-img" id="ghImg"><div class="gh-img-in" role="img" aria-label="Le restaurant Thiou, à l’Hôtel Norman"></div><div class="gh-shade"></div></div>
+      <div class="hotels-txt" id="ghHotelTxt">
+        <p class="t-cta t-eyebrow">Au-delà de l’événement</p>
+        <div class="hotels-head">
+          <h2 class="t-h2" id="hotelTitle">Bertrand Hospitality, c’est aussi l’hôtellerie</h2>
+          <p class="t-text">Prolongez l’événement en accueillant vos invités dans nos hôtels parisiens, comme l’Hôtel Norman, à deux pas des Champs-Élysées.</p>
+        </div>
+        <a class="t-cta hlink ul" href="#">Découvrir nos hôtels</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 7 : les questions des organisateurs (réponses directes, utiles au référencement) -->
+<section class="hsec" aria-labelledby="faqTitle">
+  <div class="faq">
+    <div class="faq-head">
+      <p class="t-cta t-eyebrow rv">Questions fréquentes</p>
+      <h2 class="t-h2 rv" id="faqTitle">Organiser votre événement</h2>
+      <a class="t-cta hlink ul rv" href="#" style="align-self:flex-start">Toutes les questions</a>
+    </div>
+    <div class="faq-list rv" id="faqList"></div>
+  </div>
+</section>
+
+<!-- Section 8 : l'appel final (Figma « Frame 71 ») : une carte crème posée sur la photo -->
+<section class="closing" aria-labelledby="endTitle">
+  <div class="closing-bg" id="closingBg" role="img" aria-label="Une salle dressée pour un dîner, sous des arches"></div>
+  <div class="closing-card rv">
+    <p class="t-cta t-eyebrow">Votre événement</p>
+    <div class="closing-head">
+      <h2 class="t-h3" id="endTitle">Parlons de votre projet</h2>
+      <p class="t-text">La date, le format, le nombre d’invités&nbsp;: nous vous proposons les lieux qui s’y prêtent, avec un seul interlocuteur du premier échange au jour J.</p>
+    </div>
+    <a class="go-end t-cta" href="https://evenement.groupe-bertrand.com/demande-de-devis/"><span>Demander un devis</span><svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a>
+  </div>
+</section>
+
+<!-- Pied de page (Figma « Frame 71 », pied) -->
+<footer class="foot">
+  <div class="foot-brand">
+    <a href="index.html" aria-label="Bertrand Hospitality, accueil"><img class="foot-logo" src="assets/logo-footer.svg" alt="Bertrand Hospitality" width="184" height="36"></a>
+    <p class="t-text">Trente maisons parisiennes à privatiser, de la brasserie historique à la péniche sur la Seine, avec un seul interlocuteur pour toutes.</p>
+  </div>
+  <div class="foot-main">
+    <nav class="foot-links" aria-label="Pied de page">
+      <div class="foot-group">
+        <div class="foot-col"><a href="lieux.html">Nos lieux</a><a href="lieux.html">Événements</a><a href="#">Nous connaître</a></div>
+        <div class="foot-col"><a href="#">Engagement RSE</a><a href="#">Hôtels</a><a href="#">Journal</a></div>
+      </div>
+      <span class="foot-sep" aria-hidden="true"></span>
+      <div class="foot-group">
+        <div class="foot-col"><a href="#">FAQ</a><a href="#">Coffrets cadeaux</a><a href="#">Nous rejoindre</a></div>
+        <div class="foot-col"><a href="https://evenement.groupe-bertrand.com/demande-de-devis/">Demander un devis</a><a href="#">Contact</a><a href="#">English</a></div>
+      </div>
+    </nav>
+    <p class="foot-legal">L’abus d’alcool est dangereux pour la santé, à consommer avec modération.</p>
+  </div>
+  <div class="foot-bottom t-mini">
+    <span>© 2026 Bertrand Hospitality</span>
+    <nav aria-label="Liens légaux"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Cookies</a><a href="https://www.groupe-bertrand.com" target="_blank" rel="noopener">Groupe Bertrand</a></nav>
+    <a href="https://www.digidop.com" target="_blank" rel="noopener">Site web par Digidop</a>
+  </div>
+</footer>
+<div class="leave" id="leave"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="js/data.js?v=9"></script>
+<script src="js/menu.js?v=9"></script>
+<script src="js/finder.js?v=6"></script>
+<script src="js/coverflow.js?v=9"></script>
+<script>
+/* ----- intro : le titre se révèle ligne par ligne, puis la navigation et la recherche ----- */
+const title = document.querySelector(".hero-title");
+function splitTitle() {
+  const text = title.textContent.trim();
+  title.setAttribute("aria-label", text);
+  title.innerHTML = text.split(/\s+/).map(w => `<span class="w" aria-hidden="true"><span class="wi">${w}</span></span>`).join(" ");
+  // même délai pour tous les mots d'une ligne : la ligne monte d'un seul bloc
+  let line = -1, top = null;
+  title.querySelectorAll(".w").forEach(w => {
+    if (w.offsetTop !== top) { top = w.offsetTop; line++; }
+    w.firstChild.style.setProperty("--d", (0.35 + line * 0.16) + "s");
+  });
+}
+let ready = false;
+function start() {
+  if (ready) return; ready = true;
+  splitTitle();
+  requestAnimationFrame(() => requestAnimationFrame(() => document.documentElement.classList.add("is-ready")));
+}
+const bg = new Image(); bg.src = "assets/hero-c.jpg";
+// loader : 1,5 s de remplissage du logo, puis le rideau se lève (0,5 s) pendant que le hero entre en scène ;
+// il est sauté quand on revient sur la home depuis une autre page du site
+const loaderEl = document.getElementById("loader");
+const skipLoader = document.documentElement.classList.contains("no-loader");
+const loaderDone = new Promise(res => {
+  if (skipLoader) { loaderEl.classList.add("is-gone"); return res(); }
+  document.documentElement.style.overflow = "hidden";
+  setTimeout(() => {
+    loaderEl.classList.add("is-out");
+    document.documentElement.style.overflow = "";
+    setTimeout(() => loaderEl.classList.add("is-gone"), 520);
+    res();
+  }, 1550);
+});
+Promise.all([document.fonts.ready, bg.decode().catch(() => {}), loaderDone]).then(start);
+setTimeout(start, 3200);   // filet de sécurité si une ressource tarde
+
+/* ----- défilement doux (Lenis), léger : la page glisse un peu après la molette, sans inertie appuyée.
+   Il tourne sur l'horloge de GSAP pour rester synchronisé avec les animations ----- */
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches && window.Lenis) {
+  const lenis = new Lenis({lerp:0.12, wheelMultiplier:1, smoothWheel:true});
+  window.__lenis = lenis;   // le menu met le défilement en pause quand il est ouvert
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+
+/* ----- parallax : au défilement, la photo descend plus lentement que la page (30 %).
+   On anime « translate » et non « transform », déjà utilisé par le zoom d'arrivée ----- */
+const heroEl = document.querySelector(".hero"), heroBg = document.querySelector(".hero-bg");
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  let ticking = false;
+  addEventListener("scroll", () => {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      const y = Math.min(scrollY, heroEl.offsetHeight);          // inutile une fois le hero sorti de l'écran
+      heroBg.style.translate = `0 ${(y * 0.3).toFixed(1)}px`;
+    });
+  }, {passive:true});
+}
+
+/* ----- recherche : « Voir les lieux » ouvre la page dédiée avec les filtres ----- */
+BH.finder(document.getElementById("finder"), {
+  onSubmit: state => {
+    const q = BH.toQuery(state);
+    document.getElementById("leave").classList.add("is-on");
+    setTimeout(() => location.href = "lieux.html" + (q ? "?" + q : ""), 450);
+  },
+  submitLabel: (n, touched) => touched ? (n ? (n > 1 ? `Voir les ${n} lieux` : "Voir le lieu") : "Nous consulter") : "Voir les lieux",
+});
+/* ----- section 2 : le carrousel entre en scène quand on y arrive ----- */
+const venues = document.getElementById("venues");
+document.getElementById("vTitle").textContent = `${BH.VENUES.length === 30 ? "Trente" : BH.VENUES.length} adresses à privatiser`;
+const homeCf = BH.coverflow(document.getElementById("cf"), {wheel:"x"});   // la molette verticale continue de faire défiler la page
+// même principe que les autres sections : vérifié au défilement, déclenché quand le haut de la section passe aux deux tiers de l'écran
+let venuesOn = false;
+function startVenues() {
+  if (venuesOn || venues.getBoundingClientRect().top > innerHeight * .66) return;
+  venuesOn = true;
+  removeEventListener("scroll", startVenues);
+  homeCf.set(BH.VENUES, {intro:true});
+  gsap.to(".venues .v-head > *", {opacity:1, y:0, duration:1.2, ease:"expo.out", stagger:.08});
+}
+addEventListener("scroll", startVenues, {passive:true});
+startVenues();
+
+addEventListener("pageshow", e => { if (e.persisted) document.getElementById("leave").classList.remove("is-on"); });
+</script>
+<script>
+/* ----- suite de la home : contenus tirés des données des lieux, pour rester exacts ----- */
+(() => {
+  const {VENUES, SECTORS, FORMATS, results, capFor} = BH;
+  const $ = id => document.getElementById(id);
+  const ARROW = '<svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg>';
+  const n = k => `${k} lieu${k > 1 ? "x" : ""}`;
+
+  const maxCap = Math.max(...VENUES.map(v => capFor(v)));   // capacité la plus grande, reprise dans la FAQ
+
+  // repères chiffrés : un filet vertical entre chaque repère
+  $("figures").innerHTML = [[VENUES.length, "Lieux à privatiser"], [SECTORS.length, "quartiers"], [maxCap, "invités au plus"], [1, "interlocuteur"]]
+    .map(([v, l]) => `<div class="fig rv"><span class="t-num" data-count="${v}">${v}</span><span class="t-cta t-eyebrow">${l}</span></div>`).join('<span class="fig-sep" aria-hidden="true"></span>');
+
+  // formats
+  const FIMG = {reunion:"assets/home/fmt-1.jpg", assis:"assets/home/fmt-2.jpg", cocktail:"assets/home/fmt-3.jpg", dansant:"assets/home/fmt-4.jpg"};
+  $("formatsGrid").innerHTML = FORMATS.map(f => `
+    <a class="fcard" href="lieux.html?format=${f.id}">
+      <span class="fcard-img"><img class="fcard-px" src="${FIMG[f.id]}" alt="" loading="lazy"></span>
+      <span class="fcard-txt rv"><span class="fcard-name t-h5">${f.label}</span><span class="t-mini">${n(results({format:f.id}).length)}</span></span>
+    </a>`).join("");
+
+  // quartiers : trois rangées en quinconce (petite + grande, une large au centre, grande + petite), comme le Figma
+  const AREA = {ouest:["s", "assets/home/area-1.jpg"], centre:["l", "assets/home/area-2.jpg"], rg:["xl", "assets/home/area-3.jpg"], seine:["l", "assets/home/area-4.jpg"], hors:["s", "assets/home/area-5.jpg"]};
+  const acard = s => {
+    const [size, img] = AREA[s.id], list = results({sector:s.id});
+    const names = list.slice(0, 3).map(v => v.name).join(", ") + (list.length > 3 ? "…" : "");
+    return `<a class="acard acard--${size}" href="lieux.html?secteur=${s.id}">
+      <span class="acard-img"><img class="acard-px" src="${img}" alt="" loading="lazy"></span>
+      <span class="acard-txt rv"><span class="acard-name t-h4">${s.name}</span><span class="t-cta t-eyebrow">${n(list.length)} · ${names}</span></span>
+    </a>`;
+  };
+  const sec = id => SECTORS.find(s => s.id === id);
+  $("areasGrid").innerHTML = `
+    <div class="ar-row">${acard(sec("ouest"))}${acard(sec("centre"))}</div>
+    <div class="ar-solo">${acard(sec("rg"))}</div>
+    <div class="ar-row">${acard(sec("seine"))}${acard(sec("hors"))}</div>`;
+
+  // questions fréquentes, reprises en données structurées pour Google et les IA
+  const FAQ = [
+    ["Combien d’invités pouvez-vous accueillir ?", `De quelques convives à ${maxCap} invités en cocktail. Chaque lieu propose plusieurs espaces, du salon privé à la privatisation totale.`],
+    ["Peut-on privatiser un lieu en entier ?", "Oui. La plupart de nos maisons se privatisent en totalité ou par espace : un salon, une mezzanine, une terrasse."],
+    ["Quels événements organisez-vous ?", "Séminaires et réunions, déjeuners et dîners assis, cocktails et soirées dansantes, pour les entreprises comme pour les particuliers."],
+    ["Où se trouvent vos lieux ?", "À Paris et en Île-de-France : des Champs-Élysées à la rive gauche, de l’Opéra aux bords de Seine, jusqu’à Versailles et Disney Village."],
+    ["Proposez-vous des menus pour les groupes ?", "Chaque lieu a ses menus groupe, du déjeuner au cocktail dînatoire, détaillés sur sa fiche et dans sa plaquette."],
+    ["Comment obtenir un devis ?", "Remplissez la demande de devis : un interlocuteur dédié vous recontacte avec une proposition adaptée, quel que soit le lieu."],
+  ];
+  // la première question est ouverte d'emblée, comme dans le Figma
+  $("faqList").innerHTML = FAQ.map(([q, a], i) => `
+    <div class="faq-item${i ? "" : " is-open"}">
+      <button class="faq-q" type="button" aria-expanded="${!i}" aria-controls="faq${i}"><span class="t-cta">${q}</span><i aria-hidden="true"><svg class="ic-x" viewBox="0 0 12 12"><path d="M1.5 1.5l9 9M10.5 1.5l-9 9"/></svg><svg class="ic-m" viewBox="0 0 12 12"><path d="M0 6h12"/></svg></i></button>
+      <div class="faq-a" id="faq${i}" role="region"${i ? "" : ' style="height:auto"'}><p class="t-text">${a}</p></div>
+    </div>`).join("");
+  $("faqList").addEventListener("click", e => {
+    const b = e.target.closest(".faq-q"); if (!b) return;
+    const item = b.parentElement, open = !item.classList.contains("is-open");
+    // une seule question ouverte à la fois : on referme celle qui l'était
+    if (open) $("faqList").querySelectorAll(".faq-item.is-open").forEach(o => {
+      o.classList.remove("is-open"); o.querySelector(".faq-q").setAttribute("aria-expanded", false);
+      gsap.to(o.querySelector(".faq-a"), {height:0, duration:.6, ease:"expo.out"});
+    });
+    item.classList.toggle("is-open", open); b.setAttribute("aria-expanded", open);
+    gsap.to(item.querySelector(".faq-a"), {height:open ? "auto" : 0, duration:.7, ease:"expo.out"});
+  });
+  const ld = document.createElement("script"); ld.type = "application/ld+json";
+  ld.textContent = JSON.stringify({"@context":"https://schema.org", "@type":"FAQPage", mainEntity:FAQ.map(([q, a]) => ({"@type":"Question", name:q, acceptedAnswer:{"@type":"Answer", text:a}}))});
+  document.head.appendChild(ld);
+
+  // pied de page
+
+  // apparitions au défilement : les textes montent en fondu ; les photos n'ont pas d'effet d'entrée, seulement leur parallax.
+  // Vérifiées à chaque défilement (le défilement doux de Lenis passe par l'événement natif) plutôt que par
+  // IntersectionObserver : tout ce qui est déjà passé au-dessus de l'écran est révélé, rien ne peut rester caché.
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const pending = [...document.querySelectorAll(".rv")];
+  const countUp = el => {
+    const end = +el.dataset.count; if (!(end > 1)) return;
+    const o = {v:0}; gsap.to(o, {v:end, duration:1.4, ease:"expo.out", onUpdate:() => el.textContent = Math.round(o.v)});
+  };
+  const reveal = (el, delay) => {
+    gsap.to(el, {opacity:1, y:0, duration:1.1, ease:"expo.out", delay, onComplete:() => { el.classList.add("is-in"); gsap.set(el, {clearProps:"opacity,transform,translate,rotate,scale"}); }});
+    el.querySelectorAll("[data-count]").forEach(n => setTimeout(() => countUp(n), delay * 1000));
+  };
+  function checkReveal() {
+    const lim = innerHeight * .88; let k = 0;
+    for (let i = 0; i < pending.length; i++) {
+      const el = pending[i], r = el.getBoundingClientRect();
+      if (r.top > lim || (r.width === 0 && r.height === 0)) continue;
+      reveal(el, Math.min(k++, 6) * .08);   // léger décalage entre les éléments qui apparaissent ensemble
+      pending.splice(i--, 1);
+    }
+  }
+  if (reduce) pending.length = 0;
+  else {
+    let queued = false;
+    addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; checkReveal(); }); } }, {passive:true});
+    addEventListener("resize", checkReveal);
+    checkReveal();
+    window.__checkReveal = checkReveal;   // pour les tests
+  }
+
+  // formats et quartiers : chaque photo glisse doucement dans son cadre au défilement (±24 px), calculé une fois par image affichée
+  const fpx = [...document.querySelectorAll(".fcard-px, .acard-px")];
+  if (!reduce && fpx.length) {
+    let ticking = false;
+    const run = () => {
+      ticking = false;
+      for (const im of fpx) {
+        const r = im.parentElement.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > innerHeight) continue;
+        const p = (r.top + r.height / 2 - innerHeight / 2) / (innerHeight / 2 + r.height / 2);   // de −1 à 1 pendant la traversée
+        im.style.translate = `0 ${(p * -24).toFixed(1)}px`;
+      }
+    };
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(run); } }, {passive:true});
+    run();
+  }
+
+  // Groupe Bertrand → hôtellerie, comportement repris de sobha-privy-collection.com (section « Tenets »).
+  // La scène est fixée pendant tout le passage ; le temps se compte en hauteurs d'écran de défilement :
+  // 0 → 1     les quartiers glissent vers le haut et découvrent la photo de fond, déjà immobile ;
+  // 0,55 → 1,5  la carte monte du bas jusqu'au centre (ralentie à l'arrivée), puis une pause ;
+  // 1,75 → 2,95 on entre dans la photo de la carte (la section Hôtels en miniature) jusqu'au plein écran, courbe easeInOutQuad de Sobha ;
+  // 2,75 → 3,2  le texte des hôtels apparaît ; 3,5 → 4,5 la FAQ glisse par-dessus la scène.
+  const gh = $("gh");
+  if (!reduce && gh) {
+    gh.classList.add("gh--pin");
+    gh.previousElementSibling.classList.add("gh-prev");
+    gh.nextElementSibling.classList.add("gh-next");
+    const stage = gh.firstElementChild, card = $("ghCard"), slot = $("ghSlot"), img = $("ghImg"), imgIn = img.firstElementChild;
+    const htxt = $("ghHotelTxt"), hotel = img.parentElement, bg = gh.querySelector(".gh-group-bg");
+    const clamp = v => Math.min(1, Math.max(0, v)), seg = (u, a, b) => clamp((u - a) / (b - a));
+    const inOut = t => t < .5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2, out = t => 1 - (1 - t) ** 3;
+    let geo = null, ticking = false;
+    const measure = () => {
+      card.style.transform = ""; img.style.transform = ""; img.style.clipPath = "";
+      const st = stage.getBoundingClientRect(), c = card.getBoundingClientRect(), r = slot.getBoundingClientRect(), W = st.width, H = st.height;
+      const s0 = Math.max(r.width / W, r.height / H);
+      geo = {s0, H, ch:c.height, ix:(W * s0 - r.width) / 2 / (W * s0) * 100, iy:(H * s0 - r.height) / 2 / (H * s0) * 100,
+        dx:r.left + r.width / 2 - (st.left + W / 2), dy:r.top + r.height / 2 - (st.top + H / 2)};
+      card.style.transformOrigin = `${r.left + r.width / 2 - c.left}px ${r.top + r.height / 2 - c.top}px`;   // la carte grandit autour de sa photo
+    };
+    const frame = () => {
+      ticking = false;
+      if (!geo) measure();
+      const top = gh.getBoundingClientRect().top;
+      if (top > geo.H || top < -gh.offsetHeight) return;
+      const u = Math.max(0, -top / geo.H);
+      const ty = (1 - out(seg(u, .55, 1.5))) * (geo.H / 2 + geo.ch / 2 + 40);
+      const e = inOut(seg(u, 1.75, 2.95)), k = 1 - e, s = geo.s0 + (1 - geo.s0) * e;
+      card.style.transform = `translate3d(${(-geo.dx * e).toFixed(1)}px,${(ty - geo.dy * e).toFixed(1)}px,0) scale(${(s / geo.s0).toFixed(4)})`;
+      img.style.transform = `translate3d(${(geo.dx * k).toFixed(1)}px,${(geo.dy * k + ty).toFixed(1)}px,0) scale(${s.toFixed(4)})`;
+      img.style.clipPath = `inset(${(geo.iy * k).toFixed(2)}% ${(geo.ix * k).toFixed(2)}%)`;
+      imgIn.style.transform = `scale(${(1 + .08 * k).toFixed(4)})`;
+      bg.style.transform = `translate3d(0,${((1.5 - Math.min(u, 3)) * 1.5).toFixed(2)}%,0)`;   // le fond glisse très lentement
+      const t = seg(u, 2.75, 3.2);
+      htxt.style.opacity = t.toFixed(3);
+      htxt.style.transform = `translate3d(0,${(12 * (1 - t)).toFixed(1)}px,0)`;
+      hotel.classList.toggle("is-on", t > .5);
+    };
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }, {passive:true});
+    addEventListener("resize", () => { geo = null; frame(); });
+    document.fonts && document.fonts.ready.then(() => { geo = null; frame(); });
+    frame();
+  }
+  // appel final : même glissement lent de la photo
+  const cb = $("closingBg"), cs = cb.parentElement;
+  if (!reduce) {
+    let ticking = false;
+    const place = () => {
+      ticking = false;
+      const r = cs.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight) return;
+      const p = (r.top + r.height / 2 - innerHeight / 2) / (innerHeight / 2 + r.height / 2);
+      cb.style.transform = `translate3d(0,${(p * -r.height * .12).toFixed(1)}px,0)`;
+    };
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(place); } }, {passive:true});
+    addEventListener("resize", place);
+    place();
+  }
+})();
+</script>
+</body>
+</html>

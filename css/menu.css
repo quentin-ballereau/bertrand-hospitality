@@ -1,0 +1,59 @@
+/* Menu principal (Figma « Navigation · 01 Menu ouvert ») : la page reste visible sous un voile,
+   le panneau crème part du bord gauche, et une photo n'apparaît à droite qu'au survol d'une rubrique.
+   Ouverture calquée sur cartier.com : panneau 0,8 s cubic-bezier(.5,0,0,1), ombre en fondu, voile 0,5 s ;
+   le bouton reste en place, ses traits forment une croix et « menu » laisse place à « Fermer » dans un flou. */
+.mnu{--mnu-w:520px;position:fixed;inset:0;z-index:60;visibility:hidden;pointer-events:none}
+.mnu.is-open{visibility:visible;pointer-events:auto}
+.mnu-veil{position:absolute;inset:0;background:rgba(29,29,27,.55);opacity:0}
+
+.mnu-panel{position:absolute;top:0;bottom:0;left:0;width:var(--mnu-w)}
+/* ombre du Figma, portée vers la droite uniquement. Elle est calculée sur un bloc qui déborde de 400 px en haut et en bas,
+   puis rognée au ras du panneau : ses extrémités floues (qui dessinaient des coins arrondis) restent hors de l'écran */
+.mnu-glow{position:absolute;top:-400px;bottom:-400px;left:0;right:0;pointer-events:none;opacity:0;clip-path:inset(400px -100vw 400px 0);
+  box-shadow:15px 11px 41px rgba(0,0,0,.1),60px 44px 74px rgba(0,0,0,.09),135px 98px 100px rgba(0,0,0,.05),240px 174px 119px rgba(0,0,0,.01)}
+.mnu-inner{position:relative;height:100%;background:var(--cream);color:var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:48px;
+  padding:32px var(--gutter) 40px;overflow-y:auto;overscroll-behavior:contain}
+
+/* ligne du haut : la place du bouton à gauche, FR / EN à droite (recalée par le script sur le bouton) */
+.mnu-top{display:flex;align-items:center;justify-content:flex-end;min-height:32px;margin-top:var(--cy,0)}
+.mnu-lang{display:flex;gap:8px;font-size:10px;color:var(--muted)}
+.mnu-lang b{font-weight:400;color:var(--ink)}
+
+/* le bouton « menu / Fermer » : posé exactement sur le bouton de la page, au-dessus du panneau */
+.mnu-btn{position:fixed;z-index:3;display:flex;align-items:center;gap:12px;color:var(--btn-c,var(--ink));transition:color .4s ease}
+.mnu.is-open .mnu-btn.is-x{color:var(--ink)}
+.mnu-btn.is-x .nav-ico::before{transform:translateY(2.5px) rotate(45deg) scaleX(.75)}
+.mnu-btn.is-x .nav-ico::after{transform:translateY(-2.5px) rotate(-45deg) scaleX(.75)}
+.mnu-btn-lbl{display:grid;justify-items:start;text-align:left}   /* « menu » reste calé à gauche, comme dans le bouton de la page */
+.mnu-btn-lbl > span{grid-area:1/1}
+.mnu-btn .lbl-close{opacity:0}
+
+/* rubriques : H3 du Figma, 32 px d'écart ; au survol les autres s'effacent */
+.mnu-list{list-style:none;display:flex;flex-direction:column;gap:32px}
+.mnu-link{display:inline-block;font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;transition:opacity .45s var(--ease)}
+.mnu-list:hover .mnu-link,.mnu-list:focus-within .mnu-link{opacity:.32}
+.mnu-list .mnu-link:hover,.mnu-list .mnu-link:focus-visible{opacity:1}
+
+/* pied du panneau (Figma) : deux lignes de liens en CTA & TAG beige, 24 px d'écart, filet de 0,6 px à 6 px sous le texte */
+.mnu-foot{display:flex;flex-direction:column;gap:24px;padding-top:24px;border-top:1px solid var(--line)}
+.mnu-sec{display:flex;align-items:flex-start;gap:24px;font-size:12px;color:var(--taupe)}
+.mnu-sec a{text-box:trim-both cap alphabetic}   /* texte rogné aux capitales : filet à 6 px, comme le CTA du Figma */
+.mnu-quote{display:flex;align-items:center;justify-content:center;gap:12px;height:52px;background:var(--taupe);color:#fff;font-size:12px;transition:background .45s var(--ease)}
+.mnu-quote:hover{background:var(--ink)}
+.mnu-quote svg{transition:transform .4s var(--ease)}
+.mnu-quote:hover svg{transform:translateX(4px)}
+
+/* photo de la rubrique survolée : tout le reste de l'écran, à droite du panneau */
+.mnu-media{position:absolute;top:0;bottom:0;right:0;left:var(--mnu-w);overflow:hidden;pointer-events:none}
+/* chaque photo se pose au-dessus de la précédente (transition reprise de springs.estate, voir menu.js) */
+.mnu-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;visibility:hidden}
+
+@media (max-width:1023px){ .mnu-media{display:none} }
+@media (max-width:767px){
+  .mnu{--mnu-w:100vw}
+  .mnu-inner{padding:24px var(--gutter) 32px}
+  .mnu-link{font-size:28px}
+  .mnu-list{gap:28px}
+  .mnu-btn-lbl{display:none}
+}
+@media (prefers-reduced-motion:reduce){.mnu-btn{transition:none}}
