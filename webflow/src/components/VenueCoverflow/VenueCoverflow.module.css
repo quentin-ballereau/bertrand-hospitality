@@ -1,0 +1,67 @@
+/* Carrousel 3D des lieux : css/coverflow.css du POC, plus les quelques règles de base.css dont il dépend.
+   Le composant vit dans un Shadow DOM : les classes du site n'y entrent pas, mais les variables CSS si.
+   Chaque couleur ou police lit d'abord la variable du site (--bh-…), sinon la valeur du POC. */
+.root{
+  --cream:var(--bh-cream,#faf8f7);
+  --ink:var(--bh-ink,#1d1d1b);
+  --ink-soft:var(--bh-ink-soft,#4a4744);
+  --taupe:var(--bh-taupe,#8d7974);
+  --serif:var(--bh-serif,"Ivar Display","Times New Roman",serif);
+  --caps:var(--bh-caps,"Copperplate","Copperplate Gothic",serif);
+  --sans:var(--bh-sans,"Helvetica LT","Helvetica Neue",Helvetica,Arial,sans-serif);
+  --expo:cubic-bezier(.16,1,.3,1);
+  --gutter:48px;
+  display:flex;flex-direction:column;min-height:0;color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased
+}
+:where(.root) *{box-sizing:border-box;margin:0;padding:0}
+:where(.root) a{color:inherit;text-decoration:none}
+
+/* « section » : hauteur fixe, comme sur la home ; « fill » : occupe la hauteur de son parent, comme sur la page des lieux */
+.section .stage{flex:none;height:420px}
+.fill{height:100%}
+.fill .stage{flex:1}
+
+.stage{position:relative;min-height:0;perspective:1400px;perspective-origin:50% 50%;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.isDragging{cursor:grabbing}
+.inner{position:absolute;inset:0;transform-style:preserve-3d}
+.lcard{position:absolute;left:50%;top:50%;width:var(--cw);height:var(--ch);margin:calc(var(--ch) / -2) 0 0 calc(var(--cw) / -2);
+  display:block;overflow:hidden;background:transparent;will-change:transform,opacity;backface-visibility:hidden;-webkit-user-drag:none}
+.lcard img{position:absolute;top:0;left:-8%;width:116%;height:100%;object-fit:cover;display:block;pointer-events:none;will-change:transform}
+.lcardVeil{position:absolute;inset:0;background:var(--cream);pointer-events:none}
+.veil{position:absolute;inset:-40px 0;background:var(--cream);pointer-events:none;z-index:200;opacity:1}
+.isActive{box-shadow:0 36px 60px -46px rgba(29,29,27,.45)}
+
+/* fiche du lieu au centre : Mini tag 10 beige, H3 32, Text Main 14, CTA 12 */
+.info{display:flex;flex-direction:column;align-items:center;text-align:center;width:min(384px,calc(100% - 2*var(--gutter)));margin:21px auto 0}
+.fill .info{margin-top:32px;min-height:180px}
+.info > *{will-change:transform,opacity}
+.caps{font-family:var(--caps);font-weight:400;text-transform:uppercase;letter-spacing:.14em;line-height:1.3;text-box:trim-both cap alphabetic}
+.place{font-size:10px;color:var(--taupe)}
+.name{font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;margin:24px 0 32px;text-box:trim-both cap alphabetic}
+.tag{font-size:14px;line-height:1.4;font-weight:300;letter-spacing:-.02em;color:var(--ink-soft);text-box:trim-both cap alphabetic}
+.cta{margin-top:32px;font-size:12px;color:var(--taupe)}
+
+/* soulignement du POC : trait fin au repos ; au survol il se retire vers la droite puis se redessine depuis la gauche */
+.ul{position:relative;display:inline-block;padding-bottom:6px;white-space:nowrap}
+.ul::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform:scale(1,.6);transform-origin:right bottom}
+.ul:hover::after,.ul:focus-visible::after{animation:ulRedraw .9s var(--expo)}
+@keyframes ulRedraw{
+  0%{transform:scale(1,.6);transform-origin:right bottom}
+  45%{transform:scale(0,.6);transform-origin:right bottom}
+  46%{transform:scale(0,.6);transform-origin:left bottom}
+  100%{transform:scale(1,.6);transform-origin:left bottom}}
+
+/* aucun lieu trouvé : n'apparaît que dans le Designer, pour guider la mise en place de la Collection List */
+.empty{padding:40px var(--gutter);text-align:center;font-size:13px;line-height:1.5;color:var(--ink-soft);border:1px dashed var(--taupe)}
+.empty code{font-family:ui-monospace,monospace;font-size:12px}
+
+@media (max-width:767px){
+  .root{--gutter:16px}
+  .stage{perspective:1000px}
+  .section .stage{height:240px}
+  .info{margin-top:16px}
+  .fill .info{margin-top:18px;min-height:0}
+  .name{font-size:26px;margin:20px 0 24px}
+  .tag{font-size:13px}
+  .cta{margin-top:24px}
+}

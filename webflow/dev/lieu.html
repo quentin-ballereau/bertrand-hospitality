@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Banc d'essai · Venue Experience</title>
+<!-- polices et variables du POC, comme le ferait le site Webflow -->
+<link rel="stylesheet" href="/css/base.css">
+<style>.nav{position:fixed;color:#fff;z-index:10}</style>
+</head>
+<body>
+  <!-- la navigation reste native dans Webflow : elle est ici reprise du POC, au-dessus du composant -->
+  <header class="nav">
+    <button class="nav-menu caps" type="button"><i class="nav-ico" aria-hidden="true"></i><span>menu</span></button>
+    <a class="nav-logo" href="/coverflow.html"><img src="/assets/logo-bh.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
+    <a class="nav-cta ul caps" href="#"><span class="cta-long">Demander un </span>devis</a>
+  </header>
+  <div id="app"></div>
+  <script src="/js/data.js"></script>
+  <script src="/js/detail.js"></script>
+  <script type="module" src="./lieu.tsx"></script>
+</body>
+</html>

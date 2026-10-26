@@ -1,0 +1,13 @@
+{
+  "library": {
+    "name": "Bertrand Hospitality",
+    "components": [
+      "./src/**/*.webflow.tsx"
+    ],
+    "functions": [
+      "**/*.webflow.function.@(js|cjs|mjs|ts)"
+    ],
+    "description": "Test of Custom Code Component",
+    "id": "test-code-component"
+  }
+}
