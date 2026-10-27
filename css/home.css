@@ -33,7 +33,9 @@
 .team img{width:100%;height:100%;object-fit:cover;display:block}
 
 /* ---------- repères chiffrés (Figma « Frame 6 ») : 200 px au-dessus, 100 px en dessous, filets verticaux #E6E1DD ---------- */
-.figures{display:flex;align-items:stretch;justify-content:center;gap:48px;padding:200px 148px 100px;background:var(--cream)}
+/* chiffres clés : un bandeau tenu par deux filets, 100 px d'air au-dessus (les formats ouvrent ensuite avec leurs propres 100 px) */
+.figures{padding:100px var(--gutter) 0;background:var(--cream)}
+.figs-row{display:flex;align-items:stretch;justify-content:center;gap:48px;max-width:1184px;margin:0 auto;padding:56px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .fig{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
 .fig .t-num{font-size:48px}
 .fig-sep{flex:0 0 1px;width:1px;background:var(--line)}
@@ -75,6 +77,33 @@
 .acard:hover .acard-name::after,.acard:focus-visible .acard-name::after{transform:scale(1,.6)}
 
 /* ---------- hôtellerie (Figma « Frame 9 ») : 832 px, photo plein cadre, dégradé noir du quart de la hauteur jusqu'en bas ---------- */
+/* ---------- carte de Paris (remplace « Nos quartiers ») : fond crème, arrondissements en filets, Seine taupe clair ---------- */
+.map-sec{display:flex;flex-direction:column;align-items:center;gap:64px;padding:100px var(--gutter) 200px;background:var(--cream)}
+.map-sec .sec-head{width:min(776px,100%)}
+.map-sec .sec-head .t-text{max-width:416px}
+.pmap{position:relative;width:min(1184px,100%)}
+.pmap svg{display:block;width:100%;height:auto;overflow:visible}
+.pm-arr path{fill:var(--cream-2);stroke:#e2dbd5;stroke-width:1;vector-effect:non-scaling-stroke;transition:fill .6s var(--ease)}
+.pm-seine{fill:none;stroke:#dcd1ca;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.pm-lbl{font-family:var(--caps);font-size:10px;letter-spacing:.14em;text-transform:uppercase;fill:var(--taupe);pointer-events:none;transition:opacity .4s}
+.pmap.is-hover .pm-lbl{opacity:.4}
+.pm-pin{cursor:pointer;outline:none;opacity:0;transition:opacity .8s var(--ease) var(--d,0s)}
+.pmap.is-in .pm-pin{opacity:1}
+.pm-hit{fill:transparent}
+.pm-dot{fill:var(--ink);stroke:var(--cream);stroke-width:2;transition:r .45s var(--expo),fill .3s,opacity .4s}
+.pmap.is-hover .pm-dot{opacity:.35}
+.pm-pin.is-on .pm-dot,.pm-pin:focus-visible .pm-dot{r:8;fill:var(--taupe);opacity:1}
+.pm-edge{position:absolute;color:var(--taupe)}
+.pm-edge a{color:var(--ink)}
+.pm-edge--w{left:0;bottom:12%}
+.pm-edge--e{right:0;top:28%;text-align:right}
+.pm-tip{position:absolute;z-index:2;display:flex;gap:12px;transform:translate(-50%,calc(-100% - 20px));opacity:0;pointer-events:none;transition:opacity .35s var(--ease)}
+.pm-tip.is-below{transform:translate(-50%,20px)}
+.pm-tip.is-on{opacity:1;pointer-events:auto}
+.pm-card{display:flex;flex-direction:column;align-items:center;gap:12px;width:232px;padding:8px 8px 20px;background:#fff;text-align:center;box-shadow:0 24px 48px -28px rgba(29,29,27,.35)}
+.pm-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;margin-bottom:8px}
+.pm-card .t-mini{color:var(--taupe)}
+
 /* ---------- Groupe Bertrand puis hôtellerie : une scène fixée pendant le défilement (mécanique de sobha-privy-collection.com) ----------
    Sans script ou avec les animations réduites, les deux écrans se suivent simplement, chacun d'une hauteur d'écran. */
 .gh{position:relative;background:var(--ink)}
@@ -126,7 +155,6 @@
 /* ---------- appel final (Figma « Frame 71 ») : 832 px, photo plein cadre, carte crème de 386 px au centre ---------- */
 .closing{position:relative;height:100svh;min-height:600px;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:48px;background:var(--ink)}
 .closing-bg{position:absolute;left:0;right:0;top:-12%;bottom:-12%;background:url(../assets/home/closing.jpg) center/cover no-repeat;will-change:transform}
-.closing::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(29,29,27,0) 25%,#1d1d1b 100%)}
 .closing-card{position:relative;z-index:1;width:386px;max-width:100%;display:flex;flex-direction:column;align-items:center;gap:32px;padding:64px;background:var(--cream);text-align:center}
 .closing-head{display:flex;flex-direction:column;align-items:center;gap:24px}
 .go-end{display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:18px 24px;background:var(--taupe);color:#fff;transition:background .45s var(--ease)}
@@ -160,7 +188,7 @@
 .js .rv.is-in{opacity:1;transform:none}
 
 @media (max-width:1023px){
-  .figures{padding:120px var(--gutter) 80px;gap:24px}
+  .figures{padding-top:80px} .figs-row{gap:24px;padding:48px 0}
   .care{grid-template-columns:1fr;height:auto;min-height:0}
   .care-img{aspect-ratio:4/3}
   .care-txt{padding:120px var(--gutter)}
@@ -174,13 +202,22 @@
   .foot-col{width:150px}
 }
 @media (max-width:767px){
+  .map-sec{gap:40px;padding:64px 0 100px} .map-sec .sec-head{padding:0 var(--gutter)}
+  .pm-edge{position:static;margin:16px var(--gutter) 0;text-align:left}
+  .pm-card{width:180px}
+  .pmap{overflow:hidden}
+  .pmap svg{width:180%;margin-left:-22%}   /* sur mobile, la carte est recadrée sur Paris : points et repères restent lisibles */
+  .pm-dot{r:9;stroke-width:3}
+  .pm-pin.is-on .pm-dot{r:13}
+  .pm-hit{r:24}
+  .pm-lbl{font-size:17px}
   .hsec{padding:120px 24px}
   .t-h2{font-size:28px}
   .t-h3{font-size:24px}
   .evts{padding:80px 24px;gap:40px}
   .areas{padding:80px 24px 120px;gap:48px}
   .t-h4{font-size:20px}
-  .figures{flex-wrap:wrap;gap:48px 0;padding:100px var(--gutter) 60px}
+  .figures{padding-top:64px} .figs-row{flex-wrap:wrap;gap:40px 0;padding:40px 0}
   .fig{flex:0 0 50%}
   .fig-sep{display:none}
   .fig .t-num{font-size:36px}

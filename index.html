@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="css/base.css?v=8">
 <link rel="stylesheet" href="css/menu.css?v=13">
 <link rel="stylesheet" href="css/coverflow.css?v=9">
-<link rel="stylesheet" href="css/home.css?v=18">
+<link rel="stylesheet" href="css/home.css?v=20">
 <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css">
 <script>/* loader à l’entrée sur le site ; on le saute quand on revient d’une autre page du site */try{var r=document.referrer&&new URL(document.referrer);if(r&&r.origin===location.origin&&r.pathname!==location.pathname)document.documentElement.classList.add("no-loader")}catch(e){}</script>
 <style>
@@ -122,13 +122,6 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
       <p class="t-cta t-eyebrow rv">Notre accompagnement</p>
       <h2 class="t-h2 rv" id="careTitle">Un interlocuteur pour toutes nos maisons</h2>
     </div>
-    <ul class="team rv" aria-label="L’équipe événementielle">
-      <li><img src="assets/home/team-rudy.jpg" alt="Rudy Coinon, directeur commercial adjoint" width="240" height="320" loading="lazy"></li>
-      <li><img src="assets/home/team-karine.jpg" alt="Karine Anglada, responsable commerciale du Procope" width="240" height="320" loading="lazy"></li>
-      <li><img src="assets/home/team-olivier.jpg" alt="Olivier Coulibaly, responsable commercial" width="240" height="320" loading="lazy"></li>
-      <li><img src="assets/home/team-charlotte.jpg" alt="Charlotte Antoni, cheffe de projet" width="240" height="320" loading="lazy"></li>
-      <li><img src="assets/home/team-vincent.jpg" alt="Vincent Fresneau, responsable commercial de L’Île" width="240" height="320" loading="lazy"></li>
-    </ul>
     <div class="care-foot">
       <p class="t-text rv">Plutôt que de contacter chaque établissement, confiez votre projet à notre équipe événementielle. Elle connaît chaque salon, chaque terrasse, et vous oriente vers l’adresse juste.</p>
       <a class="t-cta hlink ul rv" href="#">Rencontrer l’équipe</a>
@@ -153,7 +146,8 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 </section>
 
 <!-- Section 5 : entrer par le quartier (Figma « Frame 8 ») : cinq photos en quinconce -->
-<section class="areas" aria-labelledby="areaTitle">
+<!-- « Nos quartiers » mis de côté le 27/10/2026 (remplacé par la carte de Paris) : gardé masqué pour pouvoir y revenir -->
+<section class="areas" hidden aria-labelledby="areaTitle">
   <div class="sec-head">
     <p class="t-cta t-eyebrow rv">Nos quartiers</p>
     <div class="sec-head-txt">
@@ -162,6 +156,18 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
     </div>
   </div>
   <div class="areas-grid" id="areasGrid"></div>
+</section>
+
+<!-- Section 5 : la carte de Paris et de ses abords, un point par maison du groupe ; au survol, la fiche du lieu -->
+<section class="map-sec" aria-labelledby="mapTitle">
+  <div class="sec-head">
+    <p class="t-cta t-eyebrow rv">Nos adresses</p>
+    <div class="sec-head-txt">
+      <h2 class="t-h2 rv" id="mapTitle">Au cœur de Paris</h2>
+      <p class="t-text rv">Des Champs-Élysées à la Bastille, de Saint-Germain aux bords de Seine&nbsp;: survolez la carte pour découvrir nos maisons.</p>
+    </div>
+  </div>
+  <div class="pmap" id="pmap"></div>
 </section>
 
 <!-- Section 6 : le Groupe Bertrand, puis l'hôtellerie. Mécanique reprise de sobha-privy-collection.com (section « Tenets ») :
@@ -248,9 +254,10 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="js/data.js?v=9"></script>
-<script src="js/menu.js?v=9"></script>
+<script src="js/menu.js?v=10"></script>
 <script src="js/finder.js?v=6"></script>
 <script src="js/coverflow.js?v=9"></script>
+<script src="js/paris-map.js?v=1"></script>
 <script>
 /* ----- intro : le titre se révèle ligne par ligne, puis la navigation et la recherche ----- */
 const title = document.querySelector(".hero-title");
@@ -351,8 +358,8 @@ addEventListener("pageshow", e => { if (e.persisted) document.getElementById("le
   const maxCap = Math.max(...VENUES.map(v => capFor(v)));   // capacité la plus grande, reprise dans la FAQ
 
   // repères chiffrés : un filet vertical entre chaque repère
-  $("figures").innerHTML = [[VENUES.length, "Lieux à privatiser"], [SECTORS.length, "quartiers"], [maxCap, "invités au plus"], [1, "interlocuteur"]]
-    .map(([v, l]) => `<div class="fig rv"><span class="t-num" data-count="${v}">${v}</span><span class="t-cta t-eyebrow">${l}</span></div>`).join('<span class="fig-sep" aria-hidden="true"></span>');
+  $("figures").innerHTML = '<div class="figs-row">' + [[VENUES.length, "Lieux à privatiser"], [SECTORS.length, "quartiers"], [maxCap, "invités au plus"], [1, "interlocuteur"]]
+    .map(([v, l]) => `<div class="fig rv"><span class="t-num" data-count="${v}">${v}</span><span class="t-cta t-eyebrow">${l}</span></div>`).join('<span class="fig-sep" aria-hidden="true"></span>') + "</div>";
 
   // formats
   const FIMG = {reunion:"assets/home/fmt-1.jpg", assis:"assets/home/fmt-2.jpg", cocktail:"assets/home/fmt-3.jpg", dansant:"assets/home/fmt-4.jpg"};
@@ -441,6 +448,71 @@ addEventListener("pageshow", e => { if (e.persisted) document.getElementById("le
     window.__checkReveal = checkReveal;   // pour les tests
   }
 
+  // carte de Paris : fond projeté une fois pour toutes (js/paris-map.js), un point par adresse (deux maisons à la même adresse
+  // partagent un point) ; au survol ou au toucher, la fiche du lieu ; Versailles et Disney Village sont signalés au bord.
+  (() => {
+    const M = BH.PARIS, box = $("pmap");
+    if (!M || !box) return;
+    const [L0, L1, A0, A1] = M.box;
+    const xy = ([lat, lon]) => [(lon - L0) / (L1 - L0) * M.w, (A1 - lat) / (A1 - A0) * M.h];
+    const groups = {}, outside = [];
+    VENUES.forEach(v => {
+      const ll = M.ll[v.slug]; if (!ll) return;
+      const [x, y] = xy(ll);
+      if (x < 0 || x > M.w || y < 0 || y > M.h) { outside.push(v); return; }
+      const k = ll.join(); (groups[k] = groups[k] || {x, y, list:[]}).list.push(v);
+    });
+    const G = Object.values(groups);
+    // repères de quartier, en Mini tag beige, posés à côté des points (ancre : start, middle ou end)
+    const LABELS = [["Champs-Élysées", 48.8668, 2.2975, "end"], ["Opéra", 48.8752, 2.3345, "middle"], ["Saint-Germain", 48.8562, 2.3285, "end"],
+      ["Montparnasse", 48.8392, 2.3235, "end"], ["Bastille", 48.8505, 2.3725, "start"], ["Gare du Nord", 48.8822, 2.3605, "start"],
+      ["Auteuil", 48.8445, 2.2635, "middle"], ["Levallois", 48.8995, 2.2865, "start"], ["Saint-Ouen", 48.9119, 2.3405, "start"], ["Issy", 48.8215, 2.2635, "start"]];
+    const labels = LABELS.map(([t, la, lo, an]) => { const [x, y] = xy([la, lo]); return `<text class="pm-lbl" x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${an}">${t}</text>`; }).join("");
+    const pins = G.map((g, i) => `<g class="pm-pin" tabindex="0" role="button" data-i="${i}" transform="translate(${g.x.toFixed(1)} ${g.y.toFixed(1)})" style="--d:${(i * .03).toFixed(2)}s"
+        aria-label="${g.list.map(v => v.name).join(", ")}"><circle class="pm-hit" r="16"/><circle class="pm-dot" r="5"/></g>`).join("");
+    const versailles = outside.filter(v => v.place.includes("Versailles")), disney = outside.filter(v => !v.place.includes("Versailles"));
+    const edge = (list, cls, label, arrow) => list.length ? `<p class="pm-edge ${cls} t-mini">${arrow === "l" ? "← " : ""}${label}&nbsp;: ${list.map(v => `<a class="hlink" href="lieu.html?l=${v.slug}">${v.name}</a>`).join(", ")}${arrow === "r" ? " →" : ""}</p>` : "";
+    box.innerHTML = `<svg viewBox="0 0 ${M.w} ${M.h}" aria-hidden="false" role="group" aria-label="Carte de nos adresses à Paris">
+        <g class="pm-arr">${M.arr.map(a => `<path d="${a.d}"/>`).join("")}</g>
+        <path class="pm-seine" d="${M.seine}"/>
+        <g class="pm-lbls">${labels}</g>
+        <g class="pm-pins">${pins}</g></svg>
+      ${edge(versailles, "pm-edge--w", "Versailles", "l")}${edge(disney, "pm-edge--e", "Disney Village", "r")}
+      <div class="pm-tip" id="pmTip" aria-live="polite"></div>`;
+    const tip = $("pmTip"), svg = box.querySelector("svg");
+    let pinned = null;
+    const card = v => `<a class="pm-card" href="lieu.html?l=${v.slug}"><img src="assets/lieux/${v.slug}.jpg" alt="" loading="lazy">
+        <span class="t-mini">${v.place} · jusqu’à ${capFor(v)} invités</span><span class="t-h5">${v.name}</span></a>`;
+    const show = (el, keep) => {
+      const g = G[+el.dataset.i];
+      box.querySelectorAll(".pm-pin").forEach(p => p.classList.toggle("is-on", p === el));
+      box.classList.add("is-hover");
+      tip.innerHTML = g.list.map(card).join("");
+      tip.style.left = (g.x / M.w * 100) + "%"; tip.style.top = (g.y / M.h * 100) + "%";
+      tip.classList.toggle("is-below", g.y / M.h < .42);
+      tip.classList.add("is-on");
+      if (keep) pinned = el;
+    };
+    const hide = () => { pinned = null; tip.classList.remove("is-on"); box.classList.remove("is-hover"); box.querySelectorAll(".pm-pin.is-on").forEach(p => p.classList.remove("is-on")); };
+    box.querySelectorAll(".pm-pin").forEach(el => {
+      el.addEventListener("mouseenter", () => { if (!pinned) show(el); });
+      el.addEventListener("focus", () => show(el));
+      el.addEventListener("click", e => {
+        const g = G[+el.dataset.i];
+        // souris sur une seule maison : on y va ; toucher ou adresse partagée : la fiche reste ouverte
+        if (e.pointerType === "mouse" && g.list.length === 1 && !matchMedia("(hover: none)").matches) location.href = `lieu.html?l=${g.list[0].slug}`;
+        else show(el, true);
+      });
+      el.addEventListener("keydown", e => { if (e.key === "Enter") location.href = `lieu.html?l=${G[+el.dataset.i].list[0].slug}`; });
+    });
+    svg.addEventListener("mouseleave", e => { if (!pinned && !tip.contains(e.relatedTarget)) hide(); });
+    tip.addEventListener("mouseleave", e => { if (!pinned && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".pm-pin"))) hide(); });
+    document.addEventListener("click", e => { if (pinned && !e.target.closest(".pm-pin, .pm-tip")) hide(); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") hide(); });
+    // les points apparaissent un à un quand la carte arrive à l'écran
+    const io = new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)) { box.classList.add("is-in"); io.disconnect(); } }, {threshold:.25});
+    io.observe(box);
+  })();
   // formats et quartiers : chaque photo glisse doucement dans son cadre au défilement (±24 px), calculé une fois par image affichée
   const fpx = [...document.querySelectorAll(".fcard-px, .acard-px")];
   if (!reduce && fpx.length) {
