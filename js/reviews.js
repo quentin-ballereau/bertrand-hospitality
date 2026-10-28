@@ -5,16 +5,18 @@
    ⚠ EXEMPLES À REMPLACER : ces textes sont rédigés pour la maquette. Les vrais avis viendront des questionnaires
    de satisfaction, présélectionnés par Bertrand Hospitality (décision du weekly du 14/10/2026).
 
+   Photos : chaque maison en situation d'événement (sélection JB d'octobre 2026).
+
    BH.reviews(el, {items}) — items : [{quote, who, venue, img}] */
 BH.REVIEWS = [
   {quote:"Notre séminaire de 80 personnes à Polpo s’est déroulé sans le moindre accroc : une salle baignée de lumière, un déjeuner remarqué par toute l’équipe et une interlocutrice disponible.",
-   who:"Directrice des ressources humaines, séminaire d’entreprise", venue:"Polpo", img:"assets/polpo/bar-soir.jpg"},
+   who:"Directrice des ressources humaines, séminaire d’entreprise", venue:"Polpo", img:"assets/evenement/polpo.webp"},
   {quote:"Dîner de fin d’année sous la coupole pour 200 collaborateurs : un service d’une précision rare, et la piste du Dancing pour finir la soirée.",
-   who:"Office manager, soirée de fin d’année", venue:"La Coupole", img:"assets/home/hero-coupole.jpg"},
+   who:"Office manager, soirée de fin d’année", venue:"La Coupole", img:"assets/evenement/coupole.webp"},
   {quote:"Nos clients ont été saisis par le décor du salon historique. Le menu était à la hauteur du lieu, et tout était prêt à l’heure dite.",
-   who:"Directeur commercial, dîner clients", venue:"Le Procope", img:"assets/home/hero-procope.jpg"},
+   who:"Directeur commercial, dîner clients", venue:"Le Procope", img:"assets/evenement/procope.webp"},
   {quote:"Une journée de travail au calme, au bord de l’eau, puis un dîner devant la cheminée : exactement l’esprit que nous cherchions pour notre comité de direction.",
-   who:"Assistante de direction, comité de direction", venue:"L’Île", img:"assets/home/hero-lile.jpg"},
+   who:"Assistante de direction, comité de direction", venue:"L’Île", img:"assets/evenement/ile.webp"},
 ];
 
 BH.reviews = (root, opts = {}) => {
