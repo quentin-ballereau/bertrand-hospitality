@@ -82,6 +82,8 @@ h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,
 .seg-value.is-empty{color:var(--muted);font-weight:300}
 .go{flex:0 0 auto;min-width:184px;margin-left:6px;padding:0 24px;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:12px;background:var(--taupe);color:var(--white);font-size:14px;transition:background .45s var(--ease)}
 .go:hover{background:var(--ink)}
+/* un bouton tient toujours sur une ligne, sur tout le site */
+.go,.go-end,.btn,.mnu-quote,.pop-go,.send,.lp-send,.lp-sticky,a.ul,button.ul{white-space:nowrap}
 .go svg{transition:transform .4s var(--ease)}
 .go:hover svg{transform:translateX(4px)}
 

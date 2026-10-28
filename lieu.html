@@ -7,7 +7,7 @@
 <meta name="description" content="Visitez le lieu, ses espaces et leurs capacités, et demandez un devis.">
 <link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/base.css?v=14">
+<link rel="stylesheet" href="css/base.css?v=15">
 <link rel="stylesheet" href="css/menu.css?v=16">
 <style>
 html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
@@ -196,7 +196,8 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
   .p-name{font-size:28px}
   .tabs{margin:20px 20px 0;gap:16px;overflow-x:auto;scrollbar-width:none}
   .p-body{padding:18px 20px 20px}
-  .p-foot{padding:14px 20px 18px}
+  .p-foot{flex-wrap:wrap;justify-content:center;row-gap:14px;padding:14px 20px 18px}   /* le bouton sur toute la largeur, la plaquette dessous : tous deux sur une ligne */
+  .p-foot .go{flex:1 1 100%}
   .reopen{display:none}
   .caption{left:20px;bottom:auto;top:84px}
   .corner{right:16px;bottom:auto;top:84px;gap:16px}

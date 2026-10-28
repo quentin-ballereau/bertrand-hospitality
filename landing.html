@@ -8,7 +8,7 @@
 <meta name="robots" content="noindex">
 <link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/base.css?v=14">
+<link rel="stylesheet" href="css/base.css?v=15">
 <link rel="stylesheet" href="css/home.css?v=28">
 <link rel="stylesheet" href="css/pages.css?v=4">
 <link rel="stylesheet" href="css/reviews.css?v=1">
@@ -113,6 +113,7 @@ html,body{background:var(--cream)}
 
 /* mobile : le bouton reste à portée de pouce */
 .lp-sticky{display:none}
+@media (max-width:359px){.lp-sticky{font-size:13px;letter-spacing:.08em;padding:0 12px}}   /* très petits écrans : le bouton reste sur une ligne */
 
 @media (max-width:1023px){
   .lp-seg--mail{flex-grow:1.2}
@@ -275,7 +276,7 @@ html,body{background:var(--cream)}
       <p class="t-cta t-eyebrow">Votre événement</p>
       <div class="closing-head"><h2 class="t-h3" id="endTitle">Parlons de ${off.votre}</h2>
         <p class="t-text">Une proposition sous 24 heures ouvrées, ou par téléphone au 07 64 07 06 61.</p></div>
-      <a class="go-end t-cta" href="#lpForm"><span>Recevoir une proposition</span>${ARROW}</a>
+      <a class="go-end t-cta" href="#lpForm"><span>Demander un devis</span>${ARROW}</a>
     </div>
   </section>`;
 
