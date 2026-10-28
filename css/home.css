@@ -168,7 +168,6 @@
 .foot-col a:hover{color:#fff}
 .foot-sep{align-self:stretch;width:1px;height:96px;background:rgba(255,255,255,.1)}
 .foot-areas{display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:12px 28px;max-width:900px;padding:0 var(--gutter);color:rgba(255,255,255,.75)}
-.foot-areas span{color:rgba(255,255,255,.45)}
 .foot-areas a{transition:color .35s var(--ease)}
 .foot-areas a:hover{color:#fff}
 .foot-legal{max-width:216px;font-size:12px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:rgba(255,255,255,.75);text-align:center;text-box:trim-both cap alphabetic}
