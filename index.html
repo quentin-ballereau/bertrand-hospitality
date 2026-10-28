@@ -307,12 +307,12 @@ Promise.all([document.fonts.ready, bg.decode().catch(() => {}), loaderDone]).the
 setTimeout(start, 3200);   // filet de sécurité si une ressource tarde
 
 /* ----- hero : cinq photos qui se succèdent par glissement horizontal, comme sur paris-society-events.com
-   (la nouvelle pousse la précédente vers la gauche), au rythme plus posé : 5 s par photo, glissement de 1,4 s.
+   (la nouvelle pousse la précédente vers la gauche), une nouvelle photo toutes les 5 s, glissement compris (1,4 s).
    Aucun zoom : seule l'entrée en scène du hero joue sur l'échelle. Pause quand le hero n'est plus à l'écran ----- */
 (() => {
   const slides = [...document.querySelectorAll(".hero-slide")], imgs = slides.map(s => s.firstElementChild);
   if (slides.length < 2 || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const HOLD = 5000, SLIDE = 1.4;
+  const HOLD = 3600, SLIDE = 1.4;   // une nouvelle photo toutes les 5 s : 3,6 s de pause + 1,4 s de glissement
   let cur = 0, timer = null, visible = true, busy = false;
   gsap.set(slides, {opacity:1, xPercent:i => i ? 100 : 0});
   const load = img => { if (img.dataset.srcset) { img.srcset = img.dataset.srcset; delete img.dataset.srcset; } return img.decode ? img.decode().catch(() => {}) : Promise.resolve(); };
