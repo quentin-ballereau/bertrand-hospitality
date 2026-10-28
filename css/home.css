@@ -7,8 +7,8 @@
 .t-h2,.t-h3,.t-h4{text-wrap:balance}   /* titres sur plusieurs lignes : des lignes de longueur égale, jamais un mot seul en dessous */
 .t-h3{font-size:32px}
 .t-cta,.t-mini{font-family:var(--caps);font-weight:400;text-transform:uppercase;letter-spacing:.14em;line-height:1.3;text-box:trim-both cap alphabetic}
-.t-cta{font-size:12px}
-.t-mini{font-size:10px}
+.t-cta{font-size:14px}
+.t-mini{font-size:12px}
 .t-text{font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink-soft);text-box:trim-both cap alphabetic}   /* Text Main du Figma, rogné aux capitales */
 .t-eyebrow{color:var(--taupe)}
 
@@ -68,7 +68,7 @@
 .map-sec .sec-head .t-text{max-width:416px}
 .pmap{position:relative;width:100%;height:clamp(560px,78svh,760px);overflow:hidden;background:var(--cream)}
 .pmap svg{position:absolute;inset:0;width:100%;height:100%;display:block}
-.pm-lbl{font-family:var(--caps);font-size:11px;letter-spacing:.14em;text-transform:uppercase;fill:var(--muted);paint-order:stroke;stroke:var(--cream);stroke-width:3px;stroke-linejoin:round;pointer-events:none;transition:opacity .4s}
+.pm-lbl{font-family:var(--caps);font-size:14px;letter-spacing:.14em;text-transform:uppercase;fill:var(--muted);paint-order:stroke;stroke:var(--cream);stroke-width:3px;stroke-linejoin:round;pointer-events:none;transition:opacity .4s}
 .pm-city{font-family:var(--serif);font-size:34px;paint-order:stroke;stroke:var(--cream);stroke-width:5px;letter-spacing:.2em;text-transform:uppercase;fill:var(--ink);pointer-events:none;transition:opacity .4s}
 .pmap.is-hover .pm-lbl,.pmap.is-hover .pm-city{opacity:.35}
 .pm-area{cursor:pointer;outline:none}
@@ -202,6 +202,7 @@
   .pm-dot{r:6;stroke-width:2}
   .pm-pin.is-on .pm-dot{r:9}
   .pm-hit{r:18}
+  .pm-lbl{font-size:22px}   /* le plan est réduit de moitié sur mobile : environ 12 px à l’écran */
   .pm-city{display:none}   /* sur mobile le cadre est trop étroit pour le nom de la ville */
   .hsec{padding:120px 24px}
   .t-h2{font-size:28px}

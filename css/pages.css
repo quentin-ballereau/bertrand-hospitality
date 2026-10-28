@@ -1,6 +1,6 @@
 /* Sections communes aux pages Format (offre.html) et Secteur (secteur.html), d'après Figma 6560-607 et 6560-899 :
    les lieux filtrables, les autres formats en carrousel, les questions fréquentes. L'appel final reprend .closing (home.css). */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;height:52px;padding:0 28px;background:var(--taupe);color:#fff;font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:background .45s var(--ease)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;height:52px;padding:0 28px;background:var(--taupe);color:#fff;font-family:var(--caps);font-size:14px;letter-spacing:.14em;text-transform:uppercase;transition:background .45s var(--ease)}
 .btn:hover{background:var(--ink)}
 
 /* en-tête centré : surtitre, titre, sous-titre */
@@ -24,7 +24,7 @@
 .vcard-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.4s var(--expo)}
 .vcard:hover .vcard-img img{transform:scale(1.04)}
 .vcard-txt{display:flex;flex-direction:column;align-items:center;gap:16px}
-.vcard-meta{font-family:var(--caps);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--taupe);text-box:trim-both cap alphabetic}
+.vcard-meta{font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--taupe);text-box:trim-both cap alphabetic}
 .vcard-name{font-family:var(--serif);font-size:20px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
 .vl-more{display:flex;justify-content:center;margin-top:48px}
 .vl-more[hidden]{display:none}

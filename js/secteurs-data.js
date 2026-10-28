@@ -1,11 +1,11 @@
 /* Les pages Secteur (secteur.html?s=…, en production /secteurs/[secteur]) : un texte par quartier, repris du ton du Figma (6560-899).
    sur   : la tournure du quartier dans les phrases (« Organiser un événement sur les Champs-Élysées ») ;
-   img   : photo du hero ; blocs : les deux sections photo + texte ; carte : titre et phrase de la carte.
-   Les photos de quartier (Arc de Triomphe, pont Alexandre III…) restent à fournir : en attendant, celles de nos maisons. */
+   img   : photo du hero (imgM : version mobile, imgPos : cadrage) ; blocs : les deux sections photo + texte ; carte : titre et phrase de la carte.
+   Hero des Champs-Élysées : Figma 6560-900. Ailleurs, en attendant des photos de quartier, celles de nos maisons. */
 BH.SECTEURS = (() => {
   const T = {
-    ouest:{short:"Champs-Élysées", sur:"sur les Champs-Élysées", img:"assets/lieux/lorraine.jpg",
-      intro:"Réunissez vos invités dans un restaurant ou une brasserie des Champs-Élysées. Découvrez les adresses Bertrand Hospitality à Ternes, à l’Étoile ou à Auteuil, pour organiser votre événement dans un quartier emblématique de Paris.",
+    ouest:{short:"Champs-Élysées", sur:"sur les Champs-Élysées", img:"assets/secteurs/champs-elysees.jpg", imgM:"assets/secteurs/champs-elysees-m.jpg", imgPos:"50% 100%",
+      intro:"Réunissez vos invités dans un restaurant ou une brasserie des Champs-Élysées. Découvrez les adresses Bertrand Hospitality à réserver en groupe ou à privatiser dans ce quartier emblématique de Paris.",
       blocs:[["Une adresse emblématique", "Privatiser au cœur des Champs-Élysées", "Recevoir sur les Champs-Élysées, c’est donner rendez-vous à vos invités dans un cadre qui incarne Paris. De la tradition de brasserie de L’Alsace à l’inspiration scandinave de Flora Danica, nos adresses du 8ᵉ arrondissement offrent des ambiances singulières pour vos réceptions. Découvrez le lieu qui correspond à votre événement, au nombre de convives et à l’atmosphère recherchée.", "assets/lieux/flora-danica.jpg"],
              ["Un événement à votre image", "Une réception sur-mesure", "Déjeuner d’équipe, dîner d’affaires ou anniversaire : nos équipes vous accompagnent dans l’organisation de votre événement aux Champs-Élysées. Selon l’établissement et votre projet, choisissez une réservation de groupe ou un espace privatisé, avec une offre de restauration adaptée. Partagez votre date, le nombre d’invités et vos envies pour trouver la formule qui vous correspond.", "assets/lieux/sirwinston.jpg"]],
       carte:"De la Seine aux Champs-Élysées"},
