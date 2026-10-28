@@ -1,6 +1,6 @@
 /* Retours d'expérience (Figma 6577-2089) : un écran plein, la photo du lieu, le dégradé des héros, l'avis posé en bas.
    Les avis défilent comme les photos du hero de la home (la suivante pousse la précédente vers la gauche),
-   mais plus lentement : 10 s par avis, glissement compris, pour avoir le temps de lire. Pause au survol et hors de l'écran.
+   mais plus lentement : 10 s par avis, glissement compris, pour avoir le temps de lire. Pause seulement hors de l'écran (la section fait un écran : la souris y est forcément).
 
    ⚠ EXEMPLES À REMPLACER : ces textes sont rédigés pour la maquette. Les vrais avis viendront des questionnaires
    de satisfaction, présélectionnés par Bertrand Hospitality (décision du weekly du 14/10/2026).
@@ -33,7 +33,7 @@ BH.reviews = (root, opts = {}) => {
   const slides = [...root.querySelectorAll(".rv-slide")], dots = [...root.querySelectorAll(".rv-dots button")];
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const load = s => { const im = s.querySelector("img"); if (im.dataset.src) { im.src = im.dataset.src; delete im.dataset.src; } return im.decode ? im.decode().catch(() => {}) : Promise.resolve(); };
-  let cur = 0, timer = null, visible = false, hover = false, busy = false;
+  let cur = 0, timer = null, visible = false, busy = false;
   if (window.gsap) gsap.set(slides, {xPercent:i => i ? 100 : 0});
 
   // le trait sous l'avis en cours se remplit pendant la lecture
@@ -58,10 +58,8 @@ BH.reviews = (root, opts = {}) => {
       fill();
     });
   }
-  const schedule = () => { clearTimeout(timer); if (visible && !hover && !document.hidden) timer = setTimeout(() => go(cur + 1), HOLD); };
+  const schedule = () => { clearTimeout(timer); if (visible && !document.hidden) timer = setTimeout(() => go(cur + 1), HOLD); };
   dots.forEach((d, i) => d.addEventListener("click", () => go(i, i > cur ? 1 : -1)));
-  root.addEventListener("mouseenter", () => { hover = true; clearTimeout(timer); if (window.gsap) gsap.getTweensOf(dots[cur].firstElementChild).forEach(t => t.pause()); });
-  root.addEventListener("mouseleave", () => { hover = false; if (window.gsap) gsap.getTweensOf(dots[cur].firstElementChild).forEach(t => t.resume()); schedule(); });
   new IntersectionObserver(es => {
     const was = visible; visible = es[0].isIntersecting;
     if (visible && !was) { slides.slice(1).forEach(load); if (!busy) { mark(cur); fill(); } schedule(); }
