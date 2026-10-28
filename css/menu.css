@@ -42,6 +42,9 @@
 .mnu-quote:hover{background:var(--ink)}
 .mnu-quote svg{transition:transform .4s var(--ease)}
 .mnu-quote:hover svg{transform:translateX(4px)}
+.mnu-tel{display:flex;align-items:center;justify-content:center;gap:16px}
+.mnu-tel .caps{font-size:10px;color:var(--taupe)}
+.mnu-tel a{font-family:var(--serif);font-size:18px;letter-spacing:.02em;line-height:1;text-box:trim-both cap alphabetic}
 
 /* photo de la rubrique survolée : tout le reste de l'écran, à droite du panneau */
 .mnu-media{position:absolute;top:0;bottom:0;right:0;left:var(--mnu-w);overflow:hidden;pointer-events:none}
