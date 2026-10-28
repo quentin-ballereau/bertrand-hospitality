@@ -7,7 +7,7 @@
 <meta name="description" content="Brasseries historiques, restaurants, péniche et terrasses : une trentaine de lieux à privatiser à Paris et en Île-de-France, avec un interlocuteur dédié.">
 <link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" href="assets/home/hero-1.jpg" imagesrcset="assets/home/hero-1-m.jpg 1280w, assets/home/hero-1.jpg 2400w" imagesizes="100vw">
+<link rel="preload" as="image" href="assets/home/hero/polpo-1920.webp" imagesrcset="assets/home/hero/polpo-1280.webp 1280w, assets/home/hero/polpo-1920.webp 1920w, assets/home/hero/polpo-2560.webp 2560w, assets/home/hero/polpo-3200.webp 3200w, assets/home/hero/polpo-3840.webp 3840w" imagesizes="100vw" fetchpriority="high">
 <link rel="stylesheet" href="css/base.css?v=14">
 <link rel="stylesheet" href="css/menu.css?v=16">
 <link rel="stylesheet" href="css/coverflow.css?v=10">
@@ -33,7 +33,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 /* ---------- HERO ---------- */
 .hero{position:relative;height:100svh;min-height:640px;overflow:hidden;color:var(--white);isolation:isolate}
 .hero-bg{position:absolute;inset:0;z-index:0;background:var(--ink);will-change:transform,translate}
-/* cinq photos de nos lieux emblématiques, posées côte à côte hors champ ; elles glissent de droite à gauche (script plus bas) */
+/* cinq photos de la sélection haute définition (WebP, de 1 280 à 3 840 px : le navigateur prend la taille de l'écran), posées côte à côte hors champ ; elles glissent de droite à gauche (script plus bas) */
 .hero-bg{overflow:hidden}
 .hero-slide{position:absolute;inset:0;overflow:hidden;opacity:0;will-change:transform}
 .hero-slide:first-child{opacity:1}
@@ -87,11 +87,18 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 
 <section class="hero" aria-label="Accueil">
   <div class="hero-bg" id="heroBg">
-    <div class="hero-slide"><img src="assets/home/hero-coupole.jpg" srcset="assets/home/hero-coupole-m.jpg 1280w, assets/home/hero-coupole.jpg 2400w" sizes="100vw" alt="La Coupole, la grande salle sous sa coupole, à Montparnasse" fetchpriority="high"></div>
-    <div class="hero-slide"><img data-srcset="assets/home/hero-polpo-m.jpg 1280w, assets/home/hero-polpo.jpg 2400w" sizes="100vw" alt="Polpo, la verrière et la fresque de la barge, à Levallois"></div>
-    <div class="hero-slide"><img data-srcset="assets/home/hero-procope-m.jpg 1280w, assets/home/hero-procope.jpg 2400w" sizes="100vw" alt="Le Procope, un salon aux lustres, à Saint-Germain"></div>
-    <div class="hero-slide"><img data-srcset="assets/home/hero-bofinger-m.jpg 1280w, assets/home/hero-bofinger.jpg 2400w" sizes="100vw" alt="Bofinger, la salle sous la verrière fleurie, à la Bastille"></div>
-    <div class="hero-slide"><img data-srcset="assets/home/hero-lile-m.jpg 1280w, assets/home/hero-lile.jpg 2400w" sizes="100vw" alt="L’Île, le salon boisé au bord de la Seine, à Issy-les-Moulineaux"></div>
+    <div class="hero-slide"><img src="assets/home/hero/polpo-1920.webp" srcset="assets/home/hero/polpo-1280.webp 1280w, assets/home/hero/polpo-1920.webp 1920w, assets/home/hero/polpo-2560.webp 2560w, assets/home/hero/polpo-3200.webp 3200w, assets/home/hero/polpo-3840.webp 3840w" sizes="100vw" alt="Polpo, le bar sous la verrière de la barge, à Levallois" fetchpriority="high" decoding="async"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero/public-house-1280.webp 1280w, assets/home/hero/public-house-1920.webp 1920w, assets/home/hero/public-house-2560.webp 2560w, assets/home/hero/public-house-3200.webp 3200w, assets/home/hero/public-house-3840.webp 3840w" sizes="100vw" alt="Public House, la grande salle colorée, près de l’Opéra" decoding="async"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero/coupole-1280.webp 1280w, assets/home/hero/coupole-1536.webp 1536w" sizes="100vw" alt="La Coupole, la grande salle Art déco sous sa coupole, à Montparnasse" decoding="async"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero/auteuil-1280.webp 1280w, assets/home/hero/auteuil-1920.webp 1920w, assets/home/hero/auteuil-2560.webp 2560w, assets/home/hero/auteuil-3200.webp 3200w, assets/home/hero/auteuil-3840.webp 3840w" sizes="100vw" alt="Auteuil Brasserie, la terrasse fleurie sur le toit" decoding="async"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero/public-house-bar-1280.webp 1280w, assets/home/hero/public-house-bar-1920.webp 1920w, assets/home/hero/public-house-bar-2560.webp 2560w, assets/home/hero/public-house-bar-3200.webp 3200w, assets/home/hero/public-house-bar-3840.webp 3840w" sizes="100vw" alt="Public House, le bar baigné de lumière" decoding="async"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero/procope-1280.webp 1280w, assets/home/hero/procope-1536.webp 1536w" sizes="100vw" alt="Le Procope, sa façade illuminée, à Saint-Germain-des-Prés" decoding="async"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero/meida-1280.webp 1280w, assets/home/hero/meida-1920.webp 1920w, assets/home/hero/meida-2560.webp 2560w, assets/home/hero/meida-3200.webp 3200w, assets/home/hero/meida-3840.webp 3840w" sizes="100vw" alt="Meïda, la salle baignée de soleil, à Saint-Ouen" decoding="async"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero/public-house-etage-1280.webp 1280w, assets/home/hero/public-house-etage-1920.webp 1920w, assets/home/hero/public-house-etage-2560.webp 2560w, assets/home/hero/public-house-etage-3200.webp 3200w, assets/home/hero/public-house-etage-3840.webp 3840w" sizes="100vw" alt="Public House, l’étage doré" decoding="async"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero/ile-1280.webp 1280w, assets/home/hero/ile-1536.webp 1536w" sizes="100vw" alt="L’Île, la verrière au bord de la Seine, à Issy-les-Moulineaux" decoding="async"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero/public-house-salon-1280.webp 1280w, assets/home/hero/public-house-salon-1920.webp 1920w, assets/home/hero/public-house-salon-2560.webp 2560w, assets/home/hero/public-house-salon-3200.webp 3200w, assets/home/hero/public-house-salon-3840.webp 3840w" sizes="100vw" alt="Public House, le salon feutré" decoding="async"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero/salon-dore-1280.webp 1280w, assets/home/hero/salon-dore-1536.webp 1536w" sizes="100vw" alt="Le salon doré et ses arcades" decoding="async"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero/public-house-facade-1280.webp 1280w, assets/home/hero/public-house-facade-1920.webp 1920w, assets/home/hero/public-house-facade-2560.webp 2560w, assets/home/hero/public-house-facade-3200.webp 3200w, assets/home/hero/public-house-facade-3840.webp 3840w" sizes="100vw" alt="Public House, sa façade près de l’Opéra" decoding="async"></div>
   </div>
   <div class="hero-shade" aria-hidden="true"></div>
 
@@ -307,7 +314,7 @@ const loaderDone = new Promise(res => {
 Promise.all([document.fonts.ready, bg.decode().catch(() => {}), loaderDone]).then(start);
 setTimeout(start, 3200);   // filet de sécurité si une ressource tarde
 
-/* ----- hero : cinq photos qui se succèdent par glissement horizontal, comme sur paris-society-events.com
+/* ----- hero : les douze photos de la sélection HD (octobre 2026) qui se succèdent par glissement horizontal, comme sur paris-society-events.com
    (la nouvelle pousse la précédente vers la gauche), une nouvelle photo toutes les 5 s, glissement compris (1,4 s).
    Aucun zoom : seule l'entrée en scène du hero joue sur l'échelle. Pause quand le hero n'est plus à l'écran ----- */
 (() => {
@@ -324,13 +331,13 @@ setTimeout(start, 3200);   // filet de sécurité si une ressource tarde
     load(imgs[i]).then(() => {
       gsap.set(slides[i], {xPercent:100});
       gsap.to(slides[prev], {xPercent:-100, duration:SLIDE, ease:"power3.inOut"});
-      gsap.to(slides[i], {xPercent:0, duration:SLIDE, ease:"power3.inOut", onComplete:() => { busy = false; schedule(); }});
+      gsap.to(slides[i], {xPercent:0, duration:SLIDE, ease:"power3.inOut", onComplete:() => { busy = false; schedule(); load(imgs[(i + 1) % slides.length]); }});
       cur = i;
     });
   }
   const schedule = () => { clearTimeout(timer); if (visible && !document.hidden) timer = setTimeout(next, HOLD); };
-  // départ une fois le hero entré en scène ; les photos suivantes se chargent pendant ce temps
-  const wait = setInterval(() => { if (document.documentElement.classList.contains("is-ready")) { clearInterval(wait); imgs.slice(1).forEach(load); schedule(); } }, 200);
+  // départ une fois le hero entré en scène ; chaque photo charge la suivante pendant qu'elle est affichée (douze photos HD : pas toutes d'un coup)
+  const wait = setInterval(() => { if (document.documentElement.classList.contains("is-ready")) { clearInterval(wait); load(imgs[1]); schedule(); } }, 200);
   new IntersectionObserver(es => { visible = es[0].isIntersecting; visible ? schedule() : clearTimeout(timer); }).observe(slides[0].parentElement);
   document.addEventListener("visibilitychange", schedule);
 })();

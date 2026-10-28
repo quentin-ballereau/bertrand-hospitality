@@ -276,10 +276,12 @@ const venue = VENUES.find(v => v.slug === params.get("l")) || VENUES[0];
 const filters = fromQuery();                         // format et invites transmis depuis la recherche
 const FSEL = (filters.format || "").split(",").filter(Boolean);   // la recherche peut porter sur plusieurs formats
 filters.format = FSEL[0] || null;                  // la fiche part du premier
+// photos en haute définition (sélection d'octobre 2026) : 2 400 px pour le plein écran, les vignettes restent à 1 600 px
+const HD = new Set(["meida", "auteuil-brasserie", "public-house", "polpo", "la-coupole", "procope", "lile"]);
 const D = BH.DETAIL[venue.slug] || {
   // en attendant leur contenu, les autres lieux s'ouvrent sur leur photo et leurs capacités
   tagline: venue.tag,
-  scenes: [{id:"lieu", name:venue.name, img:`assets/lieux/${venue.slug}.jpg`, thumb:`assets/lieux/${venue.slug}.jpg`,
+  scenes: [{id:"lieu", name:venue.name, img:`assets/lieux/${HD.has(venue.slug) ? "hd/" : ""}${venue.slug}.jpg`, thumb:`assets/lieux/${venue.slug}.jpg`,
             desc:venue.tag, caps:{assis:venue.assis, cocktail:venue.cocktail, reunion:venue.reunion, dansant:venue.dansant}, hot:[]}],
   page: BASE + venue.slug + "/",
 };
