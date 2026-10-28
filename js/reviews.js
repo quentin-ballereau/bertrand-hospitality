@@ -1,6 +1,6 @@
 /* Retours d'expérience (Figma 6577-2089) : un écran plein, la photo du lieu, le dégradé des héros, l'avis posé en bas.
    Les avis défilent comme les photos du hero de la home (la suivante pousse la précédente vers la gauche),
-   mais plus lentement : 10 s par avis, glissement compris, pour avoir le temps de lire. Pause seulement hors de l'écran (la section fait un écran : la souris y est forcément).
+   au rythme de lecture (calculé ci-dessous d'après la longueur moyenne des avis). Pause seulement hors de l'écran (la section fait un écran : la souris y est forcément).
 
    ⚠ EXEMPLES À REMPLACER : ces textes sont rédigés pour la maquette. Les vrais avis viendront des questionnaires
    de satisfaction, présélectionnés par Bertrand Hospitality (décision du weekly du 14/10/2026).
@@ -19,7 +19,12 @@ BH.REVIEWS = [
 
 BH.reviews = (root, opts = {}) => {
   const items = opts.items || BH.REVIEWS;
-  const HOLD = 8600, SLIDE = 1.4;   // un nouvel avis toutes les 10 s : 8,6 s de lecture + 1,4 s de glissement
+  /* un même rythme pour tous les avis, calé sur leur longueur moyenne : 238 mots par minute en lecture silencieuse
+     (Brysbaert, 2019, méta-analyse de 190 études). L'avis se lit dès la seconde moitié du glissement :
+     pause = temps de lecture moyen − ½ glissement. Pour 27 mots en moyenne : 6,7 s de lecture, un avis toutes les 7,4 s. */
+  const WPM = 238, SLIDE = 1.4;
+  const words = items.reduce((n, r) => n + r.quote.split(/\s+/).length, 0) / items.length;
+  const HOLD = Math.round(words / WPM * 60000 - SLIDE * 500);
   root.classList.add("rv-sec");
   root.innerHTML = `
     <p class="rv-tag t-cta">${opts.tag || "Retours d’expérience"}</p>
@@ -42,7 +47,8 @@ BH.reviews = (root, opts = {}) => {
     const bar = d.firstElementChild;
     if (window.gsap) { gsap.killTweensOf(bar); gsap.set(bar, {scaleX:j < i ? 1 : 0}); }
   });
-  const fill = () => { const bar = dots[cur].firstElementChild; if (window.gsap && !reduce) gsap.fromTo(bar, {scaleX:0}, {scaleX:1, duration:(HOLD / 1000) + SLIDE, ease:"none"}); };
+  // le trait se remplit jusqu'à l'arrivée de l'avis suivant (glissement compris, sauf pour le premier, déjà en place)
+  const fill = (dur = HOLD / 1000 + SLIDE) => { const bar = dots[cur].firstElementChild; if (window.gsap && !reduce) gsap.fromTo(bar, {scaleX:0}, {scaleX:1, duration:dur, ease:"none"}); };
 
   function go(i, dir = 1) {
     if (busy || i === cur) return;
@@ -62,7 +68,7 @@ BH.reviews = (root, opts = {}) => {
   dots.forEach((d, i) => d.addEventListener("click", () => go(i, i > cur ? 1 : -1)));
   new IntersectionObserver(es => {
     const was = visible; visible = es[0].isIntersecting;
-    if (visible && !was) { slides.slice(1).forEach(load); if (!busy) { mark(cur); fill(); } schedule(); }
+    if (visible && !was) { slides.slice(1).forEach(load); if (!busy) { mark(cur); fill(HOLD / 1000); } schedule(); }
     if (!visible) clearTimeout(timer);
   }, {threshold:.4}).observe(root);
   document.addEventListener("visibilitychange", schedule);
