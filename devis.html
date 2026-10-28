@@ -72,9 +72,10 @@ html,body{background:var(--cream)}
 .fmt:hover{border-color:var(--line)}
 .fmt[aria-pressed="true"]{border-color:var(--ink)}
 
-/* cases à cocher dessinées : 14 px, centrées sur la première ligne de texte (13 px × 1,45 = 18,85 px) */
+/* cases à cocher dessinées : 14 px, centrées sur la hauteur des capitales de la première ligne */
 .chk{display:flex;gap:12px;align-items:flex-start;font-size:13px;font-weight:300;line-height:1.45;color:var(--ink-soft);cursor:pointer}
-.chk input{flex:0 0 14px;width:14px;height:14px;margin:2.4px 0 0;-webkit-appearance:none;appearance:none;border:1px solid var(--ink);border-radius:0;background:transparent;cursor:pointer;display:grid;place-content:center;transition:background .25s var(--ease)}
+.chk > span{text-box:trim-both cap alphabetic}   /* texte rogné aux capitales : la case se cale sur les lettres, pas sur l'interligne */
+.chk input{flex:0 0 14px;width:14px;height:14px;margin:calc((1cap - 14px) / 2) 0 0;-webkit-appearance:none;appearance:none;border:1px solid var(--ink);border-radius:0;background:transparent;cursor:pointer;display:grid;place-content:center;transition:background .25s var(--ease)}
 .chk input::after{content:"";width:7px;height:4px;border-left:1px solid var(--cream);border-bottom:1px solid var(--cream);transform:translateY(-1px) rotate(-45deg);opacity:0;transition:opacity .2s}
 .chk input:checked{background:var(--ink)}
 .chk input:checked::after{opacity:1}
@@ -162,7 +163,7 @@ html,body{background:var(--cream)}
               <input id="date" name="date" type="date">
             </div>
           </div>
-          <label class="chk"><input type="checkbox" name="flexible" id="flexible">Mes dates sont flexibles</label>
+          <label class="chk"><input type="checkbox" name="flexible" id="flexible"><span>Mes dates sont flexibles</span></label>
         </section>
 
         <section class="dv-block" aria-labelledby="b2">
