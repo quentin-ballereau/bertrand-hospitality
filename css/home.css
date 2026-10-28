@@ -19,12 +19,12 @@
 .hlink{color:var(--taupe)}
 
 /* ---------- accompagnement (Figma « Frame 5 ») : photo pleine hauteur à gauche, texte centré à droite ---------- */
-.care{display:grid;grid-template-columns:548px minmax(0,1fr);height:100svh;min-height:640px;background:var(--cream)}   /* une hauteur d'écran */
+.care{display:grid;grid-template-columns:1fr 1fr;height:100svh;min-height:640px;background:var(--cream)}   /* une hauteur d'écran, la photo sur la moitié */
 .care-img{position:relative;overflow:hidden;margin:0}
 .care-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.care-txt{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:48px;padding:0 var(--gutter);text-align:center}
-.care-head{display:flex;flex-direction:column;align-items:center;gap:24px;max-width:636px}   /* largeur du Figma (Frame 8) */
-.care-foot{display:flex;flex-direction:column;align-items:center;gap:32px;max-width:384px}
+.care-txt{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;padding:0 var(--gutter);text-align:center}
+.care-head{display:flex;flex-direction:column;align-items:center;gap:24px;max-width:448px}
+.care-foot{display:flex;flex-direction:column;align-items:center;gap:32px;max-width:396px}   /* largeur du texte dans le Figma */
 /* l'équipe : cinq petits tirages bordés de blanc, légèrement inclinés et qui se chevauchent */
 .team{list-style:none;display:flex;justify-content:center}
 .team li{width:59.64px;height:80px;flex:0 0 auto;margin-right:-12px;border:4px solid #fff;overflow:hidden;transform:rotate(-2deg);
