@@ -32,7 +32,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 /* ---------- HERO ---------- */
 .hero{position:relative;height:100svh;min-height:640px;overflow:hidden;color:var(--white);isolation:isolate}
 .hero-bg{position:absolute;inset:0;z-index:0;background:var(--ink);will-change:transform,translate}
-/* trois photos posées côte à côte hors champ ; elles glissent de droite à gauche (script plus bas) */
+/* cinq photos de nos lieux emblématiques, posées côte à côte hors champ ; elles glissent de droite à gauche (script plus bas) */
 .hero-bg{overflow:hidden}
 .hero-slide{position:absolute;inset:0;overflow:hidden;opacity:0;will-change:transform}
 .hero-slide:first-child{opacity:1}
@@ -40,11 +40,13 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 /* dégradé du Figma : un vrai calque posé au-dessus de la photo (et non un z-index négatif,
    que certains navigateurs repassent sous la photo dès qu'elle est animée) */
 .hero-shade{position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(180deg,rgba(29,29,27,.9) 20%,rgba(29,29,27,0) 60%)}   /* Figma « hero » : noir 90 % jusqu'à 20 %, transparent à 60 % */
+  background:linear-gradient(0deg,rgba(29,29,27,.9) 20%,rgba(29,29,27,0) 40%,rgba(29,29,27,0) 80%,rgba(29,29,27,.9) 100%)}   /* Figma 6565-1945 : noir 90 % en bas jusqu'à 20 %, transparent de 40 à 80 %, de nouveau 90 % tout en haut */
 .hero-title{z-index:2}
+.hero .finder{bottom:24px}
 
-.hero-title{position:absolute;left:50%;top:clamp(132px,23vh,192px);transform:translateX(-50%);width:min(786px,calc(100% - 2*var(--gutter)));
-  font-family:var(--serif);font-weight:400;font-size:48px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-align:center;
+/* le titre et la recherche posés en bas de l'image (Figma 6565-1945) : la recherche à 24 px du bord, le titre 32 px au-dessus */
+.hero-title{position:absolute;left:50%;bottom:114px;transform:translateX(-50%);width:min(710px,calc(100% - 2*var(--gutter)));
+  font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-align:center;
   text-box:trim-both cap alphabetic}
 
 /* ---------- INTRO ---------- */
@@ -76,7 +78,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 .leave.is-on{opacity:1}
 
 @media (prefers-reduced-motion:reduce){.hero-bg,.hero-title .wi,.nav,.finder{transition:none!important;transform:none!important;translate:none!important;opacity:1!important;filter:none!important}}
-@media (max-width:767px){ .hero-title{font-size:30px;top:24vh} .venues{padding:120px 0} .v-title{font-size:24px} .v-sub{font-size:13px} .venues .cf{margin-top:24px} .venues .stage{height:240px} .venues .info{margin-top:16px} }
+@media (max-width:767px){ .hero .finder{bottom:16px} .hero-title{font-size:30px;bottom:178px} .venues{padding:120px 0} .v-title{font-size:24px} .v-sub{font-size:13px} .venues .cf{margin-top:24px} .venues .stage{height:240px} .venues .info{margin-top:16px} }
 </style>
 </head>
 <body>
@@ -84,9 +86,11 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 
 <section class="hero" aria-label="Accueil">
   <div class="hero-bg" id="heroBg">
-    <div class="hero-slide"><img src="assets/home/hero-1.jpg" srcset="assets/home/hero-1-m.jpg 1280w, assets/home/hero-1.jpg 2400w" sizes="100vw" alt="Terrasse du café Le Nemours, place Colette, le soir" fetchpriority="high"></div>
-    <div class="hero-slide"><img data-srcset="assets/home/hero-2-m.jpg 1280w, assets/home/hero-2.jpg 2400w" sizes="100vw" alt="La Seine et le pont de Bir-Hakeim, la nuit"></div>
-    <div class="hero-slide"><img data-srcset="assets/home/hero-3-m.jpg 1280w, assets/home/hero-3.jpg 2400w" sizes="100vw" alt="La façade du Vaudeville illuminée, le soir"></div>
+    <div class="hero-slide"><img src="assets/home/hero-coupole.jpg" srcset="assets/home/hero-coupole-m.jpg 1280w, assets/home/hero-coupole.jpg 2400w" sizes="100vw" alt="La Coupole, la grande salle sous sa coupole, à Montparnasse" fetchpriority="high"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero-polpo-m.jpg 1280w, assets/home/hero-polpo.jpg 2400w" sizes="100vw" alt="Polpo, la verrière et la fresque de la barge, à Levallois"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero-procope-m.jpg 1280w, assets/home/hero-procope.jpg 2400w" sizes="100vw" alt="Le Procope, un salon aux lustres, à Saint-Germain"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero-bofinger-m.jpg 1280w, assets/home/hero-bofinger.jpg 2400w" sizes="100vw" alt="Bofinger, la salle sous la verrière fleurie, à la Bastille"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero-lile-m.jpg 1280w, assets/home/hero-lile.jpg 2400w" sizes="100vw" alt="L’Île, le salon boisé au bord de la Seine, à Issy-les-Moulineaux"></div>
   </div>
   <div class="hero-shade" aria-hidden="true"></div>
 
@@ -300,7 +304,7 @@ const loaderDone = new Promise(res => {
 Promise.all([document.fonts.ready, bg.decode().catch(() => {}), loaderDone]).then(start);
 setTimeout(start, 3200);   // filet de sécurité si une ressource tarde
 
-/* ----- hero : trois photos qui se succèdent par glissement horizontal, comme sur paris-society-events.com
+/* ----- hero : cinq photos qui se succèdent par glissement horizontal, comme sur paris-society-events.com
    (la nouvelle pousse la précédente vers la gauche), au rythme plus posé : 6 s par photo, glissement de 1,4 s.
    Aucun zoom : seule l'entrée en scène du hero joue sur l'échelle. Pause quand le hero n'est plus à l'écran ----- */
 (() => {
