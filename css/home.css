@@ -80,6 +80,7 @@
   background:linear-gradient(var(--cream),rgba(250,248,247,0) 14%,rgba(250,248,247,0) 86%,var(--cream)),linear-gradient(90deg,var(--cream),rgba(250,248,247,0) 10%,rgba(250,248,247,0) 90%,var(--cream))}
 .pm-pin{cursor:pointer;outline:none;opacity:0;transition:opacity .8s var(--ease) var(--d,0s)}
 .pmap.is-in .pm-pin{opacity:1}
+.pmap.is-in .pm-pin.is-dim{opacity:.3}   /* page Secteur : les adresses des autres quartiers */
 .pm-hit{fill:transparent}
 .pm-dot{fill:var(--ink);stroke:var(--cream);stroke-width:1.5;transition:r .45s var(--expo),fill .3s,opacity .4s}
 .pmap.is-hover .pm-dot{opacity:.3}

@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nos lieux par quartier — Bertrand Hospitality</title>
+<meta name="description" content="Privatisez l’une de nos maisons parisiennes pour votre événement : les lieux, les prestations et un devis sous 24 heures.">
+<link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/base.css?v=10">
+<link rel="stylesheet" href="css/menu.css?v=14">
+<link rel="stylesheet" href="css/home.css?v=24">
+<link rel="stylesheet" href="css/pages.css?v=2">
+<style>
+/* Page Secteur (lot 2, dynamique : en production /secteurs/[secteur], une fiche CMS par quartier), d'après Figma 6560-899 :
+   le hero en photo plein écran, les lieux du quartier (filtrables par format et par nombre d'invités), deux sections photo + texte,
+   la carte centrée sur le quartier, les questions fréquentes et l'appel final de la home. Sections communes : css/pages.css. */
+html,body{background:var(--cream)}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-stopped{overflow:hidden}
+.nav{color:#fff}
+
+/* hero : la photo du quartier, le titre et la phrase posés en bas */
+.sc-hero{position:relative;height:100svh;min-height:640px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:32px;padding:0 var(--gutter) 96px;color:#fff;text-align:center;isolation:isolate}
+.sc-hero img{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;transform:scale(1.06);transition:transform 2.4s var(--expo)}
+.is-ready .sc-hero img{transform:none}
+.sc-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(29,29,27,.55) 0%,rgba(29,29,27,0) 28%,rgba(29,29,27,0) 45%,rgba(29,29,27,.82) 100%)}
+.sc-title{max-width:880px;font-family:var(--serif);font-weight:400;font-size:48px;line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
+.sc-intro{max-width:584px;font-size:14px;font-weight:300;line-height:1.5;letter-spacing:-.02em;color:rgba(255,255,255,.88)}
+
+/* deux sections photo + texte, en alternance, une hauteur d'écran */
+.sc-split{display:grid;grid-template-columns:1fr 1fr;min-height:100svh}
+.sc-split figure{position:relative;overflow:hidden;background:var(--cream-2)}
+.sc-split figure img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sc-split > div{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;padding:96px 48px;text-align:center}
+.sc-split > div > div{display:flex;flex-direction:column;align-items:center;gap:24px;max-width:544px}
+.sc-split .t-text{max-width:544px;color:var(--ink-soft)}
+.sc-split--r figure{order:2}
+
+/* la carte (home.css) : les adresses du quartier en avant */
+.map-sec{padding:128px 0 0;gap:64px}
+
+/* entrée en scène */
+.js .of-fade{opacity:0;translate:0 16px}
+.of-fade.is-in{opacity:1;translate:0 0;transition:opacity 1.1s var(--expo),translate 1.1s var(--expo)}
+
+@media (max-width:767px){
+  .sc-hero{padding-bottom:64px}
+  .sc-title{font-size:32px}
+  .sc-split{grid-template-columns:1fr;min-height:0}
+  .sc-split figure{aspect-ratio:4/5}
+  .sc-split--r figure{order:0}
+  .sc-split > div{padding:64px var(--gutter)}
+  .map-sec{padding-top:100px}
+}
+@media (prefers-reduced-motion:reduce){.js .of-fade{opacity:1;translate:none}.sc-hero img{transform:none}}
+</style>
+</head>
+<body class="js">
+
+<header class="nav">
+  <button class="nav-menu caps" type="button" aria-label="Ouvrir le menu"><i class="nav-ico" aria-hidden="true"></i><span>menu</span></button>
+  <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
+  <div class="nav-right">
+    <div class="nav-quote">
+      <a class="nav-cta ul caps" href="devis.html"><span class="cta-long">Demander un </span>devis</a>
+      <div class="nav-quote-pop"><span class="caps">Ou appelez-nous</span><a href="tel:+33764070661">07 64 07 06 61</a></div>
+    </div>
+  </div>
+</header>
+
+<main id="main"></main>
+
+<footer class="foot">
+  <div class="foot-brand">
+    <a href="index.html" aria-label="Bertrand Hospitality, accueil"><img class="foot-logo" src="assets/logo-footer.svg" alt="Bertrand Hospitality" width="184" height="36"></a>
+    <p class="t-text">Trente maisons parisiennes à privatiser, de la brasserie historique à la péniche sur la Seine, avec un seul interlocuteur pour toutes.</p>
+  </div>
+  <div class="foot-main">
+    <nav class="foot-links" aria-label="Pied de page">
+      <div class="foot-group">
+        <div class="foot-col"><a href="lieux.html">Nos lieux</a><a href="offres.html">Événements</a><a href="#">Nous connaître</a></div>
+        <div class="foot-col"><a href="#">Engagement RSE</a><a href="#">Hôtels</a><a href="#">Journal</a></div>
+      </div>
+      <span class="foot-sep" aria-hidden="true"></span>
+      <div class="foot-group">
+        <div class="foot-col"><a href="#">FAQ</a><a href="#">Coffrets cadeaux</a><a href="#">Nous rejoindre</a></div>
+        <div class="foot-col"><a href="devis.html">Demander un devis</a><a href="#">Contact</a><a href="#">English</a></div>
+      </div>
+    </nav>
+    <nav class="foot-areas t-mini" aria-label="Nos quartiers"><span>Nos quartiers</span><a href="secteur.html?s=ouest">Champs-Élysées et Ouest</a><a href="secteur.html?s=centre">Opéra et centre</a><a href="secteur.html?s=rg">Rive gauche</a><a href="secteur.html?s=seine">Bords de Seine</a><a href="secteur.html?s=hors">Versailles et Disney Village</a></nav>
+    <p class="foot-legal">L’abus d’alcool est dangereux pour la santé, à consommer avec modération.</p>
+  </div>
+  <div class="foot-bottom t-mini">
+    <span>© 2026 Bertrand Hospitality</span>
+    <nav aria-label="Liens légaux"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Cookies</a><a href="https://bertrand-hospitality.com/" target="_blank" rel="noopener">Bertrand Hospitality</a></nav>
+    <a href="https://www.digidop.com" target="_blank" rel="noopener">Site web par Digidop</a>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+/* défilement doux, réglé comme amritpalace.com : chaque geste s'étire sur 1,2 s et se pose en douceur (courbe exponentielle) ;
+   les animations liées au défilement suivent ce défilement lissé, d'où leur fluidité */
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches && window.Lenis) {
+  window.__lenis = new Lenis({duration:1.2, easing:t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel:true, wheelMultiplier:1, touchMultiplier:2});
+  const raf = t => { window.__lenis.raf(t); requestAnimationFrame(raf); };
+  requestAnimationFrame(raf);
+  // liens internes (#pro, #lieux…) : glissés eux aussi
+  document.addEventListener("click", e => {
+    const a = e.target.closest('a[href^="#"]'); if (!a || a.getAttribute("href").length < 2) return;
+    const t = document.querySelector(a.getAttribute("href")); if (!t) return;
+    e.preventDefault(); window.__lenis.scrollTo(t, {offset:-24});
+  });
+}
+</script>
+<script src="js/data.js?v=10"></script>
+<script src="js/menu.js?v=13"></script>
+<script src="js/offres-data.js?v=2"></script>
+<script src="js/secteurs-data.js?v=1"></script>
+<script src="js/paris-map.js?v=4"></script>
+<script src="js/finder.js?v=9"></script>
+<script src="js/venue-list.js?v=1"></script>
+<script>
+(() => {
+  const {FORMATS, capFor, fmtsOf} = BH, O = BH.OFFRES;
+  const $ = id => document.getElementById(id);
+  const z = BH.SECTEURS.byId(new URLSearchParams(location.search).get("s")) || BH.SECTEURS.ALL[0];
+  const ARROW = '<svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg>';
+  const list = z.venues, max = Math.max(...list.map(v => capFor(v)));
+
+  /* référencement : titre, description, fil d'Ariane et questions fréquentes en données structurées */
+  document.title = `Organiser un événement ${z.sur} : ${list.length} lieux à privatiser — Bertrand Hospitality`;
+  document.querySelector('meta[name="description"]').content = `${z.intro} ${list.length} lieux, jusqu’à ${max} invités. Devis sous 24 heures.`;
+  const FAQ = [
+    [`Combien d’invités ${z.sur} ?`, `De quelques convives à ${max} invités selon la maison. Chaque lieu propose plusieurs espaces, du salon privé à la privatisation complète.`],
+    [`Quels lieux ${z.sur} ?`, `${list.length} de nos maisons : ${list.map(v => v.name).join(", ")}.`],
+    ["Quels événements organisez-vous ?", `Séminaires, déjeuners et dîners, cocktails, afterworks, soirées dansantes, mariages : ${O.ALL.length} formats, selon les maisons.`],
+    ["Peut-on privatiser un lieu en entier ?", "Oui, selon la date et la maison : un salon, un étage ou l’établissement complet."],
+    ["Comment obtenir un devis ?", "Décrivez votre événement en ligne ou appelez le 07 64 07 06 61 : un interlocuteur dédié vous répond sous 24 heures ouvrées avec les lieux, les menus et les tarifs."],
+  ];
+  const ld = o => { const s = document.createElement("script"); s.type = "application/ld+json"; s.textContent = JSON.stringify(o); document.head.appendChild(s); };
+  ld({"@context":"https://schema.org", "@type":"BreadcrumbList", itemListElement:[
+    {"@type":"ListItem", position:1, name:"Accueil", item:"https://evenement.bertrand-hospitality.com/"},
+    {"@type":"ListItem", position:2, name:"Nos lieux", item:"https://evenement.bertrand-hospitality.com/lieux/"},
+    {"@type":"ListItem", position:3, name:z.name, item:"https://evenement.bertrand-hospitality.com/secteurs/" + z.id + "/"}]});
+  ld({"@context":"https://schema.org", "@type":"FAQPage", mainEntity:FAQ.map(([q, a]) => ({"@type":"Question", name:q, acceptedAnswer:{"@type":"Answer", text:a}}))});
+
+  const split = ([eyebrow, title, text, img], i) => `
+  <section class="sc-split${i ? " sc-split--r" : ""}" aria-labelledby="b${i}">
+    <figure><img src="${img}" alt="" loading="lazy"></figure>
+    <div class="of-fade"><p class="t-cta t-eyebrow">${eyebrow}</p><div><h2 class="t-h2" id="b${i}">${title}</h2><p class="t-text">${text}</p></div></div>
+  </section>`;
+
+  $("main").innerHTML = `
+  <section class="sc-hero" aria-labelledby="scTitle">
+    <img src="${z.img}" alt="" fetchpriority="high">
+    <h1 class="sc-title of-fade" id="scTitle">Organiser un événement ${z.sur}</h1>
+    <p class="sc-intro of-fade">${z.intro}</p>
+  </section>
+
+  <section class="vl" id="lieux" aria-labelledby="vTitle">
+    <div class="pg-head of-fade"><p class="t-cta t-eyebrow">Nos lieux</p><div><h2 class="t-h2" id="vTitle">${list.length} adresse${list.length > 1 ? "s" : ""} ${z.sur}</h2><p class="t-text">Du plus grand au plus intime</p></div></div>
+  </section>
+
+  ${z.blocs.map(split).join("")}
+
+  <section class="map-sec" aria-labelledby="mapTitle">
+    <div class="pg-head of-fade"><p class="t-cta t-eyebrow">Tous nos lieux</p><div><h2 class="t-h2" id="mapTitle">${z.carte}</h2><p class="t-text">Commencez par le quartier&nbsp;: nous vous montrons les lieux qui s’y trouvent.</p></div></div>
+    <div class="pmap" id="pmap"></div>
+  </section>
+
+  <section class="qa" aria-labelledby="qTitle">
+    <div class="qa-head of-fade"><p class="t-cta t-eyebrow">Questions fréquentes</p><div><h2 class="t-h2" id="qTitle">Organiser votre événement</h2><a class="cta ul caps" href="index.html#faq">Toutes les questions</a></div></div>
+    <div class="faq-list of-fade" id="faqList">${FAQ.map(([q, a], i) => `
+      <div class="faq-item${i ? "" : " is-open"}">
+        <button class="faq-q" type="button" aria-expanded="${!i}" aria-controls="faq${i}"><span class="t-cta">${q}</span><i aria-hidden="true"><svg class="ic-x" viewBox="0 0 12 12"><path d="M1.5 1.5l9 9M10.5 1.5l-9 9"/></svg><svg class="ic-m" viewBox="0 0 12 12"><path d="M0 6h12"/></svg></i></button>
+        <div class="faq-a" id="faq${i}" role="region"${i ? "" : ' style="height:auto"'}><p class="t-text">${a}</p></div>
+      </div>`).join("")}</div>
+  </section>
+
+  <section class="closing" aria-labelledby="endTitle">
+    <div class="closing-bg" id="closingBg" role="img" aria-label="Une salle dressée pour un dîner, sous des arches"></div>
+    <div class="closing-card">
+      <p class="t-cta t-eyebrow">Votre événement</p>
+      <div class="closing-head"><h2 class="t-h3" id="endTitle">Parlons de votre projet</h2>
+        <p class="t-text">La date, le format, le nombre d’invités&nbsp;: nous vous proposons les lieux qui s’y prêtent, avec un seul interlocuteur du premier échange au jour J.</p></div>
+      <a class="go-end t-cta" href="devis.html"><span>Demander un devis</span>${ARROW}</a>
+    </div>
+  </section>`;
+
+  /* les lieux du quartier : filtrés par format et par nombre d'invités, le quartier est déjà choisi */
+  BH.venueList($("lieux"), {
+    venues:list, fields:["format", "guests"],
+    capOf:(v, st) => capFor(v, st.format),
+    unitOf:st => { const fs = fmtsOf(st.format); return fs.length === 1 ? fs[0].unit : ""; },
+    link:(v, st) => `lieu.html?l=${v.slug}${st.format ? "&format=" + st.format : ""}${st.guests ? "&invites=" + st.guests : ""}`,
+    devis:st => "devis.html?" + BH.toQuery({...st, sector:z.id}),
+  });
+  BH.parisMap($("pmap"), {focus:z.id});
+
+  /* questions fréquentes : une seule ouverte à la fois */
+  $("faqList").addEventListener("click", e => {
+    const b = e.target.closest(".faq-q"); if (!b) return;
+    const item = b.parentElement, open = !item.classList.contains("is-open");
+    if (open) $("faqList").querySelectorAll(".faq-item.is-open").forEach(o => {
+      o.classList.remove("is-open"); o.querySelector(".faq-q").setAttribute("aria-expanded", false);
+      gsap.to(o.querySelector(".faq-a"), {height:0, duration:.6, ease:"expo.out"});
+    });
+    item.classList.toggle("is-open", open); b.setAttribute("aria-expanded", open);
+    gsap.to(item.querySelector(".faq-a"), {height:open ? "auto" : 0, duration:.7, ease:"expo.out"});
+  });
+
+  /* appel final : la photo glisse lentement, comme sur la home */
+  const cb = $("closingBg"), cs = cb.parentElement;
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const place = () => {
+      const r = cs.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
+      const p = (r.top + r.height / 2 - innerHeight / 2) / (innerHeight / 2 + r.height / 2);
+      cb.style.transform = `translate3d(0,${(p * -r.height * .12).toFixed(1)}px,0)`;
+    };
+    addEventListener("scroll", place, {passive:true}); place();
+  }
+
+  /* entrée en scène */
+  requestAnimationFrame(() => document.body.classList.add("is-ready"));
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } }), {rootMargin:"0px 0px -8% 0px"});
+  document.querySelectorAll(".of-fade").forEach((el, i) => { if (el.closest(".sc-hero")) el.style.transitionDelay = `${.3 + i * .1}s`; io.observe(el); });
+})();
+</script>
+</body>
+</html>

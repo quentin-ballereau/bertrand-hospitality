@@ -1,7 +1,10 @@
 /* Barre de recherche commune à la home et à la page des lieux.
-   BH.finder(el, {state, onSubmit(state), onChange(state), submitLabel(n, touched)}) */
+   BH.finder(el, {state, onSubmit(state), onChange(state), submitLabel(n, touched), fields, results})
+   fields  : les choix proposés (par défaut format, invités et secteur ; la page Format n'a pas besoin du format) ;
+   results : la liste des lieux pour un état donné (par défaut BH.results). */
 BH.finder = (root, opts = {}) => {
-  const {FORMATS, SECTORS, results, fmtsOf, secOf} = BH;
+  const {FORMATS, SECTORS, fmtsOf, secOf} = BH;
+  const results = opts.results || BH.results, fields = opts.fields || ["format", "guests", "sector"];
   const state = opts.state || {format:null, guests:null, sector:null};
   const GUEST_CHIPS = [20, 50, 100, 200, 400];
   const ARROW = '<svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg>';
@@ -39,6 +42,7 @@ BH.finder = (root, opts = {}) => {
       <button class="seg" type="button" data-pop="sector" aria-expanded="false"><span class="seg-label caps">Secteur</span><span class="seg-value" data-v="sector"></span></button>
       <button class="go caps" type="button" data-go><span class="go-label"></span>${ARROW}</button>
     </div>`;
+  root.querySelectorAll("[data-pop], .pop").forEach(el => { if (!fields.includes(el.dataset.pop || el.dataset.id)) el.remove(); });
   // sur mobile la feuille recouvre la barre : chaque feuille a son propre bouton
   root.querySelectorAll(".pop").forEach(p => p.insertAdjacentHTML("beforeend", `<button class="go pop-go caps" type="button" data-go><span class="go-label"></span></button>`));
 
@@ -74,7 +78,7 @@ BH.finder = (root, opts = {}) => {
     scrim.classList.remove("is-on"); openId = null;
     if (!switching && opts.onClose) opts.onClose();
   }
-  const setVal = (k, txt, empty) => { const el = q(`[data-v="${k}"]`); el.textContent = txt; el.classList.toggle("is-empty", empty); };
+  const setVal = (k, txt, empty) => { const el = q(`[data-v="${k}"]`); if (!el) return; el.textContent = txt; el.classList.toggle("is-empty", empty); };
   const defaultLabel = (n, touched) => touched ? (n ? (n > 1 ? `Voir les ${n} lieux` : "Voir le lieu") : "Nous consulter") : "Trouver un lieu";
 
   function update(silent) {
@@ -98,7 +102,7 @@ BH.finder = (root, opts = {}) => {
   qa(".seg").forEach(b => b.addEventListener("click", () => openId === b.dataset.pop ? close() : open(b.dataset.pop)));
   scrim.addEventListener("click", () => close());
   document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
-  q(".formats").addEventListener("click", e => {
+  q(".formats")?.addEventListener("click", e => {
     const b = e.target.closest(".fmt"); if (!b) return;
     // plusieurs formats : chaque clic ajoute ou retire le sien (le lieu devra tous les accueillir) ; on reste sur la feuille
     const on = new Set(fmtsOf(state.format).map(f => f.id));
@@ -108,8 +112,8 @@ BH.finder = (root, opts = {}) => {
   });
   range.addEventListener("input", () => setGuests(+range.value));
   qa("[data-step]").forEach(b => b.addEventListener("click", () => setGuests((state.guests ?? 50) + +b.dataset.step)));
-  q(".chips").addEventListener("click", e => { const b = e.target.closest(".chip"); if (b) setGuests(+b.dataset.g); });
-  q(".sectors").addEventListener("click", e => {
+  q(".chips")?.addEventListener("click", e => { const b = e.target.closest(".chip"); if (b) setGuests(+b.dataset.g); });
+  q(".sectors")?.addEventListener("click", e => {
     const b = e.target.closest(".sec"); if (!b) return;
     state.sector = b.dataset.s || null; update(); setTimeout(close, 200);
   });
