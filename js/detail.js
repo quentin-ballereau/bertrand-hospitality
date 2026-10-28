@@ -71,12 +71,12 @@ BH.DETAIL = {
        desc:"Une vue panoramique sur la Seine. Couverte et chauffée selon la saison.",
        caps:{cocktail:100},
        hot:[{x:76, y:54, to:"babord"}, {x:30, y:56, to:"plage"}]},
-      // mises en situation fournies le 28/10/2026 (photos d'ambiance, non contractuelles) : capacités à confirmer avec Polpo
-      {id:"plage", name:"La Plage", empty:false, pos:"50% 38%", img:"assets/polpo/plage.jpg", thumb:"assets/polpo/plage-thumb.jpg", event:"assets/polpo/plage-soir.jpg",
+      // mises en situation fournies le 28/10/2026, versions vides livrées ensuite (photos d'ambiance, non contractuelles) : capacités à confirmer avec Polpo
+      {id:"plage", name:"La Plage", pos:"50% 38%", img:"assets/polpo/plage.jpg", thumb:"assets/polpo/plage-thumb.jpg", day:"assets/polpo/plage-jour.jpg", event:"assets/polpo/plage-soir.jpg",
        desc:"Transats, sable et lanternes au bord de l’eau, sous une voile tressée : l’été sur la Seine.",
        caps:{},
        hot:[{x:52, y:44, to:"terrasse"}]},
-      {id:"tente", name:"Salle sous la tente", empty:false, img:"assets/polpo/tente.jpg", thumb:"assets/polpo/tente-thumb.jpg", event:"assets/polpo/tente-soir.jpg",
+      {id:"tente", name:"Salle sous la tente", img:"assets/polpo/tente.jpg", thumb:"assets/polpo/tente-thumb.jpg", day:"assets/polpo/tente-jour.jpg", event:"assets/polpo/tente-soir.jpg",
        desc:"Sous ses arceaux et ses suspensions en osier, une salle lumineuse ouverte sur le quai, pour les déjeuners et les dîners.",
        caps:{},
        hot:[{x:50, y:60, to:"bar"}]},
