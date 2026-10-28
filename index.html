@@ -12,7 +12,6 @@
 <link rel="stylesheet" href="css/menu.css?v=15">
 <link rel="stylesheet" href="css/coverflow.css?v=10">
 <link rel="stylesheet" href="css/home.css?v=28">
-<link rel="stylesheet" href="css/reviews.css?v=1">
 <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css">
 <script>/* loader à l’entrée sur le site ; on le saute quand on revient d’une autre page du site */try{var r=document.referrer&&new URL(document.referrer);if(r&&r.origin===location.origin&&r.pathname!==location.pathname)document.documentElement.classList.add("no-loader")}catch(e){}</script>
 <style>
@@ -166,9 +165,6 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
   <div class="formats-grid" id="formatsGrid"></div>
 </section>
 
-<!-- Section 4 bis : retours d'expérience (Figma 6577-2089), un écran plein ; avis d'exemple en attendant les questionnaires (js/reviews.js) -->
-<section id="reviews" aria-label="Retours d’expérience"></section>
-
 <!-- Section 5 : entrer par le quartier (Figma « Frame 8 ») : cinq photos en quinconce -->
 <!-- Section 5 : la carte de Paris et de ses abords, un point par maison du groupe ; au survol, la fiche du lieu -->
 <section class="map-sec" aria-labelledby="mapTitle">
@@ -272,7 +268,6 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 <script src="js/finder.js?v=9"></script>
 <script src="js/coverflow.js?v=11"></script>
 <script src="js/paris-map.js?v=4"></script>
-<script src="js/reviews.js?v=3"></script>
 <script>
 /* ----- intro : le titre se révèle ligne par ligne, puis la navigation et la recherche ----- */
 const title = document.querySelector(".hero-title");
@@ -477,7 +472,6 @@ addEventListener("pageshow", e => { if (e.persisted) document.getElementById("le
   }
 
   BH.parisMap($("pmap"));
-  BH.reviews($("reviews"));
   // formats : chaque photo glisse doucement dans son cadre au défilement (±24 px), calculé une fois par image affichée
   const fpx = [...document.querySelectorAll(".fcard-px")];
   if (!reduce && fpx.length) {
