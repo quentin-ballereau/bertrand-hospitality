@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="css/base.css?v=8">
 <link rel="stylesheet" href="css/menu.css?v=13">
 <link rel="stylesheet" href="css/coverflow.css?v=9">
-<link rel="stylesheet" href="css/home.css?v=21">
+<link rel="stylesheet" href="css/home.css?v=22">
 <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css">
 <script>/* loader à l’entrée sur le site ; on le saute quand on revient d’une autre page du site */try{var r=document.referrer&&new URL(document.referrer);if(r&&r.origin===location.origin&&r.pathname!==location.pathname)document.documentElement.classList.add("no-loader")}catch(e){}</script>
 <style>
@@ -57,7 +57,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 .venues{position:relative;display:flex;flex-direction:column;padding:200px 0;background:var(--cream);overflow:hidden;overflow:clip}   /* 200px d'air au-dessus et en dessous */
 .v-head{text-align:center;padding:0 var(--gutter)}
 .v-eyebrow{font-size:12px;color:var(--taupe)}
-.v-title{margin:32px auto 0;font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+.v-title{text-wrap:balance;margin:32px auto 0;font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
 .v-sub{max-width:416px;margin:24px auto 0;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink-soft);text-box:trim-both cap alphabetic}
 /* Figma : 48 px sous l'en-tête, scène de 398 px, 32 px avant la fiche. La scène fait ici 420 px pour que la carte centrale
    garde ses 640 × 360 ; les 11 px de plus de chaque côté sont repris sur les écarts (38 = 48 − 11 + 1 d’arrondi du texte). */
@@ -245,7 +245,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 <script src="js/menu.js?v=10"></script>
 <script src="js/finder.js?v=7"></script>
 <script src="js/coverflow.js?v=10"></script>
-<script src="js/paris-map.js?v=2"></script>
+<script src="js/paris-map.js?v=3"></script>
 <script>
 /* ----- intro : le titre se révèle ligne par ligne, puis la navigation et la recherche ----- */
 const title = document.querySelector(".hero-title");
@@ -421,36 +421,31 @@ addEventListener("pageshow", e => { if (e.persisted) document.getElementById("le
     window.__checkReveal = checkReveal;   // pour les tests
   }
 
-  // carte de Paris, en traits fins (référence : plan de sobha-privy-collection.com, en crème) : contour de Paris teinté,
-  // autoroutes et grands axes, Seine ; un point par adresse (deux maisons à la même adresse partagent un point).
-  // Le cadre est fixe, la carte le remplit (recadrée, jamais déformée) ; au survol ou au toucher, la fiche du lieu.
+  // carte de Paris : un vrai plan de rues (vectormap.net, CC0) restylé en crème, servi à part et posé en fond du SVG des points ;
+  // un point par adresse (deux maisons à la même adresse partagent un point). Le cadre est fixe, la carte le remplit
+  // (recadrée, jamais déformée) ; au survol ou au toucher, la fiche du lieu.
   (() => {
     const M = BH.PARIS, box = $("pmap");
     if (!M || !box) return;
-    const [L0, L1, A0, A1] = M.box;
-    const xy = ([lat, lon]) => [(lon - L0) / (L1 - L0) * M.w, (A1 - lat) / (A1 - A0) * M.h];
+    const [X0, Y0, MW, MH] = M.vb;
     const groups = {}, outside = [];
     VENUES.forEach(v => {
-      const ll = M.ll[v.slug]; if (!ll) return;
-      const [x, y] = xy(ll);
-      if (x < 0 || x > M.w || y < 0 || y > M.h) { outside.push(v); return; }
-      const k = ll.join(); (groups[k] = groups[k] || {x, y, list:[]}).list.push(v);
+      const pt = M.pts[v.slug]; if (!pt) return;
+      const [x, y] = pt;
+      if (x < X0 || x > X0 + MW || y < Y0 || y > Y0 + MH) { outside.push(v); return; }
+      const k = pt.join(); (groups[k] = groups[k] || {x, y, list:[]}).list.push(v);
     });
     const G = Object.values(groups);
-    // vue centrée sur Paris ; le cadre la recadre selon sa forme (preserveAspectRatio slice)
-    const [cx, cy] = xy([48.862, 2.322]), VW = 1240, VH = 820;
-    const LABELS = [["Champs-Élysées", 48.8668, 2.2975, "end"], ["Opéra", 48.8755, 2.3345, "middle"], ["Saint-Germain", 48.8562, 2.3285, "end"],
-      ["Montparnasse", 48.8392, 2.3235, "end"], ["Bastille", 48.8505, 2.3725, "start"], ["Gare du Nord", 48.8822, 2.3605, "start"],
-      ["Auteuil", 48.8445, 2.2635, "middle"], ["Levallois", 48.8995, 2.2865, "start"], ["Saint-Ouen", 48.9119, 2.3405, "start"], ["Issy", 48.8215, 2.2635, "start"]];
-    const txt = ([t, la, lo, an], cls) => { const [x, y] = xy([la, lo]); return `<text class="${cls}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${an}">${t}</text>`; };
-    const pins = G.map((g, i) => `<g class="pm-pin" tabindex="0" role="button" data-i="${i}" transform="translate(${g.x.toFixed(1)} ${g.y.toFixed(1)})" style="--d:${(i * .03).toFixed(2)}s"
-        aria-label="${g.list.map(v => v.name).join(", ")}"><circle class="pm-hit" r="14"/><circle class="pm-dot" r="4.5"/></g>`).join("");
+    // vue centrée sur nos adresses ; le cadre la recadre selon sa forme (preserveAspectRatio slice)
+    const xs = G.map(g => g.x), ys = G.map(g => g.y);
+    const cx = (Math.min(...xs) + Math.max(...xs)) / 2 + 40, cy = (Math.min(...ys) + Math.max(...ys)) / 2, VW = 1480, VH = 980;
+    const txt = ([t, x, y, an]) => `<text class="${t === "Paris" ? "pm-city" : "pm-lbl"}" x="${x}" y="${y}" text-anchor="${an}">${t}</text>`;
+    const pins = G.map((g, i) => `<g class="pm-pin" tabindex="0" role="button" data-i="${i}" transform="translate(${g.x} ${g.y})" style="--d:${(i * .03).toFixed(2)}s"
+        aria-label="${g.list.map(v => v.name).join(", ")}"><circle class="pm-hit" r="16"/><circle class="pm-dot" r="5.5"/></g>`).join("");
     const edge = (list, cls, label, arrow) => list.length ? `<p class="pm-edge ${cls} t-mini">${arrow === "l" ? "← " : ""}${label}&nbsp;: ${list.map(v => `<a href="lieu.html?l=${v.slug}">${v.name}</a>`).join(", ")}${arrow === "r" ? " →" : ""}</p>` : "";
     box.innerHTML = `<svg viewBox="${(cx - VW / 2).toFixed(0)} ${(cy - VH / 2).toFixed(0)} ${VW} ${VH}" preserveAspectRatio="xMidYMid slice" role="group" aria-label="Carte de nos adresses à Paris">
-        <path class="pm-paris" d="${M.paris}"/>
-        <path class="pm-trunk" d="${M.trunk}"/><path class="pm-motorway" d="${M.motorway}"/>
-        <path class="pm-seine" d="${M.seine}"/>
-        <g>${LABELS.map(l => txt(l, "pm-lbl")).join("")}${txt(["Paris", 48.8585, 2.4035, "middle"], "pm-city")}</g>
+        <image class="pm-plan" x="${X0}" y="${Y0}" width="${MW}" height="${MH}" preserveAspectRatio="none"/>
+        <g>${M.labels.map(txt).join("")}</g>
         <g class="pm-pins">${pins}</g></svg>
       <div class="pm-frame" aria-hidden="true"></div>
       ${edge(outside.filter(v => v.place.includes("Versailles")), "pm-edge--w", "Versailles", "l")}${edge(outside.filter(v => !v.place.includes("Versailles")), "pm-edge--e", "Disney Village", "r")}
@@ -487,6 +482,11 @@ addEventListener("pageshow", e => { if (e.persisted) document.getElementById("le
     document.addEventListener("click", e => { if (pinned && !e.target.closest(".pm-pin, .pm-tip")) hide(); });
     document.addEventListener("keydown", e => { if (e.key === "Escape") hide(); });
     addEventListener("resize", hide);
+    // le plan (≈ 1 Mo compressé) n'est demandé qu'à l'approche de la section, puis apparaît en fondu
+    const plan = box.querySelector(".pm-plan");
+    plan.addEventListener("load", () => box.classList.add("is-loaded"));
+    const near = new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)) { plan.setAttribute("href", M.img); near.disconnect(); } }, {rootMargin:"1200px 0px"});
+    near.observe(box);
     // les points apparaissent un à un quand la carte arrive à l'écran
     const io = new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)) { box.classList.add("is-in"); io.disconnect(); } }, {threshold:.25});
     io.observe(box);
