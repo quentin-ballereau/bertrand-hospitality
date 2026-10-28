@@ -8,15 +8,14 @@
 <link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/base.css?v=11">
-<link rel="stylesheet" href="css/menu.css?v=15">
 <style>
 /* Demande de devis (lot 2 · 08), d'après Figma 6567-1971 : l'écran coupé en deux, la photo bord à bord à gauche, fixe pendant
-   la saisie, le formulaire à droite en trois blocs numérotés, champs encadrés. Le menu et le logo, en blanc, se posent sur la photo. Le formulaire arrive pré-rempli depuis une fiche lieu ou une recherche
+   la saisie, le formulaire à droite en trois blocs numérotés, champs encadrés. Le logo, en blanc, se pose en haut à gauche de la photo. Le formulaire arrive pré-rempli depuis une fiche lieu ou une recherche
    (devis.html?l=polpo&format=cocktail&invites=120) ; la photo suit le lieu choisi.
    En production, l'envoi passe par Make vers BookingShake, puis la page /demande-de-devis/merci/ (mesure des conversions). */
 html,body{background:var(--cream)}
-.nav{right:calc(50% + var(--gutter));color:#fff}   /* sur la photo : le logo centré sur elle */
-.nav-right{display:none}   /* on y est déjà */
+.dv-logo{position:absolute;top:32px;left:var(--gutter);z-index:8;display:block}   /* pas de menu sur cette page : seul le logo, en blanc sur la photo, ramène à l'accueil */
+.dv-logo img{display:block;width:164px;height:32px}
 
 .t-h2{font-family:var(--serif);font-weight:400;font-size:40px;letter-spacing:.02em;text-transform:uppercase;line-height:1.1;text-box:trim-both cap alphabetic}
 .t-h5{font-family:var(--serif);font-weight:400;font-size:18px;letter-spacing:.02em;text-transform:uppercase;line-height:1.1;text-box:trim-both cap alphabetic}
@@ -31,7 +30,7 @@ html,body{background:var(--cream)}
 .dv-aside{position:sticky;top:0;height:100svh}
 .dv-photo{position:absolute;inset:0;overflow:hidden;background:var(--ink)}
 .dv-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:9% 50%;transition:opacity .8s var(--ease)}
-.dv-photo::after{content:"";position:absolute;inset:0 0 auto;height:160px;background:linear-gradient(180deg,rgba(29,29,27,.45),rgba(29,29,27,0))}   /* le menu et le logo restent lisibles */
+.dv-photo::after{content:"";position:absolute;inset:0 0 auto;height:160px;background:linear-gradient(180deg,rgba(29,29,27,.45),rgba(29,29,27,0))}   /* le logo reste lisible */
 .dv-main{display:flex;flex-direction:column;gap:48px;width:min(100%,640px);padding:96px 100px 100px}
 
 /* en-tête */
@@ -102,7 +101,6 @@ html,body{background:var(--cream)}
 .dv-foot a:hover{color:var(--ink)}
 
 @media (max-width:1023px){
-  .nav{right:var(--gutter)}
   .dv{grid-template-columns:1fr}
   .dv-aside{position:relative;height:46svh;min-height:320px}
   .dv-photo img{object-position:20% 50%}
@@ -111,6 +109,8 @@ html,body{background:var(--cream)}
   .dv-foot nav{justify-content:center}
 }
 @media (max-width:767px){
+  .dv-logo{top:20px}
+  .dv-logo img{width:123px;height:24px}
   .t-h2{font-size:28px}
   .dv-main{padding-top:48px}
   .dv-row{grid-template-columns:1fr}
@@ -120,16 +120,7 @@ html,body{background:var(--cream)}
 </head>
 <body>
 
-<header class="nav">
-  <button class="nav-menu caps" type="button" aria-label="Ouvrir le menu"><i class="nav-ico" aria-hidden="true"></i><span>menu</span></button>
-  <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
-  <div class="nav-right">
-    <div class="nav-quote">
-      <a class="nav-cta ul caps" href="devis.html" aria-current="page"><span class="cta-long">Demander un </span>devis</a>
-      <div class="nav-quote-pop"><span class="caps">Ou appelez-nous</span><a href="tel:+33764070661">07 64 07 06 61</a></div>
-    </div>
-  </div>
-</header>
+<a class="dv-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
 
 <main class="dv" id="dv">
   <aside class="dv-aside" aria-hidden="true">
@@ -205,7 +196,6 @@ html,body{background:var(--cream)}
 </footer>
 
 <script src="js/data.js?v=10"></script>
-<script src="js/menu.js?v=13"></script>
 <script>
 (() => {
   const {VENUES, FORMATS, fmtsOf, fromQuery} = BH;
