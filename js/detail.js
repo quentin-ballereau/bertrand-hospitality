@@ -2,7 +2,8 @@
    Polpo est le lieu pilote : espaces, capacités et offres repris de sa fiche actuelle et du POC de Thomas.
    Les autres lieux s'affichent avec leur photo principale et leurs capacités (BH.VENUES) en attendant leur contenu.
 
-   Points de passage (hot) : position en % de l'image ; « to » = espace de destination.
+   Points de passage (hot) : position en % de la vue plein écran ; « to » = espace de destination.
+   Replacés le 28/10/2026 sur les photos vides 16:9 (Bâbord, Tribord, Mezzanine, Terrasse, Privatisation totale).
    day / event : photos du même espace en situation d'événement, au même cadrage, en journée et en soirée
    (par ex. day:"assets/polpo/bar-jour.jpg", event:"assets/polpo/bar-soir.jpg") ; le sélecteur « Lieu vide · En journée · En soirée »
    ne s'affiche que sur les espaces qui en ont. empty:false : pas de photo du lieu vide, img est déjà la photo de jour.
@@ -58,15 +59,15 @@ BH.DETAIL = {
       {id:"babord", name:"Espace Bâbord", img:"assets/polpo/grande-salle-vide.jpg", thumb:"assets/polpo/grande-salle-vide-thumb.jpg", day:"assets/polpo/babord-jour.jpg", event:"assets/polpo/babord-soir.jpg",
        desc:"La grande salle sous verrière, sa mosaïque au poulpe et ses suspensions en rotin.",
        caps:{assis:100, cocktail:100, reunion:60},
-       hot:[{x:44, y:52, to:"bar"}, {x:12, y:58, to:"terrasse"}, {x:78, y:60, to:"tribord"}]},
+       hot:[{x:16, y:52, to:"bar"}, {x:86, y:56, to:"terrasse"}, {x:55, y:52, to:"tribord"}]},
       {id:"tribord", name:"Espace Tribord", img:"assets/polpo/tribord-vide.jpg", thumb:"assets/polpo/tribord-vide-thumb.jpg", day:"assets/polpo/tribord-jour.jpg", event:"assets/polpo/tribord-soir.jpg",
        desc:"Un salon en banquettes, sous la mezzanine. Idéal pour un comité de direction ou un dîner privé.",
        caps:{assis:40, cocktail:40, reunion:15},
-       hot:[{x:52, y:30, to:"mezzanine"}, {x:14, y:62, to:"babord"}]},
+       hot:[{x:56, y:26, to:"mezzanine"}, {x:18, y:50, to:"babord"}]},
       {id:"mezzanine", name:"Mezzanine", img:"assets/polpo/mezzanine-vide.jpg", thumb:"assets/polpo/mezzanine-vide-thumb.jpg", day:"assets/polpo/mezzanine-jour.jpg", event:"assets/polpo/mezzanine-soir.jpg",
        desc:"En surplomb de la salle, un espace cocktail confidentiel avec vue plongeante.",
        caps:{cocktail:25},
-       hot:[{x:72, y:56, to:"terrasse"}, {x:30, y:64, to:"tribord"}]},
+       hot:[{x:79, y:62, to:"terrasse"}, {x:38, y:74, to:"tribord"}]},
       {id:"bar", name:"Le Bar", img:"assets/polpo/bar.jpg", thumb:"assets/polpo/bar-thumb.jpg", day:"assets/polpo/bar-jour.jpg", event:"assets/polpo/bar-soir.jpg",
        desc:"Carrelage vert et bibliothèque de spiritueux, le cœur des afterworks et des cocktails dînatoires.",
        caps:{cocktail:100},
@@ -74,7 +75,7 @@ BH.DETAIL = {
       {id:"terrasse", name:"Terrasse sur Seine", img:"assets/polpo/terrasse-vide.jpg", thumb:"assets/polpo/terrasse-vide-thumb.jpg", day:"assets/polpo/terrasse-jour.jpg", event:"assets/polpo/terrasse-soir.jpg",
        desc:"Une vue panoramique sur la Seine. Couverte et chauffée selon la saison.",
        caps:{cocktail:100},
-       hot:[{x:76, y:54, to:"babord"}, {x:30, y:56, to:"plage"}]},
+       hot:[{x:18, y:58, to:"babord"}, {x:67, y:52, to:"plage"}]},
       // mises en situation fournies le 28/10/2026, versions vides livrées ensuite (photos d'ambiance, non contractuelles) : capacités à confirmer avec Polpo
       {id:"plage", name:"La Plage", pos:"50% 38%", img:"assets/polpo/plage.jpg", thumb:"assets/polpo/plage-thumb.jpg", day:"assets/polpo/plage-jour.jpg", event:"assets/polpo/plage-soir.jpg",
        desc:"Transats, sable et lanternes au bord de l’eau, sous une voile tressée : l’été sur la Seine.",
@@ -87,7 +88,7 @@ BH.DETAIL = {
       {id:"restaurant", name:"Privatisation totale", img:"assets/polpo/grande-salle-vide.jpg", thumb:"assets/polpo/grande-salle-vide-thumb.jpg", day:"assets/polpo/restaurant-jour.jpg", event:"assets/polpo/restaurant-soir.jpg",
        desc:"Toute la barge pour vous : tables rondes, piste de danse, jusqu’à 500 invités en cocktail.",
        caps:{assis:350, cocktail:500, reunion:250, dansant:500},
-       hot:[{x:58, y:56, to:"conference"}, {x:20, y:60, to:"bar"}]},
+       hot:[{x:50, y:62, to:"conference"}, {x:16, y:52, to:"bar"}]},
       {id:"conference", name:"Configuration conférence", img:"assets/polpo/conference.jpg", thumb:"assets/polpo/conference-thumb.jpg", day:"assets/polpo/conference-jour.jpg", event:"assets/polpo/conference-soir.jpg", reframe:true,
        desc:"Le restaurant en théâtre : 250 places face à l’écran, sous la lumière naturelle de la verrière.",
        caps:{reunion:250},
