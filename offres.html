@@ -45,31 +45,21 @@ html,body{background:var(--cream)}
 .acard-txt .t-text{max-width:440px}
 
 /* comment ça se passe */
-/* notre accompagnement : une photo de nuit en fond (fixe pendant la section, cadre crème intérieur comme sur lorunser.com),
-   le titre au style H2, et trois cartes à double filet qui montent et se posent l'une sur l'autre sous le titre */
-.ev-how{position:relative;background:var(--ink);color:#fff}
-.hw-bg{position:sticky;top:0;height:100svh;margin-bottom:-100svh;overflow:hidden}
-.hw-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.hw-bg::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(29,29,27,.72) 0%,rgba(29,29,27,.35) 45%,rgba(29,29,27,.6) 100%)}
-.hw-bg::after{content:"";position:absolute;inset:24px;border:1px solid rgba(250,248,247,.45);pointer-events:none}
-.hw-stage{position:relative;width:min(1184px,100%);margin:0 auto;padding:12svh var(--gutter) 140px}
-.hw-pin{position:relative}   /* le titre reste fixe tant que les cartes défilent, puis repart avec elles */
-.hw-title{position:sticky;top:12svh;z-index:0;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center;pointer-events:none}
-.hw-title .t-eyebrow{color:rgba(250,248,247,.8)}
+/* notre accompagnement : une scène fixée pendant la section (photo de nuit, titre H2), où quatre cartes montent
+   l'une après l'autre et recouvrent entièrement la précédente : les trois étapes, puis l'appel final (carte de fin de la home).
+   La section mesure 4 hauteurs d'écran ; à la fin, la scène repart d'un bloc et le pied de page suit. */
+.ev-how{position:relative;height:400svh;background:var(--ink)}
+.hw-pin{position:sticky;top:0;height:100svh;min-height:600px;overflow:hidden;color:#fff}
+.hw-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;will-change:transform}
+.hw-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(29,29,27,.62) 0%,rgba(29,29,27,.18) 42%,rgba(29,29,27,.18) 100%)}   /* dégradé léger : le titre se lit, la photo respire */
+.hw-title{position:absolute;left:var(--gutter);right:var(--gutter);top:13svh;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center;will-change:opacity}
+.hw-title .t-eyebrow{color:rgba(250,248,247,.85)}
 .hw-title .t-h2{color:#fff}
-.hw-cards{position:relative;z-index:1;list-style:none;display:flex;flex-direction:column;align-items:center;gap:34svh;margin-top:22svh;color:var(--ink)}
-/* une carte collante est libérée dès que sa marge touche le bas de la liste : l'écart passe donc par « gap »,
-   et une cale après la dernière carte garde la pile complète posée un moment avant qu'elle ne reparte */
-.hw-cards::after{content:"";display:block;height:28svh;margin-top:-34svh}
-.hw-card{--i:0;position:sticky;top:calc(12svh + 112px + var(--i) * 64px);width:min(440px,100%);height:min(46svh,440px);min-height:340px;flex:none;
-  display:flex;flex-direction:column;background:var(--cream);border:1px solid var(--taupe);box-shadow:0 40px 70px -40px rgba(0,0,0,.55);transform-origin:50% 100%;will-change:transform}
-.hw-card::after{content:"";position:absolute;inset:5px;border:1px solid rgba(141,121,116,.45);pointer-events:none}   /* second filet, comme une carte imprimée */
-.hw-num{display:flex;align-items:center;height:64px;padding:0 28px;border-bottom:1px solid var(--line);font-family:var(--serif);font-size:24px;line-height:1;color:var(--taupe)}
-.hw-body{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:32px 28px}
-.hw-body h3{font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}   /* H3 */
-.hw-body .t-text{max-width:340px}
-.hw-end{position:relative;z-index:1;display:flex;justify-content:center;margin-top:64px}
-.hw-end .cta{color:#fff}
+.hw-deck{position:absolute;left:50%;top:calc(50% + 56px);width:386px;height:400px;margin:-200px 0 0 -193px}
+.hw-card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;padding:64px;background:var(--cream);color:var(--ink);text-align:center;
+  box-shadow:0 40px 80px -40px rgba(0,0,0,.6);will-change:transform;transform:translate3d(0,120vh,0)}
+.hw-card .t-h3{text-wrap:balance}
+.hw-head{display:flex;flex-direction:column;align-items:center;gap:24px}
 .ev-cta{display:flex;align-items:center;gap:32px}
 .ev-quote{display:flex;align-items:center;justify-content:center;gap:12px;height:56px;padding:0 32px;background:var(--taupe);color:#fff;font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:background .45s var(--ease)}
 .ev-quote:hover{background:var(--ink)}
@@ -91,13 +81,10 @@ html,body{background:var(--cream)}
   .ev-jump{flex-direction:column;align-items:center;gap:20px}
   .ev{gap:100px;padding-bottom:120px}
   .ev-group{gap:40px}
-  .hw-stage{padding:12svh 28px 100px}
-  .hw-bg::after{inset:12px}
-  .hw-card{top:calc(12svh + 124px + var(--i) * 56px);height:auto;min-height:320px}
-  .hw-num{height:56px;padding:0 24px}
-  .hw-body{padding:28px 24px}
-  .hw-body h3{font-size:24px}
   .ev-cta{flex-direction:column;gap:24px}
+  .hw-title{top:11svh}
+  .hw-deck{width:calc(100% - 32px);height:380px;margin:-190px 0 0;left:16px;top:calc(50% + 64px)}
+  .hw-card{padding:48px 24px}
 }
 @media (prefers-reduced-motion:reduce){.js .ev-fade{opacity:1;translate:none}}
 </style>
@@ -125,26 +112,20 @@ html,body{background:var(--cream)}
 
   <div class="ev" id="index"></div>
 
-  <section class="ev-how" aria-labelledby="howTitle">
-    <div class="hw-bg" aria-hidden="true"><img src="assets/offres/coupole-nuit.jpg" alt="" loading="lazy"></div>
-    <div class="hw-stage">
-      <div class="hw-pin">
+  <section class="ev-how" id="how" aria-labelledby="howTitle">
+    <div class="hw-pin">
+      <img class="hw-bg" src="assets/offres/coupole-nuit.jpg" alt="" decoding="async">
+      <div class="hw-shade" aria-hidden="true"></div>
       <div class="hw-title">
         <p class="t-cta t-eyebrow">Notre accompagnement</p>
         <h2 class="t-h2" id="howTitle">Du premier échange au jour J</h2>
       </div>
-      <ol class="hw-cards" id="hwCards">
-        <li class="hw-card" style="--i:0"><p class="hw-num">1.</p><div class="hw-body"><h3>Vous décrivez votre événement</h3><p class="t-text">Le format, la date, le nombre d’invités&nbsp;: quelques lignes suffisent, en ligne ou par téléphone.</p></div></li>
-        <li class="hw-card" style="--i:1"><p class="hw-num">2.</p><div class="hw-body"><h3>Nous vous proposons les lieux</h3><p class="t-text">Sous 24 heures ouvrées, les maisons et les espaces qui s’y prêtent, avec leurs menus et leurs tarifs.</p></div></li>
-        <li class="hw-card" style="--i:2"><p class="hw-num">3.</p><div class="hw-body"><h3>Un seul interlocuteur</h3><p class="t-text">Il connaît chaque salon, chaque terrasse, et vous accompagne jusqu’au dernier invité.</p></div></li>
+      <ol class="hw-deck" id="hwDeck" style="list-style:none">
+        <li class="hw-card"><p class="t-cta t-eyebrow">Étape 1</p><div class="hw-head"><h3 class="t-h3">Vous décrivez votre événement</h3><p class="t-text">Le format, la date, le nombre d’invités&nbsp;: quelques lignes suffisent, en ligne ou par téléphone.</p></div></li>
+        <li class="hw-card"><p class="t-cta t-eyebrow">Étape 2</p><div class="hw-head"><h3 class="t-h3">Nous vous proposons les lieux</h3><p class="t-text">Sous 24 heures ouvrées, les maisons et les espaces qui s’y prêtent, avec leurs menus et leurs tarifs.</p></div></li>
+        <li class="hw-card"><p class="t-cta t-eyebrow">Étape 3</p><div class="hw-head"><h3 class="t-h3">Un seul interlocuteur</h3><p class="t-text">Il connaît chaque salon, chaque terrasse, et vous accompagne jusqu’au dernier invité.</p></div></li>
+        <li class="hw-card hw-card--end"><p class="t-cta t-eyebrow">Votre événement</p><div class="hw-head"><h3 class="t-h3">Parlons de votre projet</h3><p class="t-text">La date, le format, le nombre d’invités&nbsp;: nous vous proposons les lieux qui s’y prêtent, avec un seul interlocuteur du premier échange au jour J.</p></div><a class="go-end t-cta" href="devis.html"><span>Demander un devis</span><svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a></li>
       </ol>
-      </div>
-      <div class="hw-end">
-        <div class="ev-cta">
-          <a class="ev-quote" href="devis.html">Demander un devis<svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a>
-          <a class="cta ul caps" href="lieux.html">Voir tous nos lieux</a>
-        </div>
-      </div>
     </div>
   </section>
 </main>
@@ -226,23 +207,31 @@ html,body{background:var(--cream)}
     run();
   }
 
-  /* cartes de l'accompagnement : elles montent légèrement penchées et se redressent en se posant sur la pile,
-     chacune gardant un très léger angle (comme des cartes déposées à la main) */
-  const cards = [...document.querySelectorAll(".hw-card")];
-  if (!reduce && cards.length) {
-    const REST = [-1.2, .9, -.5], TILT = [5, -4, 4];
+  /* accompagnement : la scène est fixée pendant la section ; chaque carte monte du bas de l'écran (ralentie à l'arrivée)
+     et recouvre entièrement la précédente, qui recule à peine. La quatrième est l'appel final : le titre s'efface avec elle */
+  const how = $("how"), deck = [...document.querySelectorAll(".hw-card")], hwTitle = document.querySelector(".hw-title"), hwBg = document.querySelector(".hw-bg");
+  if (how && deck.length) {
+    const clamp = v => Math.min(1, Math.max(0, v)), out = t => 1 - (1 - t) ** 3;
+    const SEG = 1 / deck.length, RISE = .62;   // chaque carte a un quart du parcours : elle monte sur 62 %, puis reste posée
     let ticking = false;
-    const tilt = () => {
+    const run = () => {
       ticking = false;
-      cards.forEach((c, i) => {
-        const stick = parseFloat(getComputedStyle(c).top), d = c.getBoundingClientRect().top - stick;
-        const p = Math.min(1, Math.max(0, d / (innerHeight * .55)));   // 1 en bas de l'écran, 0 une fois posée
-        c.style.transform = `rotate(${(REST[i] + TILT[i] * p).toFixed(2)}deg)`;
+      const r = how.getBoundingClientRect(), range = how.offsetHeight - innerHeight;
+      if (r.bottom < 0 || r.top > innerHeight) return;
+      const p = clamp(-r.top / range);
+      const e = deck.map((_, k) => reduce ? (p >= k * SEG ? 1 : 0) : out(clamp((p - k * SEG) / (SEG * RISE))));
+      deck.forEach((c, k) => {
+        const next = e[k + 1] || 0;
+        const y = (1 - e[k]) * (innerHeight * .75);
+        c.style.transform = `translate3d(0,${y.toFixed(1)}px,0) scale(${(1 - .04 * next).toFixed(4)})`;
+        c.style.zIndex = k + 1;
       });
+      hwTitle.style.opacity = (1 - e[deck.length - 1]).toFixed(3);
+      if (!reduce) hwBg.style.transform = `scale(${(1.06 - .06 * p).toFixed(4)})`;   // la photo recule très lentement pendant la section
     };
-    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(tilt); } }, {passive:true});
-    addEventListener("resize", tilt);
-    tilt();
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(run); } }, {passive:true});
+    addEventListener("resize", run);
+    run();
   }
 
   /* entrée en scène : chaque élément apparaît en fondu quand il arrive à l'écran */

@@ -29,12 +29,11 @@ html,body{background:var(--cream)}
 .of-crumbs a{transition:color .3s}
 .of-crumbs a:hover{color:var(--ink)}
 .of-title{font-family:var(--serif);font-weight:400;font-size:48px;line-height:1.05;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
-/* photo secondaire : coins haut gauche et bas droit découpés en quart de cercle, filet crème à l'intérieur */
+/* photo secondaire : coins haut gauche et bas droit découpés en quart de cercle */
 .of-pic{position:relative;width:100%;aspect-ratio:3/2;overflow:hidden;
   -webkit-mask:radial-gradient(circle at 0 0,#0000 28px,#000 28.5px) top left/51% 51% no-repeat,radial-gradient(circle at 100% 0,#000 0,#000 0) top right/50% 51% no-repeat,radial-gradient(circle at 0 100%,#000 0,#000 0) bottom left/51% 50% no-repeat,radial-gradient(circle at 100% 100%,#0000 28px,#000 28.5px) bottom right/50% 50% no-repeat;
           mask:radial-gradient(circle at 0 0,#0000 28px,#000 28.5px) top left/51% 51% no-repeat,radial-gradient(circle at 100% 0,#000 0,#000 0) top right/50% 51% no-repeat,radial-gradient(circle at 0 100%,#000 0,#000 0) bottom left/51% 50% no-repeat,radial-gradient(circle at 100% 100%,#0000 28px,#000 28.5px) bottom right/50% 50% no-repeat}
 .of-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.of-pic::after{content:"";position:absolute;inset:12px;border:1px solid rgba(250,248,247,.75);pointer-events:none}
 .of-meta{font-family:var(--caps);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--taupe);text-box:trim-both cap alphabetic}
 .of-intro{font-size:14px;font-weight:300;line-height:1.5;letter-spacing:-.02em;color:var(--ink-soft)}
 .of-ctas{display:flex;flex-direction:column;align-items:center;gap:20px}
