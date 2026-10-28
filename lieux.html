@@ -58,7 +58,10 @@ body{color:var(--ink)}
 .gcard-place{font-size:10px;color:var(--taupe)}
 .gcard-name{font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
 .grid-empty{grid-column:1/-1;text-align:center;padding:80px 0}
-html.is-grid,html.is-grid body{height:auto;overflow:auto;overflow-x:clip}
+/* en grille la page défile : seul html défile ; body ne doit être ni un conteneur de défilement ni bloquer le report
+   du geste (overscroll-behavior:none sur body arrêtait la molette avant qu'elle n'atteigne la page) */
+html.is-grid{height:auto;overflow-x:clip;overflow-y:auto;overscroll-behavior:auto}
+html.is-grid body{height:auto;overflow:visible;overscroll-behavior:auto}
 .is-grid .page{height:auto;min-height:0}
 .is-grid .cf{display:none}
 .is-grid .grid{display:grid}
@@ -141,8 +144,8 @@ const {results, capFor, fmtOf, fmtPhrase, secOf, FORMATS, BASE, toQuery, fromQue
 const $ = id => document.getElementById(id);
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const state = fromQuery();
-let view = new URLSearchParams(location.search).get("vue") === "grille" ? "grille" : null;
-try { view = view || localStorage.getItem("bh-vue") || "carrousel"; } catch (e) { view = view || "carrousel"; }
+// le carrousel est la vue de base ; la grille ne s'ouvre que si on la choisit (ou par un lien « vue=grille »)
+let view = new URLSearchParams(location.search).get("vue") === "grille" ? "grille" : "carrousel";
 const cf = BH.coverflow($("cf"), {wheel:"all", format:() => state.format, query:() => toQuery(state), enabled:() => view === "carrousel"});
 
 /* ---------- construction ---------- */
@@ -173,12 +176,11 @@ function build(intro) {
   if (view === "grille") { renderGrid(intro); cf.set(list); return; }
   intro ? cf.set(list, {intro:true}) : cf.refresh(list);
 }
-/* bascule carrousel / grille : la vue choisie est gardée dans l'adresse et pour la prochaine visite */
+/* bascule carrousel / grille : la vue choisie est gardée dans l'adresse (lien partageable), pas d'une visite à l'autre */
 function setView(v, first) {
   view = v;
   document.documentElement.classList.toggle("is-grid", v === "grille");
   document.querySelectorAll(".view").forEach(b => b.setAttribute("aria-pressed", b.dataset.view === v));
-  try { localStorage.setItem("bh-vue", v); } catch (e) {}
   if (first) return;
   history.replaceState(null, "", url());
   scrollTo(0, 0);
