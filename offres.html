@@ -45,25 +45,31 @@ html,body{background:var(--cream)}
 .acard-txt .t-text{max-width:440px}
 
 /* comment ça se passe */
-/* notre accompagnement : le grand titre reste en fond, trois cartes montent et se posent l'une sur l'autre
-   (réf. lorunser.com pour la carte à double filet, cartes empilées au défilement) ; chacune laisse voir le numéro de la précédente */
-.ev-how{background:var(--cream-2);padding:160px var(--gutter) 160px}
-.hw-stage{position:relative;width:min(1184px,100%);margin:0 auto}
+/* notre accompagnement : une photo de nuit en fond (fixe pendant la section, cadre crème intérieur comme sur lorunser.com),
+   le titre au style H2, et trois cartes à double filet qui montent et se posent l'une sur l'autre sous le titre */
+.ev-how{position:relative;background:var(--ink);color:#fff}
+.hw-bg{position:sticky;top:0;height:100svh;margin-bottom:-100svh;overflow:hidden}
+.hw-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hw-bg::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(29,29,27,.72) 0%,rgba(29,29,27,.35) 45%,rgba(29,29,27,.6) 100%)}
+.hw-bg::after{content:"";position:absolute;inset:24px;border:1px solid rgba(250,248,247,.45);pointer-events:none}
+.hw-stage{position:relative;width:min(1184px,100%);margin:0 auto;padding:12svh var(--gutter) 140px}
 .hw-pin{position:relative}   /* le titre reste fixe tant que les cartes défilent, puis repart avec elles */
-.hw-title{position:sticky;top:22svh;z-index:0;display:flex;flex-direction:column;align-items:center;gap:32px;text-align:center;pointer-events:none}
-.hw-title h2{font-family:var(--serif);font-weight:400;font-size:clamp(48px,7.4vw,104px);line-height:1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance;max-width:1000px}
-.hw-cards{position:relative;z-index:1;list-style:none;display:flex;flex-direction:column;align-items:center;gap:34svh;margin-top:18svh}
+.hw-title{position:sticky;top:12svh;z-index:0;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center;pointer-events:none}
+.hw-title .t-eyebrow{color:rgba(250,248,247,.8)}
+.hw-title .t-h2{color:#fff}
+.hw-cards{position:relative;z-index:1;list-style:none;display:flex;flex-direction:column;align-items:center;gap:34svh;margin-top:22svh;color:var(--ink)}
 /* une carte collante est libérée dès que sa marge touche le bas de la liste : l'écart passe donc par « gap »,
    et une cale après la dernière carte garde la pile complète posée un moment avant qu'elle ne reparte */
 .hw-cards::after{content:"";display:block;height:28svh;margin-top:-34svh}
-.hw-card{--i:0;position:sticky;top:calc(16svh + var(--i) * 68px);width:min(440px,100%);height:min(54svh,500px);min-height:380px;flex:none;
-  display:flex;flex-direction:column;background:var(--cream);border:1px solid var(--taupe);box-shadow:0 30px 60px -40px rgba(29,29,27,.35);transform-origin:50% 100%;will-change:transform}
+.hw-card{--i:0;position:sticky;top:calc(12svh + 112px + var(--i) * 64px);width:min(440px,100%);height:min(46svh,440px);min-height:340px;flex:none;
+  display:flex;flex-direction:column;background:var(--cream);border:1px solid var(--taupe);box-shadow:0 40px 70px -40px rgba(0,0,0,.55);transform-origin:50% 100%;will-change:transform}
 .hw-card::after{content:"";position:absolute;inset:5px;border:1px solid rgba(141,121,116,.45);pointer-events:none}   /* second filet, comme une carte imprimée */
-.hw-num{display:flex;align-items:center;height:68px;padding:0 28px;border-bottom:1px solid var(--line);font-family:var(--serif);font-size:24px;line-height:1;color:var(--taupe)}
-.hw-body{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:32px 28px 32px}
-.hw-body h3{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
+.hw-num{display:flex;align-items:center;height:64px;padding:0 28px;border-bottom:1px solid var(--line);font-family:var(--serif);font-size:24px;line-height:1;color:var(--taupe)}
+.hw-body{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:32px 28px}
+.hw-body h3{font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}   /* H3 */
 .hw-body .t-text{max-width:340px}
 .hw-end{position:relative;z-index:1;display:flex;justify-content:center;margin-top:64px}
+.hw-end .cta{color:#fff}
 .ev-cta{display:flex;align-items:center;gap:32px}
 .ev-quote{display:flex;align-items:center;justify-content:center;gap:12px;height:56px;padding:0 32px;background:var(--taupe);color:#fff;font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:background .45s var(--ease)}
 .ev-quote:hover{background:var(--ink)}
@@ -85,9 +91,10 @@ html,body{background:var(--cream)}
   .ev-jump{flex-direction:column;align-items:center;gap:20px}
   .ev{gap:100px;padding-bottom:120px}
   .ev-group{gap:40px}
-  .ev-how{padding:100px var(--gutter)}
-  .hw-card{top:calc(14svh + var(--i) * 60px);height:auto;min-height:340px}
-  .hw-num{height:60px;padding:0 24px}
+  .hw-stage{padding:12svh 28px 100px}
+  .hw-bg::after{inset:12px}
+  .hw-card{top:calc(12svh + 124px + var(--i) * 56px);height:auto;min-height:320px}
+  .hw-num{height:56px;padding:0 24px}
   .hw-body{padding:28px 24px}
   .hw-body h3{font-size:24px}
   .ev-cta{flex-direction:column;gap:24px}
@@ -119,11 +126,12 @@ html,body{background:var(--cream)}
   <div class="ev" id="index"></div>
 
   <section class="ev-how" aria-labelledby="howTitle">
+    <div class="hw-bg" aria-hidden="true"><img src="assets/offres/coupole-nuit.jpg" alt="" loading="lazy"></div>
     <div class="hw-stage">
       <div class="hw-pin">
       <div class="hw-title">
         <p class="t-cta t-eyebrow">Notre accompagnement</p>
-        <h2 id="howTitle">Du premier échange au jour J</h2>
+        <h2 class="t-h2" id="howTitle">Du premier échange au jour J</h2>
       </div>
       <ol class="hw-cards" id="hwCards">
         <li class="hw-card" style="--i:0"><p class="hw-num">1.</p><div class="hw-body"><h3>Vous décrivez votre événement</h3><p class="t-text">Le format, la date, le nombre d’invités&nbsp;: quelques lignes suffisent, en ligne ou par téléphone.</p></div></li>
