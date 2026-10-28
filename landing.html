@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="css/base.css?v=12">
 <link rel="stylesheet" href="css/home.css?v=28">
 <link rel="stylesheet" href="css/pages.css?v=3">
+<link rel="stylesheet" href="css/reviews.css?v=1">
 <style>
 /* Landing d'acquisition (Google Ads, Meta) : un seul objectif, la demande de devis.
    Pas de menu ni de liens de sortie ; le formulaire court est dans le hero, le bouton est toujours le même.
@@ -73,13 +74,8 @@ html,body{background:var(--cream)}
 .lp-step .t-num{font-size:40px;color:var(--taupe)}
 .lp-step .t-h4{font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
 
-/* mise en situation : une grande image, la légende posée en bas */
-.lp-scene{position:relative;height:88svh;min-height:520px;margin-top:128px;display:flex;align-items:flex-end;padding:0 var(--gutter) 56px;color:#fff;isolation:isolate}
-.lp-scene img{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover}
-.lp-scene::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(29,29,27,.75),rgba(29,29,27,0) 45%)}
-.lp-scene-txt{display:flex;flex-direction:column;gap:24px;max-width:560px}
-.lp-scene-txt .t-mini{color:rgba(255,255,255,.75)}
-.lp-scene-txt .t-h3{color:#fff}
+/* retours d'expérience : css/reviews.css, un écran plein */
+.lp-reviews{margin-top:128px}
 
 /* formats : un clic préremplit le formulaire */
 .lp-fmts{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1184px;margin:0 auto}
@@ -120,7 +116,9 @@ html,body{background:var(--cream)}
   .lp-form{padding:32px 20px 24px}
   .lp-sec{padding-top:96px}
   .lp-sec .sec-head{margin-bottom:40px}
-  .lp-scene{height:70svh;margin-top:96px;padding-bottom:40px}
+  .lp-reviews{margin-top:96px}
+  .lp-reviews .rv-slide{padding-bottom:140px}
+  .lp-reviews .rv-dots{bottom:92px}   /* au-dessus du bouton fixe */
   .lp-faq{padding:96px var(--gutter)}
   .lp-foot{flex-direction:column;align-items:center;text-align:center;padding-bottom:96px}
   .lp-foot nav{justify-content:center}
@@ -148,6 +146,7 @@ html,body{background:var(--cream)}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="js/data.js?v=10"></script>
 <script src="js/offres-data.js?v=2"></script>
+<script src="js/reviews.js?v=1"></script>
 <script>
 (() => {
   const {VENUES, SECTORS, FORMATS} = BH, O = BH.OFFRES;
@@ -159,21 +158,21 @@ html,body{background:var(--cream)}
   const CAMPAIGNS = {
     seminaire:{offre:"reunion-seminaire", format:"reunion", eyebrow:"Séminaires et réunions à Paris",
       title:"Votre séminaire dans une maison qui a du caractère",
-      img:"assets/home/hero-lile.jpg", scene:{img:"assets/polpo/conference-jour.jpg", place:"Polpo · Levallois-Perret", title:"Une plénière sous la verrière, face à la Seine"},
+      img:"assets/home/hero-lile.jpg", lead:"Polpo",
       faq:[["Quel budget prévoir pour un séminaire ?", "Il dépend du lieu, du nombre de participants et de la formule (salle, pauses, déjeuner). Notre équipe vous envoie une proposition chiffrée sous 24 heures ouvrées."],
            ["Combien de temps à l’avance réserver ?", "Idéalement deux à trois mois, et davantage pour juin, septembre et décembre. Nous trouvons aussi des solutions pour les demandes de dernière minute."],
            ["Le matériel technique est-il fourni ?", "Écran, vidéoprojecteur, sonorisation et micros selon la salle. Nous vous précisons l’équipement de chaque lieu dans la proposition."],
            ["Peut-on visiter avant de réserver ?", "Oui : nous organisons la visite des lieux retenus avec l’équipe de la maison, aux horaires qui vous conviennent."]]},
     soiree:{offre:"soiree-dansante", format:"dansant", eyebrow:"Soirées d’entreprise à Paris",
       title:"Une soirée dans un lieu mythique de Paris",
-      img:"assets/home/hero-coupole.jpg", scene:{img:"assets/polpo/restaurant-soir.jpg", place:"Polpo · Levallois-Perret", title:"Toute la barge pour vous, jusqu’au bout de la nuit"},
+      img:"assets/home/hero-coupole.jpg", lead:"La Coupole",
       faq:[["Quel budget prévoir pour une soirée ?", "Selon le lieu et la formule, cocktail dînatoire ou dîner assis suivi de la soirée. Notre équipe vous envoie une proposition chiffrée sous 24 heures ouvrées."],
            ["Le DJ et le son sont-ils inclus ?", "Nous proposons DJ, sonorisation et éclairages adaptés à chaque lieu, ou travaillons avec vos prestataires."],
            ["Jusqu’à quelle heure peut-on rester ?", "Les horaires varient selon les maisons : nous vous les précisons pour chaque lieu dans la proposition."],
            ["Peut-on privatiser un lieu en entier ?", "Oui, selon la date : un salon, un étage ou la maison complète, jusqu’à 500 invités."]]},
     mariage:{offre:"mariage", format:"assis", eyebrow:"Mariages à Paris",
       title:"Votre mariage dans l’une de nos maisons",
-      img:"assets/home/closing.jpg", scene:{img:"assets/polpo/tente-soir.jpg", place:"Polpo · Levallois-Perret", title:"Le dîner, puis la fête, au bord de la Seine"},
+      img:"assets/home/closing.jpg", lead:"L’Île",
       faq:[["Quel budget prévoir pour un mariage ?", "Selon le nombre d’invités, le lieu et le menu. Notre équipe vous envoie une proposition chiffrée sous 24 heures ouvrées."],
            ["Peut-on organiser la cérémonie sur place ?", "Selon le lieu, nous étudions avec vous la possibilité d’une cérémonie laïque sur place, en jardin, en terrasse ou en salon."],
            ["Le gâteau et les vins sont-ils compris ?", "Menus de réception, gâteau et accords mets-vins sont proposés par nos chefs et nos sommeliers."],
@@ -230,10 +229,7 @@ html,body{background:var(--cream)}
     </ol>
   </section>
 
-  <section class="lp-scene" aria-label="Mise en situation">
-    <img src="${C.scene.img}" alt="" loading="lazy">
-    <div class="lp-scene-txt"><p class="t-mini">${C.scene.place} · mise en situation</p><p class="t-h3">${C.scene.title}</p></div>
-  </section>
+  <section class="lp-reviews" id="reviews" aria-label="Retours d’expérience"></section>
 
   <section class="lp-sec" aria-labelledby="fTitle">
     <div class="sec-head"><p class="t-cta t-eyebrow">Tous les formats</p><div class="sec-head-txt"><h2 class="t-h2" id="fTitle">Quel événement préparez-vous&nbsp;?</h2></div></div>
@@ -261,6 +257,9 @@ html,body{background:var(--cream)}
       <a class="go-end t-cta" href="#lpForm"><span>Recevoir une proposition</span>${ARROW}</a>
     </div>
   </section>`;
+
+  /* retours d'expérience : les avis de la campagne d'abord (le lieu mis en avant), puis les autres */
+  BH.reviews($("reviews"), {items:[...BH.REVIEWS].sort((a, b) => (b.venue === C.lead) - (a.venue === C.lead))});
 
   /* ---------- le formulaire court : il prépare le devis complet ---------- */
   const form = $("lpForm");
