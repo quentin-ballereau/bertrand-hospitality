@@ -66,35 +66,7 @@
 .map-sec{display:flex;flex-direction:column;align-items:center;gap:64px;padding:100px 0 200px;background:var(--cream)}
 .map-sec .sec-head{width:min(776px,100%);padding:0 var(--gutter)}
 .map-sec .sec-head .t-text{max-width:416px}
-.pmap{position:relative;width:100%;height:clamp(560px,78svh,760px);overflow:hidden;background:var(--cream)}
-.pmap svg{position:absolute;inset:0;width:100%;height:100%;display:block}
-.pm-lbl{font-family:var(--caps);font-size:14px;letter-spacing:.14em;text-transform:uppercase;fill:var(--muted);paint-order:stroke;stroke:var(--cream);stroke-width:3px;stroke-linejoin:round;pointer-events:none;transition:opacity .4s}
-.pm-city{font-family:var(--serif);font-size:34px;paint-order:stroke;stroke:var(--cream);stroke-width:5px;letter-spacing:.2em;text-transform:uppercase;fill:var(--ink);pointer-events:none;transition:opacity .4s}
-.pmap.is-hover .pm-lbl,.pmap.is-hover .pm-city{opacity:.35}
-.pm-area{cursor:pointer;outline:none}
-.pm-area .pm-lbl{pointer-events:auto;transition:fill .3s var(--ease),opacity .4s}
-.pm-area:hover .pm-lbl,.pm-area:focus-visible .pm-lbl{fill:var(--ink)}
-.pm-plan{opacity:0;transition:opacity 1.2s var(--ease)}
-.pmap.is-loaded .pm-plan{opacity:1}
-.pm-frame{position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(var(--cream),rgba(250,248,247,0) 14%,rgba(250,248,247,0) 86%,var(--cream)),linear-gradient(90deg,var(--cream),rgba(250,248,247,0) 10%,rgba(250,248,247,0) 90%,var(--cream))}
-.pm-pin{cursor:pointer;outline:none;opacity:0;transition:opacity .8s var(--ease) var(--d,0s)}
-.pmap.is-in .pm-pin{opacity:1}
-.pmap.is-in .pm-pin.is-dim{opacity:.3}   /* page Secteur : les adresses des autres quartiers */
-.pm-hit{fill:transparent}
-.pm-dot{fill:var(--ink);stroke:var(--cream);stroke-width:1.5;transition:r .45s var(--expo),fill .3s,opacity .4s}
-.pmap.is-hover .pm-dot{opacity:.3}
-.pm-pin.is-on .pm-dot,.pm-pin:focus-visible .pm-dot{r:8.5;fill:var(--taupe);opacity:1}
-.pm-edge{position:absolute;z-index:2;bottom:28px;color:var(--taupe)}
-.pm-edge a{color:var(--ink)}
-.pm-edge--w{left:var(--gutter)}
-.pm-edge--e{right:var(--gutter);text-align:right}
-.pm-tip{position:absolute;z-index:3;display:flex;gap:12px;transform:translate(-50%,calc(-100% - 18px));opacity:0;pointer-events:none;transition:opacity .35s var(--ease)}
-.pm-tip.is-below{transform:translate(-50%,18px)}
-.pm-tip.is-on{opacity:1;pointer-events:auto}
-.pm-card{display:flex;flex-direction:column;align-items:center;gap:12px;width:232px;padding:8px 8px 20px;background:#fff;text-align:center;box-shadow:0 24px 48px -28px rgba(29,29,27,.35)}
-.pm-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;margin-bottom:8px}
-.pm-card .t-mini{color:var(--taupe)}
+/* la carte elle-même : css/paris-map.css */
 
 /* ---------- Groupe Bertrand puis hôtellerie : une scène fixée pendant le défilement (mécanique de sobha-privy-collection.com) ----------
    Sans script ou avec les animations réduites, les deux écrans se suivent simplement, chacun d'une hauteur d'écran. */
@@ -196,14 +168,6 @@
 }
 @media (max-width:767px){
   .map-sec{gap:40px;padding:64px 0 100px}
-  .pmap{height:520px}
-  .pm-edge{bottom:16px;max-width:46%}
-  .pm-card{width:180px}
-  .pm-dot{r:6;stroke-width:2}
-  .pm-pin.is-on .pm-dot{r:9}
-  .pm-hit{r:18}
-  .pm-lbl{font-size:22px}   /* le plan est réduit de moitié sur mobile : environ 12 px à l’écran */
-  .pm-city{display:none}   /* sur mobile le cadre est trop étroit pour le nom de la ville */
   .hsec{padding:120px 24px}
   .t-h2{font-size:28px}
   .t-h3{font-size:24px}

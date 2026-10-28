@@ -1,0 +1,87 @@
+/* Carte de Paris interactive (home, pages Secteur) : js/paris-map.js.
+   Le plan de rues restylé (assets/paris-plan.svg), les quartiers en formes souples, puis, posés au-dessus en HTML pour garder
+   leur taille à l'écran quel que soit le zoom : les monuments, les noms de quartiers, les adresses et leurs pastilles. */
+.pmap{position:relative;width:100%;height:clamp(560px,78svh,760px);overflow:hidden;background:var(--cream);cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.pmap.is-dragging{cursor:grabbing}
+.pm-svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.pm-plan{opacity:0;transition:opacity 1.2s var(--ease)}
+.pmap.is-loaded .pm-plan{opacity:1}
+/* les bords fondus dans le crème */
+.pm-frame{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(var(--cream),rgba(250,248,247,0) 12%,rgba(250,248,247,0) 88%,var(--cream)),linear-gradient(90deg,var(--cream),rgba(250,248,247,0) 8%,rgba(250,248,247,0) 92%,var(--cream))}
+
+/* les quartiers : invisibles au repos, une forme taupe au survol (son contour est un trait épais aux bouts arrondis) */
+.pm-zone{fill:rgba(141,121,116,0);stroke:rgba(141,121,116,0);stroke-width:90;stroke-linejoin:round;stroke-linecap:round;cursor:pointer;transition:fill .4s var(--ease),stroke .4s var(--ease)}
+.pm-zone.is-on,.pm-zone.is-focus{fill:rgba(141,121,116,.16);stroke:rgba(141,121,116,.16)}
+.pm-zone-tip{position:absolute;left:0;top:0;z-index:4;display:flex;flex-direction:column;gap:8px;padding:12px 14px;background:#fff;color:var(--ink);font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .25s var(--ease);box-shadow:0 18px 40px -24px rgba(29,29,27,.4)}
+.pm-zone-tip small{font-family:var(--sans);font-size:12px;letter-spacing:-.01em;text-transform:none;color:var(--taupe)}
+.pm-zone-tip.is-on{opacity:1}
+
+/* tout ce qui est posé sur le plan : placé par translate au point voulu, centré dessus */
+.pm-layer{position:absolute;inset:0;z-index:1;pointer-events:none}
+.pm-layer [data-x]{position:absolute;left:0;top:0;will-change:transform}
+
+/* les monuments : un pictogramme au trait, le nom au survol, ou toujours de près */
+.pm-mon{display:flex;flex-direction:column;align-items:center;gap:6px;width:0;pointer-events:auto;cursor:default}
+.pm-mon svg{flex:none;width:30px;height:30px;margin-top:-15px;fill:none;stroke:var(--ink-soft);stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round;padding:3px;border-radius:50%;background:rgba(250,248,247,.85);transition:stroke .3s}
+.pm-mon-name{font-family:var(--caps);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap;padding:2px 6px;background:rgba(250,248,247,.85);opacity:0;transform:translateY(-4px);transition:opacity .3s var(--ease),transform .4s var(--expo)}
+.pm-mon:hover .pm-mon-name,.pmap.is-close .pm-mon-name{opacity:1;transform:none}
+.pm-mon:hover svg{stroke:var(--ink)}
+
+/* les quartiers nommés (liens vers leur page) et la ville */
+.pm-lbl{display:block;width:0;pointer-events:auto;font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-shadow:0 0 4px var(--cream),0 0 4px var(--cream),0 0 8px var(--cream);transition:color .3s var(--ease),opacity .4s}
+/* le nom se cale sur son point comme dans le plan d'origine : à gauche, centré ou à droite, sur la ligne de base */
+.pm-lbl span,.pm-city span{position:absolute;bottom:0;white-space:nowrap}
+.pm-lbl--start span{left:0}
+.pm-lbl--middle span{left:0;translate:-50% 0}
+.pm-lbl--end span{right:0}
+.pm-lbl:hover,.pm-lbl.is-on,.pm-lbl.is-focus{color:var(--ink)}
+.pm-city{display:block;width:0;font-family:var(--serif);font-size:30px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);text-shadow:0 0 6px var(--cream),0 0 10px var(--cream)}
+.pm-city span{left:0;translate:-50% 0}
+.pmap.is-hover .pm-lbl,.pmap.is-hover .pm-city,.pmap.is-hover .pm-mon{opacity:.35}
+
+/* les adresses : un point, ou une pastille numérotée quand plusieurs se touchent */
+.pm-pins{position:absolute;inset:0}
+.pm-pin,.pm-cl{pointer-events:auto;opacity:0;transition:opacity .8s var(--ease)}
+.pmap.is-in .pm-pin,.pmap.is-in .pm-cl{opacity:1}
+.pmap.is-in .is-dim{opacity:.35}   /* page Secteur : les adresses des autres quartiers */
+.pm-pin{width:32px;height:32px;margin:-16px 0 0 -16px;display:grid;place-items:center;cursor:pointer}
+.pm-pin i{width:11px;height:11px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 1.5px var(--cream);transition:transform .45s var(--expo),background .3s,opacity .4s}
+.pm-pin:hover i,.pm-pin.is-on i,.pm-pin:focus-visible i{transform:scale(1.55);background:var(--taupe)}
+.pmap.is-hover .pm-pin:not(.is-on) i{opacity:.3}
+.pm-cl{width:30px;height:30px;margin:-15px 0 0 -15px;display:grid;place-items:center;border-radius:50%;background:var(--ink);color:var(--cream);font-family:var(--caps);font-size:12px;letter-spacing:.06em;line-height:1;box-shadow:0 0 0 1.5px var(--cream),0 8px 18px -8px rgba(29,29,27,.5);cursor:zoom-in;transition:background .3s var(--ease),transform .45s var(--expo),opacity .8s var(--ease)}
+.pm-cl:hover,.pm-cl:focus-visible{background:var(--taupe);transform:scale(1.1)}
+
+/* commandes : zoomer, dézoomer, recentrer */
+.pm-ctrl{position:absolute;right:var(--gutter);top:32px;z-index:3;display:flex;flex-direction:column;background:#fff;box-shadow:0 18px 40px -24px rgba(29,29,27,.4)}
+.pm-ctrl button{display:grid;place-items:center;width:40px;height:40px;color:var(--ink);transition:background .3s var(--ease)}
+.pm-ctrl button + button{border-top:1px solid var(--line)}
+.pm-ctrl button:hover{background:var(--cream)}
+.pm-ctrl svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.2}
+
+/* l'aide (« Maintenez ⌘… ») */
+.pm-hint{position:absolute;left:50%;top:50%;z-index:4;padding:14px 20px;background:rgba(29,29,27,.82);color:#fff;transform:translate(-50%,-50%);pointer-events:none;opacity:0;transition:opacity .3s var(--ease)}
+.pm-hint.is-on{opacity:1}
+
+/* hors du plan : Versailles et Disney Village */
+.pm-edge{position:absolute;z-index:3;bottom:28px;color:var(--taupe)}
+.pm-edge a{color:var(--ink)}
+.pm-edge--w{left:var(--gutter)}
+.pm-edge--e{right:var(--gutter);text-align:right}
+
+/* la fiche d'un lieu */
+.pm-tip{position:absolute;z-index:5;display:flex;gap:12px;transform:translate(-50%,calc(-100% - 18px));opacity:0;pointer-events:none;transition:opacity .35s var(--ease);cursor:default}
+.pm-tip.is-below{transform:translate(-50%,18px)}
+.pm-tip.is-on{opacity:1;pointer-events:auto}
+.pm-card{display:flex;flex-direction:column;align-items:center;gap:12px;width:232px;padding:8px 8px 20px;background:#fff;text-align:center;box-shadow:0 24px 48px -28px rgba(29,29,27,.35)}
+.pm-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;margin-bottom:8px}
+.pm-card .t-mini{color:var(--taupe)}
+
+@media (max-width:767px){
+  .pmap{height:520px;cursor:default}
+  .pm-edge{bottom:16px;max-width:46%}
+  .pm-card{width:180px}
+  .pm-city{display:none}
+  .pm-ctrl{top:16px}
+  .pm-mon svg{width:26px;height:26px;margin-top:-13px}
+}
