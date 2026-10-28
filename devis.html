@@ -43,10 +43,12 @@ html,body{background:var(--cream)}
 .t-eyebrow{color:var(--taupe)}
 
 /* blocs du formulaire */
-.dv-block{display:flex;flex-direction:column;gap:32px;padding:40px 0;border-top:1px solid var(--line)}
-.dv-block-head{display:flex;align-items:baseline;gap:16px}
-.dv-num{font-family:var(--caps);font-size:10px;letter-spacing:.14em;color:var(--taupe)}
-.dv-block-title{font-family:var(--serif);font-weight:400;font-size:18px;letter-spacing:.02em;text-transform:uppercase;line-height:1.1}
+.dv-block{display:flex;flex-direction:column;gap:32px;padding:40px 0}
+.dv-block:first-of-type{border-top:1px solid var(--line)}   /* un seul filet, sous l'introduction : les champs ont déjà leur trait, un filet de plus les doublerait */
+.dv-block + .dv-block{padding-top:24px}
+.dv-block-head{display:flex;align-items:center;gap:16px}   /* numéro et titre rognés aux capitales : leurs centres s'alignent */
+.dv-num{font-family:var(--caps);font-size:10px;letter-spacing:.14em;line-height:1;color:var(--taupe);text-box:trim-both cap alphabetic}
+.dv-block-title{font-family:var(--serif);font-weight:400;font-size:18px;letter-spacing:.02em;text-transform:uppercase;line-height:1.1;text-box:trim-both cap alphabetic}
 .dv-row{display:grid;grid-template-columns:1fr 1fr;gap:32px 24px}
 .dv-row--1{grid-template-columns:1fr}
 
@@ -54,7 +56,7 @@ html,body{background:var(--cream)}
 .fld > label,.fld > .lbl{font-family:var(--caps);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .fld > label small,.fld > .lbl small{letter-spacing:.06em;text-transform:none;font-family:var(--sans);font-weight:300;font-size:11px}
 .fld input,.fld select,.fld textarea{width:100%;font:300 15px/1.4 var(--sans);color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:4px 0 12px;outline:none;transition:border-color .3s var(--ease);-webkit-appearance:none;appearance:none}
-.fld textarea{min-height:120px;resize:vertical}
+.fld textarea{min-height:96px;resize:none;overflow:hidden}   /* grandit avec le texte (script), sans poignée */
 .fld select{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%231d1d1b'/%3E%3C/svg%3E") right 2px top 11px no-repeat;padding-right:24px;cursor:pointer}
 .fld input::placeholder,.fld textarea::placeholder{color:#b9b2ac}
 .fld input:focus,.fld select:focus,.fld textarea:focus{border-bottom-color:var(--ink)}
@@ -70,17 +72,23 @@ html,body{background:var(--cream)}
 .fmt:hover{border-color:var(--line)}
 .fmt[aria-pressed="true"]{border-color:var(--ink)}
 
+/* cases à cocher dessinées : 14 px, centrées sur la première ligne de texte (13 px × 1,45 = 18,85 px) */
 .chk{display:flex;gap:12px;align-items:flex-start;font-size:13px;font-weight:300;line-height:1.45;color:var(--ink-soft);cursor:pointer}
-.chk input{flex:0 0 14px;width:14px;height:14px;margin-top:2px;accent-color:var(--ink)}
+.chk input{flex:0 0 14px;width:14px;height:14px;margin:2.4px 0 0;-webkit-appearance:none;appearance:none;border:1px solid var(--ink);border-radius:0;background:transparent;cursor:pointer;display:grid;place-content:center;transition:background .25s var(--ease)}
+.chk input::after{content:"";width:7px;height:4px;border-left:1px solid var(--cream);border-bottom:1px solid var(--cream);transform:translateY(-1px) rotate(-45deg);opacity:0;transition:opacity .2s}
+.chk input:checked{background:var(--ink)}
+.chk input:checked::after{opacity:1}
+.chk input:focus-visible{outline:1px solid var(--ink);outline-offset:3px}
+.chk.is-bad input{border-color:#a0453a}
 .chk a{text-decoration:underline;text-underline-offset:3px}
 
-.dv-send{display:flex;flex-direction:column;gap:24px;padding-top:40px;border-top:1px solid var(--line)}
+.dv-send{display:flex;flex-direction:column;gap:24px;padding-top:16px}   /* pas de filet : celui du message suffit */
 .send{display:flex;align-items:center;justify-content:center;gap:12px;height:56px;width:100%;background:var(--taupe);color:#fff;font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:background .45s var(--ease)}
 .send:hover{background:var(--ink)}
 .send svg{transition:transform .4s var(--ease)}
 .send:hover svg{transform:translateX(4px)}
 .send[disabled]{opacity:.6;cursor:wait}
-.dv-alt{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.dv-alt{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
 .dv-alt a{color:var(--ink)}
 
 /* état « merci » (en production : /demande-de-devis/merci/) */
@@ -237,6 +245,10 @@ html,body{background:var(--cream)}
   }
   $("lieu").addEventListener("change", syncPhoto);
   syncPhoto();
+
+  // le message grandit avec le texte
+  const msg = $("message");
+  msg.addEventListener("input", () => { msg.style.height = "auto"; msg.style.height = msg.scrollHeight + "px"; });
 
   $("fmts").addEventListener("click", e => {
     const b = e.target.closest(".fmt"); if (!b) return;
