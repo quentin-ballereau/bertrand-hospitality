@@ -24,7 +24,9 @@ BH.MONUMENTS = [
 /* La carte (home, pages Secteur), dans l'esprit de sireos.com/projets.
    — On la fait glisser (avec un peu d'élan), on zoome : boutons, double clic, Ctrl ou ⌘ + molette, pincement du pavé tactile,
      deux doigts sur mobile. La molette seule et un doigt seul font défiler la page : la carte ne la piège jamais.
-   — Le plan est déplacé par une transformation (GPU) et redessiné net une fois le geste fini.
+   — Le plan est une image (assets/plan/, tirée du SVG de vectormap.net) : une vue d'ensemble, puis des tuiles plus nettes
+     chargées pour la seule partie visible quand on zoome, comme sur les cartes en ligne. Il est déplacé par une
+     transformation (GPU) ; les 39 000 tracés du SVG d'origine ne sont plus jamais recalculés pendant les gestes.
    — Les adresses proches se regroupent en pastilles numérotées ; le regroupement est recalculé quand le zoom se pose,
      et les pastilles se séparent ou se rejoignent en glissant (jamais de saut).
    — Les quartiers s'éclairent au survol et mènent à leur page ; les monuments servent de repères.
@@ -77,8 +79,9 @@ BH.parisMap = (box, opts = {}) => {
   box.classList.add("pm");
   box.innerHTML = `
     <div class="pm-stage" aria-hidden="true">
+      <img class="pm-plan" alt="" width="${MW}" height="${MH}" decoding="async">
+      <div class="pm-tiles"></div>
       <svg class="pm-svg" width="${MW}" height="${MH}" viewBox="${X0} ${Y0} ${MW} ${MH}">
-        <image class="pm-plan" x="${X0}" y="${Y0}" width="${MW}" height="${MH}" preserveAspectRatio="none"/>
         <g>${areas.map(a => `<path class="pm-zone" data-s="${a.id}" d="${a.d}"/>`).join("")}</g>
       </svg>
     </div>
@@ -158,6 +161,45 @@ BH.parisMap = (box, opts = {}) => {
     if (anim || drag || pinch) return;
     box.classList.remove("is-moving");
     if (Math.abs(k() - lastK) > 1e-4) recluster(true);
+    tiles();
+  }
+
+  /* ---------- le plan : vue d'ensemble, puis tuiles nettes de la partie visible ---------- */
+  const TILE = 512, LEVELS = {2:[3911, 3675], 4:[7822, 7350]};   // taille du plan à chaque niveau (pixels)
+  const tileEls = new Map(), tilesEl = q(".pm-tiles");
+  let planReady = false;
+  function tiles() {
+    if (!planReady) return;
+    const need = k() * (devicePixelRatio || 1);
+    const lv = need > 3 ? 4 : need > 1.2 ? 2 : 0;   // pixels de plan par pixel affiché : la vue d’ensemble suffit jusqu’à 1,2
+    const want = new Set();
+    if (lv) {
+      const unit = TILE / lv, [pw, ph] = LEVELS[lv], h = view.w * H / W, m = view.w * .15;   // un peu de marge autour de la vue
+      const nx = Math.ceil(pw / TILE), ny = Math.ceil(ph / TILE);
+      const tx0 = Math.max(0, Math.floor((view.x - m - X0) / unit)), tx1 = Math.min(nx - 1, Math.floor((view.x + view.w + m - X0) / unit));
+      const ty0 = Math.max(0, Math.floor((view.y - m - Y0) / unit)), ty1 = Math.min(ny - 1, Math.floor((view.y + h + m - Y0) / unit));
+      for (let ty = ty0; ty <= ty1; ty++) for (let tx = tx0; tx <= tx1; tx++) {
+        const key = `${lv}-${tx}-${ty}`; want.add(key);
+        if (tileEls.has(key)) continue;
+        const img = new Image(), w = Math.min(TILE, pw - tx * TILE) / lv, hh = Math.min(TILE, ph - ty * TILE) / lv;
+        img.className = "pm-tile"; img.alt = ""; img.decoding = "async";
+        img.style.cssText = `left:${tx * unit}px;top:${ty * unit}px;width:${w + .6}px;height:${hh + .6}px`;   // +0,6 : pas de jour entre deux tuiles
+        img.onload = () => { img.classList.add("is-on"); prune(); };
+        img.src = `assets/plan/${key}.webp`;
+        tilesEl.appendChild(img); tileEls.set(key, img);
+      }
+    }
+    curWant = want; curLv = lv;
+    prune();
+  }
+  // les tuiles hors de la vue partent tout de suite ; celles d'un autre niveau, une fois le niveau voulu chargé (jamais de trou)
+  let curWant = new Set(), curLv = 0;
+  function prune() {
+    const ready = [...curWant].every(key => tileEls.get(key) && tileEls.get(key).classList.contains("is-on"));
+    for (const [key, img] of tileEls) {
+      if (curWant.has(key)) continue;
+      if (ready || key.startsWith(curLv + "-")) { img.remove(); tileEls.delete(key); }
+    }
   }
   const setView = v => { view = clampV(v); kick(); };
 
@@ -439,10 +481,10 @@ BH.parisMap = (box, opts = {}) => {
   layout();                                   // tout de suite si le cadre a déjà sa taille
   new ResizeObserver(layout).observe(box);    // puis à chaque changement de taille
 
-  // le plan (≈ 1 Mo compressé) n'est demandé qu'à l'approche de la section, puis apparaît en fondu
+  // le plan (330 Ko) n'est demandé qu'à l'approche de la section, puis apparaît en fondu ; les tuiles suivent
   const plan = q(".pm-plan");
-  plan.addEventListener("load", () => box.classList.add("is-loaded"));
-  const near = new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)) { plan.setAttribute("href", M.img); near.disconnect(); } }, {rootMargin:"1200px 0px"});
+  plan.addEventListener("load", () => { box.classList.add("is-loaded"); planReady = true; tiles(); });
+  const near = new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)) { plan.src = "assets/plan/plan-1.webp"; near.disconnect(); } }, {rootMargin:"1200px 0px"});
   near.observe(box);
   // les adresses apparaissent quand la carte arrive à l'écran
   const io = new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)) { box.classList.add("is-in"); io.disconnect(); } }, {threshold:.25});

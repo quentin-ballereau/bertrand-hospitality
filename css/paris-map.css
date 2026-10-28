@@ -7,8 +7,11 @@
    redessiné net ensuite */
 .pm-stage{position:absolute;left:0;top:0;transform-origin:0 0}
 .pmap.is-moving .pm-stage{will-change:transform}
-.pm-svg{display:block;overflow:visible}
-.pm-plan{opacity:0;transition:opacity 1.2s var(--ease)}
+.pm-svg{position:absolute;left:0;top:0;display:block;overflow:visible}
+.pm-plan{position:absolute;left:0;top:0;max-width:none;opacity:0;transition:opacity 1.2s var(--ease)}
+.pm-tiles{position:absolute;left:0;top:0}
+.pm-tile{position:absolute;max-width:none;opacity:0;transition:opacity .3s var(--ease)}
+.pm-tile.is-on{opacity:1}
 .pmap.is-loaded .pm-plan{opacity:1}
 /* les bords fondus dans le crème */
 .pm-frame{position:absolute;inset:0;z-index:2;pointer-events:none;
