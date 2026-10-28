@@ -14,7 +14,7 @@
    (devis.html?l=polpo&format=cocktail&invites=120) ; la photo suit le lieu choisi.
    En production, l'envoi passe par Make vers BookingShake, puis la page /demande-de-devis/merci/ (mesure des conversions). */
 html,body{background:var(--cream)}
-.dv-logo{position:absolute;top:32px;left:var(--gutter);z-index:8;display:block}   /* pas de menu sur cette page : seul le logo, en blanc sur la photo, ramène à l'accueil */
+.dv-logo{position:fixed;top:32px;left:var(--gutter);z-index:8;display:block}   /* pas de menu sur cette page : seul le logo, en blanc sur la photo, ramène à l’accueil ; il reste avec la photo, fixe */
 .dv-logo img{display:block;width:164px;height:32px}
 
 .t-h2{font-family:var(--serif);font-weight:400;font-size:40px;letter-spacing:.02em;text-transform:uppercase;line-height:1.1;text-box:trim-both cap alphabetic}
@@ -105,6 +105,7 @@ html,body{background:var(--cream)}
   .dv-aside{position:relative;height:46svh;min-height:320px}
   .dv-photo img{object-position:20% 50%}
   .dv-main{width:min(100%,648px);padding:64px var(--gutter) 80px}
+  .dv-logo{position:absolute}   /* la photo passe au-dessus du formulaire et défile : le logo part avec elle */
   .dv-foot{flex-direction:column;align-items:center;text-align:center}
   .dv-foot nav{justify-content:center}
 }
