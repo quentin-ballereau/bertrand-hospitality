@@ -7,6 +7,8 @@
    (par ex. day:"assets/polpo/bar-jour.jpg", event:"assets/polpo/bar-soir.jpg") ; le sélecteur « Lieu vide · En journée · En soirée »
    ne s'affiche que sur les espaces qui en ont. empty:false : pas de photo du lieu vide, img est déjà la photo de jour.
    pos : cadrage de la photo (object-position), pour une photo en hauteur.
+   Photos vides « -vide » : les photos réelles (images-polpo/) dont les mises en situation ont été tirées, recadrées en 16:9
+   au pixel près (Bâbord et Privatisation totale partent de la même vue de la grande salle, Romain Ricard 40).
    reframe : les mises en situation ne reprennent pas le cadrage de la photo vide (fondu d'une vue à l'autre,
    points de passage masqués en journée et en soirée). À remplacer par des visuels au même cadrage quand ils existeront. */
 BH.DETAIL = {
@@ -53,15 +55,15 @@ BH.DETAIL = {
       {src:"assets/polpo/galerie/16.jpg", thumb:"assets/polpo/galerie/16-thumb.jpg", alt:"Un plat de la carte"},
     ],
     scenes: [
-      {id:"babord", name:"Espace Bâbord", img:"assets/polpo/babord.jpg", thumb:"assets/polpo/babord-thumb.jpg", day:"assets/polpo/babord-jour.jpg", event:"assets/polpo/babord-soir.jpg", reframe:true,
+      {id:"babord", name:"Espace Bâbord", img:"assets/polpo/grande-salle-vide.jpg", thumb:"assets/polpo/grande-salle-vide-thumb.jpg", day:"assets/polpo/babord-jour.jpg", event:"assets/polpo/babord-soir.jpg",
        desc:"La grande salle sous verrière, sa mosaïque au poulpe et ses suspensions en rotin.",
        caps:{assis:100, cocktail:100, reunion:60},
        hot:[{x:44, y:52, to:"bar"}, {x:12, y:58, to:"terrasse"}, {x:78, y:60, to:"tribord"}]},
-      {id:"tribord", name:"Espace Tribord", img:"assets/polpo/tribord.jpg", thumb:"assets/polpo/tribord-thumb.jpg", day:"assets/polpo/tribord-jour.jpg", event:"assets/polpo/tribord-soir.jpg", reframe:true,
+      {id:"tribord", name:"Espace Tribord", img:"assets/polpo/tribord-vide.jpg", thumb:"assets/polpo/tribord-vide-thumb.jpg", day:"assets/polpo/tribord-jour.jpg", event:"assets/polpo/tribord-soir.jpg",
        desc:"Un salon en banquettes, sous la mezzanine. Idéal pour un comité de direction ou un dîner privé.",
        caps:{assis:40, cocktail:40, reunion:15},
        hot:[{x:52, y:30, to:"mezzanine"}, {x:14, y:62, to:"babord"}]},
-      {id:"mezzanine", name:"Mezzanine", img:"assets/polpo/mezzanine.jpg", thumb:"assets/polpo/mezzanine-thumb.jpg", day:"assets/polpo/mezzanine-jour.jpg", event:"assets/polpo/mezzanine-soir.jpg", reframe:true,
+      {id:"mezzanine", name:"Mezzanine", img:"assets/polpo/mezzanine-vide.jpg", thumb:"assets/polpo/mezzanine-vide-thumb.jpg", day:"assets/polpo/mezzanine-jour.jpg", event:"assets/polpo/mezzanine-soir.jpg",
        desc:"En surplomb de la salle, un espace cocktail confidentiel avec vue plongeante.",
        caps:{cocktail:25},
        hot:[{x:72, y:56, to:"terrasse"}, {x:30, y:64, to:"tribord"}]},
@@ -69,7 +71,7 @@ BH.DETAIL = {
        desc:"Carrelage vert et bibliothèque de spiritueux, le cœur des afterworks et des cocktails dînatoires.",
        caps:{cocktail:100},
        hot:[{x:22, y:48, to:"babord"}, {x:70, y:66, to:"restaurant"}]},
-      {id:"terrasse", name:"Terrasse sur Seine", img:"assets/polpo/terrasse.jpg", thumb:"assets/polpo/terrasse-thumb.jpg", day:"assets/polpo/terrasse-jour.jpg", event:"assets/polpo/terrasse-soir.jpg", reframe:true,
+      {id:"terrasse", name:"Terrasse sur Seine", img:"assets/polpo/terrasse-vide.jpg", thumb:"assets/polpo/terrasse-vide-thumb.jpg", day:"assets/polpo/terrasse-jour.jpg", event:"assets/polpo/terrasse-soir.jpg",
        desc:"Une vue panoramique sur la Seine. Couverte et chauffée selon la saison.",
        caps:{cocktail:100},
        hot:[{x:76, y:54, to:"babord"}, {x:30, y:56, to:"plage"}]},
@@ -82,7 +84,7 @@ BH.DETAIL = {
        desc:"Sous ses arceaux et ses suspensions en osier, une salle lumineuse ouverte sur le quai, pour les déjeuners et les dîners.",
        caps:{},
        hot:[{x:50, y:60, to:"bar"}]},
-      {id:"restaurant", name:"Privatisation totale", img:"assets/polpo/restaurant.jpg", thumb:"assets/polpo/restaurant-thumb.jpg", day:"assets/polpo/restaurant-jour.jpg", event:"assets/polpo/restaurant-soir.jpg", reframe:true,
+      {id:"restaurant", name:"Privatisation totale", img:"assets/polpo/grande-salle-vide.jpg", thumb:"assets/polpo/grande-salle-vide-thumb.jpg", day:"assets/polpo/restaurant-jour.jpg", event:"assets/polpo/restaurant-soir.jpg",
        desc:"Toute la barge pour vous : tables rondes, piste de danse, jusqu’à 500 invités en cocktail.",
        caps:{assis:350, cocktail:500, reunion:250, dansant:500},
        hot:[{x:58, y:56, to:"conference"}, {x:20, y:60, to:"bar"}]},
