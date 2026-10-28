@@ -134,7 +134,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 
 <!-- Section 3 : l'accompagnement (Figma 6568-2053) : la photo sur la moitié de l'écran, le texte centré sur l'autre.
      Après les trente adresses, la promesse : une équipe qui reçoit vos invités comme les siens, de la proposition au jour J
-     (le « 1 interlocuteur » est déjà dit par les chiffres qui suivent) -->
+     (les chiffres qui suivent disent la taille de l’équipe : 30 commerciaux) -->
 <section class="care" aria-labelledby="careTitle">
   <figure class="care-img"><img src="assets/home/care-diner.jpg" alt="Un dîner entre amis sous les suspensions en osier, à la nuit tombée" loading="lazy"></figure>
   <div class="care-txt">
@@ -396,7 +396,7 @@ addEventListener("pageshow", e => { if (e.persisted) document.getElementById("le
   const maxCap = Math.max(...VENUES.map(v => capFor(v)));   // capacité la plus grande, reprise dans la FAQ
 
   // repères chiffrés : un filet vertical entre chaque repère
-  $("figures").innerHTML = '<div class="figs-row">' + [[VENUES.length, "Lieux à privatiser"], [SECTORS.length, "quartiers"], [maxCap, "invités au plus"], [1, "interlocuteur"]]
+  $("figures").innerHTML = '<div class="figs-row">' + [[VENUES.length, "Lieux à privatiser"], [SECTORS.length, "quartiers"], [maxCap, "invités au plus"], [30, "commerciaux"]]
     .map(([v, l]) => `<div class="fig rv"><span class="t-num" data-count="${v}">${v}</span><span class="t-cta t-eyebrow">${l}</span></div>`).join('<span class="fig-sep" aria-hidden="true"></span>') + "</div>";
 
   // formats
