@@ -156,26 +156,27 @@
 .go-end:hover svg{transform:translateX(4px)}
 
 /* ---------- pied de page (Figma) : logo et phrase, quatre colonnes de liens séparées par un filet, mentions ---------- */
-.foot{background:var(--ink);display:flex;flex-direction:column;align-items:center;gap:128px;padding-top:128px}
+/* pied de page sur fond rosé clair (E8DDD8, essai du 28/10/2026 ; version sombre : tag git sauvegarde-avant-footer-clair) */
+.foot{background:#E8DDD8;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:128px;padding-top:128px}
 .foot-brand{display:flex;flex-direction:column;align-items:center;gap:32px;width:min(584px,100% - 2 * var(--gutter));text-align:center}
 .foot-logo{width:184px;height:36px;display:block}
-.foot-brand .t-text{max-width:432px;color:rgba(255,255,255,.75)}
-.foot-main{display:flex;flex-direction:column;align-items:center;gap:64px;width:100%;padding:96px var(--gutter) 0;border-top:1px solid rgba(255,255,255,.1)}
+.foot-brand .t-text{max-width:432px;color:var(--ink-soft)}
+.foot-main{display:flex;flex-direction:column;align-items:center;gap:64px;width:100%;padding:96px var(--gutter) 0;border-top:1px solid rgba(29,29,27,.12)}
 .foot-links{display:flex;align-items:center;justify-content:center;gap:108px}
 .foot-group{display:flex;gap:16px}
 .foot-col{display:flex;flex-direction:column;align-items:center;gap:16px;width:184px;font-family:var(--caps);font-size:12px;letter-spacing:.14em;line-height:1.3;text-transform:uppercase;text-align:center}
-.foot-col a{color:rgba(255,255,255,.75);text-box:trim-both cap alphabetic;transition:color .35s var(--ease)}
-.foot-col a:hover{color:#fff}
-.foot-sep{align-self:stretch;width:1px;height:96px;background:rgba(255,255,255,.1)}
-.foot-areas{display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:12px 28px;max-width:900px;padding:0 var(--gutter);color:rgba(255,255,255,.75)}
+.foot-col a{color:var(--ink-soft);text-box:trim-both cap alphabetic;transition:color .35s var(--ease)}
+.foot-col a:hover{color:var(--ink)}
+.foot-sep{align-self:stretch;width:1px;height:96px;background:rgba(29,29,27,.12)}
+.foot-areas{display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:12px 28px;max-width:900px;padding:0 var(--gutter);color:var(--ink-soft)}
 .foot-areas a{transition:color .35s var(--ease)}
-.foot-areas a:hover{color:#fff}
-.foot-legal{max-width:216px;font-size:12px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:rgba(255,255,255,.75);text-align:center;text-box:trim-both cap alphabetic}
-.foot-bottom{display:flex;align-items:flex-start;justify-content:space-between;gap:16px 24px;width:100%;margin-top:-32px;padding:24px var(--gutter) 23px;border-top:.5px solid var(--ink-soft);color:var(--muted)}
+.foot-areas a:hover{color:var(--ink)}
+.foot-legal{max-width:216px;font-size:12px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink-soft);text-align:center;text-box:trim-both cap alphabetic}
+.foot-bottom{display:flex;align-items:flex-start;justify-content:space-between;gap:16px 24px;width:100%;margin-top:-32px;padding:24px var(--gutter) 23px;border-top:.5px solid rgba(29,29,27,.12);color:#6f6964}
 .foot-bottom nav{display:flex;gap:24px}
 .foot-bottom > *,.foot-bottom nav a{text-box:trim-both cap alphabetic}
 .foot-bottom a{transition:color .35s var(--ease)}
-.foot-bottom a:hover{color:#fff}
+.foot-bottom a:hover{color:var(--ink)}
 
 /* ---------- apparitions au défilement : les textes seulement, en fondu ---------- */
 .js .rv{opacity:0;transform:translateY(24px)}
