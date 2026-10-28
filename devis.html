@@ -11,7 +11,7 @@
 <style>
 /* Demande de devis (lot 2 · 08), d'après Figma 6567-1971 : l'écran coupé en deux, la photo bord à bord à gauche, fixe pendant
    la saisie, le formulaire à droite en trois blocs numérotés, champs encadrés. Le logo, en blanc, se pose en haut de la photo, centré. Le formulaire arrive pré-rempli depuis une fiche lieu ou une recherche
-   (devis.html?l=polpo&format=cocktail&invites=120) ; la photo suit le lieu choisi.
+   (devis.html?l=polpo&format=cocktail&invites=120, et depuis la landing &date=… ; l'e-mail saisi sur la landing suit dans sessionStorage) ; la photo suit le lieu choisi.
    En production, l'envoi passe par Make vers BookingShake, puis la page /demande-de-devis/merci/ (mesure des conversions). */
 html,body{background:var(--cream)}
 .dv-logo{position:fixed;top:32px;left:25%;transform:translateX(-50%);z-index:8;display:block}   /* pas de menu sur cette page : seul le logo, en blanc, centré en haut de la photo, ramène à l’accueil ; il reste avec la photo, fixe */
@@ -215,6 +215,9 @@ html,body{background:var(--cream)}
   if (pre) $("lieu").value = pre.slug;
   fmtsOf(q.format).forEach(f => $("fmts").querySelector(`[data-f="${f.id}"]`).setAttribute("aria-pressed", "true"));
   if (q.guests) $("invites").value = q.guests;
+  // depuis la landing : la date et l'e-mail déjà saisis
+  if (/^\d{4}-\d{2}-\d{2}$/.test(params.get("date") || "")) $("date").value = params.get("date");
+  try { const em = sessionStorage.getItem("bh-devis-email"); if (em) { $("email").value = em; sessionStorage.removeItem("bh-devis-email"); } } catch (err) {}
 
   /* la photo suit le lieu choisi */
   const photo = $("photo");

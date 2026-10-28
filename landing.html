@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privatiser un lieu à Paris — Bertrand Hospitality</title>
+<meta name="description" content="Trente maisons à privatiser à Paris et en Île-de-France : recevez une proposition de lieux sous 24 heures.">
+<meta name="robots" content="noindex">
+<link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/base.css?v=12">
+<link rel="stylesheet" href="css/home.css?v=28">
+<link rel="stylesheet" href="css/pages.css?v=3">
+<style>
+/* Landing d'acquisition (Google Ads, Meta) : un seul objectif, la demande de devis.
+   Pas de menu ni de liens de sortie ; le formulaire court est dans le hero, le bouton est toujours le même.
+   Une page par campagne : landing.html?c=seminaire | soiree | mariage (titre, photo, lieux et questions changent).
+   Le formulaire court mène au devis complet, pré-rempli (devis.html?format=…&invites=…&date=… ; l'e-mail passe par sessionStorage). */
+html,body{background:var(--cream)}
+
+/* en-tête réduit : le logo et le téléphone */
+.lp-top{position:absolute;top:32px;left:var(--gutter);right:var(--gutter);z-index:5;display:flex;align-items:center;justify-content:space-between;color:#fff}
+.lp-top img{display:block;width:164px;height:32px}
+.lp-tel{display:flex;flex-direction:column;align-items:flex-end;gap:10px;text-align:right}
+.lp-tel .t-mini{color:rgba(255,255,255,.75)}
+.lp-tel a{font-family:var(--serif);font-size:20px;letter-spacing:.02em;line-height:1;text-box:trim-both cap alphabetic}
+
+/* hero : la photo, le dégradé de la home, le titre à gauche et le formulaire court à droite */
+.lp-hero{position:relative;min-height:100svh;display:grid;grid-template-columns:minmax(0,1fr) 400px;align-items:end;gap:64px;padding:160px var(--gutter) 64px;color:#fff;isolation:isolate}
+.lp-hero > img{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover}
+.lp-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(29,29,27,.8) 20%,rgba(29,29,27,0) 50%,rgba(29,29,27,0) 75%,rgba(29,29,27,.8) 100%),linear-gradient(90deg,rgba(29,29,27,.35),rgba(29,29,27,0) 60%)}
+.lp-hero-txt{display:flex;flex-direction:column;gap:32px;max-width:640px;padding-bottom:8px}
+.lp-hero-txt .t-mini{color:rgba(255,255,255,.8)}
+.lp-title{font-family:var(--serif);font-weight:400;font-size:48px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
+.lp-proof{display:flex;flex-wrap:wrap;gap:12px 28px}
+.lp-proof span{display:flex;align-items:center;gap:10px}
+.lp-proof span + span::before{content:"";width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.6);margin-left:-16px}
+
+/* le formulaire court */
+.lp-form{display:flex;flex-direction:column;gap:24px;padding:40px 32px 32px;background:var(--cream);color:var(--ink);box-shadow:0 40px 80px -40px rgba(0,0,0,.6)}
+.lp-form-head{display:flex;flex-direction:column;gap:16px}
+.lp-form-head .t-h4{font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+.lp-form-head .t-text{font-size:14px}
+.lp-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fld{display:flex;flex-direction:column;gap:12px}
+.fld label{font-family:var(--caps);font-size:12px;letter-spacing:.14em;line-height:1.3;text-transform:uppercase;color:var(--taupe);text-box:trim-both cap alphabetic}
+.fld input,.fld select{width:100%;height:42px;font:300 14px/1.4 var(--sans);letter-spacing:-.02em;color:var(--ink);background:#fff;border:.5px solid var(--taupe);border-radius:0;padding:10px 12px;outline:none;-webkit-appearance:none;appearance:none;transition:border-color .3s var(--ease),box-shadow .3s var(--ease)}
+.fld select{background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14'%3E%3Cpath d='M2 5l5 5 5-5' fill='none' stroke='%238A8480' stroke-width='1.2'/%3E%3C/svg%3E") right 12px center no-repeat;padding-right:36px;cursor:pointer}
+.fld input::placeholder{color:var(--muted)}
+.fld input:focus,.fld select:focus{border-color:var(--ink);box-shadow:inset 0 0 0 .5px var(--ink)}
+.fld.is-bad input{border-color:#a0453a;box-shadow:inset 0 0 0 .5px #a0453a}
+.lp-picked{display:none;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;background:#fff;font-size:14px;font-weight:300}
+.lp-picked.is-on{display:flex}
+.lp-picked b{font-weight:400}
+.lp-picked button{font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.lp-send{display:flex;align-items:center;justify-content:center;gap:12px;height:52px;width:100%;background:var(--taupe);color:#fff;font-family:var(--caps);font-size:14px;letter-spacing:.14em;text-transform:uppercase;transition:background .45s var(--ease)}
+.lp-send:hover{background:var(--ink)}
+.lp-send svg{transition:transform .4s var(--ease)}
+.lp-send:hover svg{transform:translateX(4px)}
+.lp-note{font-size:12px;font-weight:300;line-height:1.4;color:var(--muted);text-align:center}
+
+/* sections */
+.lp-sec{padding:128px var(--gutter) 0}
+.lp-sec .sec-head{margin-bottom:64px}
+.lp-sec .vl-grid{margin-top:0}
+.vcard .vcard-cta{font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--taupe);text-box:trim-both cap alphabetic}
+.vcard{cursor:pointer}
+
+/* comment ça marche : trois étapes sur une ligne */
+.lp-steps{display:grid;grid-template-columns:repeat(3,1fr);max-width:1184px;margin:0 auto;border-top:1px solid var(--line)}
+.lp-step{display:flex;flex-direction:column;gap:24px;padding:48px 40px 0 0}
+.lp-step + .lp-step{padding-left:40px;border-left:1px solid var(--line)}
+.lp-step .t-num{font-size:40px;color:var(--taupe)}
+.lp-step .t-h4{font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+
+/* mise en situation : une grande image, la légende posée en bas */
+.lp-scene{position:relative;height:88svh;min-height:520px;margin-top:128px;display:flex;align-items:flex-end;padding:0 var(--gutter) 56px;color:#fff;isolation:isolate}
+.lp-scene img{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover}
+.lp-scene::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(29,29,27,.75),rgba(29,29,27,0) 45%)}
+.lp-scene-txt{display:flex;flex-direction:column;gap:24px;max-width:560px}
+.lp-scene-txt .t-mini{color:rgba(255,255,255,.75)}
+.lp-scene-txt .t-h3{color:#fff}
+
+/* formats : un clic préremplit le formulaire */
+.lp-fmts{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1184px;margin:0 auto}
+.lp-fmt{display:flex;flex-direction:column;align-items:center;gap:20px;padding:40px 16px 36px;background:#fff;border:.5px solid transparent;transition:border-color .3s var(--ease)}
+.lp-fmt:hover,.lp-fmt[aria-pressed="true"]{border-color:var(--ink)}
+.lp-fmt svg{width:34px;height:34px;stroke:var(--ink);fill:none;stroke-width:1.1}
+.lp-fmt .t-cta{color:var(--ink)}
+.lp-fmt small{font-size:12px;font-weight:300;color:var(--muted)}
+
+/* FAQ : celle de la home, sur deux colonnes */
+.lp-faq{padding:128px var(--gutter)}
+
+/* pied de page réduit */
+.lp-foot{display:flex;justify-content:space-between;gap:16px 24px;padding:24px var(--gutter) 23px;border-top:.5px solid rgba(29,29,27,.12);background:#E8DDD8;color:#6f6964}
+.lp-foot nav{display:flex;flex-wrap:wrap;gap:12px 24px}
+.lp-foot a:hover{color:var(--ink)}
+
+/* mobile : le bouton reste à portée de pouce */
+.lp-sticky{display:none}
+
+@media (max-width:1023px){
+  .lp-hero{grid-template-columns:1fr;gap:40px;padding-top:140px}
+  .lp-form{max-width:480px}
+  .lp-steps{grid-template-columns:1fr}
+  .lp-step,.lp-step + .lp-step{padding:40px 0 0;border-left:0}
+  .lp-step + .lp-step{border-top:1px solid var(--line);margin-top:40px}
+  .lp-fmts{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:767px){
+  .lp-top{top:20px}
+  .lp-top img{width:123px;height:24px}
+  .lp-tel .t-mini{display:none}
+  .lp-tel a{font-size:16px}
+  .lp-hero{padding:112px var(--gutter) 32px;gap:32px}
+  .lp-title{font-size:30px}
+  .lp-proof{gap:10px 20px}
+  .lp-proof span + span::before{display:none}   /* la ligne passe à la ligne : pas de puce en bord d'écran */
+  .lp-form{padding:32px 20px 24px}
+  .lp-sec{padding-top:96px}
+  .lp-sec .sec-head{margin-bottom:40px}
+  .lp-scene{height:70svh;margin-top:96px;padding-bottom:40px}
+  .lp-faq{padding:96px var(--gutter)}
+  .lp-foot{flex-direction:column;align-items:center;text-align:center;padding-bottom:96px}
+  .lp-foot nav{justify-content:center}
+  .lp-sticky{position:fixed;left:16px;right:16px;bottom:16px;z-index:20;display:flex;align-items:center;justify-content:center;height:52px;background:var(--taupe);color:#fff;font-family:var(--caps);font-size:14px;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 18px 40px -16px rgba(0,0,0,.5);transform:translateY(calc(100% + 24px));transition:transform .5s var(--expo)}
+  .lp-sticky.is-on{transform:none}
+}
+</style>
+</head>
+<body>
+
+<header class="lp-top">
+  <img src="assets/logo-bh.svg" width="164" height="32" alt="Bertrand Hospitality">
+  <div class="lp-tel"><span class="t-mini">Une question&nbsp;?</span><a href="tel:+33764070661">07 64 07 06 61</a></div>
+</header>
+
+<main id="main"></main>
+
+<footer class="lp-foot t-mini">
+  <span>© 2026 Bertrand Hospitality</span>
+  <nav aria-label="Liens légaux"><a href="#">Mentions légales</a><a href="#">Confidentialité</a></nav>
+</footer>
+
+<a class="lp-sticky" href="#lpForm" id="sticky">Recevoir une proposition</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="js/data.js?v=10"></script>
+<script src="js/offres-data.js?v=2"></script>
+<script>
+(() => {
+  const {VENUES, SECTORS, FORMATS} = BH, O = BH.OFFRES;
+  const $ = id => document.getElementById(id);
+  const ARROW = '<svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg>';
+  const maxCap = Math.max(...VENUES.map(v => BH.capFor(v)));
+
+  /* une campagne = un titre, une photo, un format, une sélection de lieux et ses questions */
+  const CAMPAIGNS = {
+    seminaire:{offre:"reunion-seminaire", format:"reunion", eyebrow:"Séminaires et réunions à Paris",
+      title:"Votre séminaire dans une maison qui a du caractère",
+      img:"assets/home/hero-lile.jpg", scene:{img:"assets/polpo/conference-jour.jpg", place:"Polpo · Levallois-Perret", title:"Une plénière sous la verrière, face à la Seine"},
+      faq:[["Quel budget prévoir pour un séminaire ?", "Il dépend du lieu, du nombre de participants et de la formule (salle, pauses, déjeuner). Notre équipe vous envoie une proposition chiffrée sous 24 heures ouvrées."],
+           ["Combien de temps à l’avance réserver ?", "Idéalement deux à trois mois, et davantage pour juin, septembre et décembre. Nous trouvons aussi des solutions pour les demandes de dernière minute."],
+           ["Le matériel technique est-il fourni ?", "Écran, vidéoprojecteur, sonorisation et micros selon la salle. Nous vous précisons l’équipement de chaque lieu dans la proposition."],
+           ["Peut-on visiter avant de réserver ?", "Oui : nous organisons la visite des lieux retenus avec l’équipe de la maison, aux horaires qui vous conviennent."]]},
+    soiree:{offre:"soiree-dansante", format:"dansant", eyebrow:"Soirées d’entreprise à Paris",
+      title:"Une soirée dans un lieu mythique de Paris",
+      img:"assets/home/hero-coupole.jpg", scene:{img:"assets/polpo/restaurant-soir.jpg", place:"Polpo · Levallois-Perret", title:"Toute la barge pour vous, jusqu’au bout de la nuit"},
+      faq:[["Quel budget prévoir pour une soirée ?", "Selon le lieu et la formule, cocktail dînatoire ou dîner assis suivi de la soirée. Notre équipe vous envoie une proposition chiffrée sous 24 heures ouvrées."],
+           ["Le DJ et le son sont-ils inclus ?", "Nous proposons DJ, sonorisation et éclairages adaptés à chaque lieu, ou travaillons avec vos prestataires."],
+           ["Jusqu’à quelle heure peut-on rester ?", "Les horaires varient selon les maisons : nous vous les précisons pour chaque lieu dans la proposition."],
+           ["Peut-on privatiser un lieu en entier ?", "Oui, selon la date : un salon, un étage ou la maison complète, jusqu’à 500 invités."]]},
+    mariage:{offre:"mariage", format:"assis", eyebrow:"Mariages à Paris",
+      title:"Votre mariage dans l’une de nos maisons",
+      img:"assets/home/closing.jpg", scene:{img:"assets/polpo/tente-soir.jpg", place:"Polpo · Levallois-Perret", title:"Le dîner, puis la fête, au bord de la Seine"},
+      faq:[["Quel budget prévoir pour un mariage ?", "Selon le nombre d’invités, le lieu et le menu. Notre équipe vous envoie une proposition chiffrée sous 24 heures ouvrées."],
+           ["Peut-on organiser la cérémonie sur place ?", "Selon le lieu, nous étudions avec vous la possibilité d’une cérémonie laïque sur place, en jardin, en terrasse ou en salon."],
+           ["Le gâteau et les vins sont-ils compris ?", "Menus de réception, gâteau et accords mets-vins sont proposés par nos chefs et nos sommeliers."],
+           ["Peut-on visiter avant de réserver ?", "Oui : nous organisons la visite des lieux retenus, avec l’équipe qui vous accompagnera le jour J."]]},
+  };
+  const key = new URLSearchParams(location.search).get("c");
+  const C = CAMPAIGNS[key] || CAMPAIGNS.seminaire;
+  const off = O.bySlug(C.offre), picks = off.venues.slice(0, 6);
+  const unit = f => (FORMATS.find(x => x.id === f) || {}).unit || "";
+  document.title = `${C.title} — Bertrand Hospitality`;
+
+  $("main").innerHTML = `
+  <section class="lp-hero" aria-labelledby="lpTitle">
+    <img src="${C.img}" alt="" fetchpriority="high">
+    <div class="lp-hero-txt">
+      <p class="t-mini">${C.eyebrow}</p>
+      <h1 class="lp-title" id="lpTitle">${C.title}</h1>
+      <p class="lp-proof t-mini"><span>${VENUES.length} lieux</span><span>Jusqu’à ${maxCap} invités</span><span>Réponse sous 24 h</span></p>
+    </div>
+    <form class="lp-form" id="lpForm" novalidate>
+      <div class="lp-form-head"><p class="t-h4">Recevez une proposition</p>
+        <p class="t-text">Quatre informations suffisent : nous vous envoyons les lieux qui s’y prêtent, avec les menus et les tarifs.</p></div>
+      <div class="lp-picked" id="picked" aria-live="polite"><span>Lieu choisi : <b id="pickedName"></b></span><button type="button" id="unpick">Retirer</button></div>
+      <div class="fld"><label for="fFormat">Format</label>
+        <select id="fFormat">${FORMATS.map(f => `<option value="${f.id}"${f.id === C.format ? " selected" : ""}>${f.label}</option>`).join("")}</select></div>
+      <div class="lp-row">
+        <div class="fld"><label for="fGuests">Invités</label><input id="fGuests" type="number" inputmode="numeric" min="2" max="1000" placeholder="Ex : 80"></div>
+        <div class="fld"><label for="fDate">Date</label><input id="fDate" type="date"></div>
+      </div>
+      <div class="fld"><label for="fEmail">E-mail</label><input id="fEmail" type="email" autocomplete="email" placeholder="vous@entreprise.fr"></div>
+      <button class="lp-send" type="submit">Recevoir une proposition${ARROW}</button>
+      <p class="lp-note">Réponse sous 24 heures ouvrées, sans engagement.</p>
+    </form>
+  </section>
+
+  <section class="figures" aria-label="Bertrand Hospitality en chiffres"><div class="figs-row">${[[VENUES.length, "Lieux à privatiser"], [SECTORS.length, "quartiers"], [maxCap, "invités au plus"], [30, "commerciaux"]]
+    .map(([v, l]) => `<div class="fig"><span class="t-num">${v}</span><span class="t-cta t-eyebrow">${l}</span></div>`).join('<span class="fig-sep" aria-hidden="true"></span>')}</div></section>
+
+  <section class="lp-sec" aria-labelledby="pTitle">
+    <div class="sec-head"><p class="t-cta t-eyebrow">Notre sélection</p><div class="sec-head-txt"><h2 class="t-h2" id="pTitle">Six adresses pour ${off.votre}</h2>
+      <p class="t-text">Choisissez une maison, nous vérifions sa disponibilité à votre date.</p></div></div>
+    <div class="vl-grid">${picks.map(v => `<button class="vcard" type="button" data-pick="${v.slug}">
+      <span class="vcard-img"><img src="assets/lieux/${v.slug}.jpg" alt="" loading="lazy"></span>
+      <span class="vcard-txt"><span class="vcard-meta">${v.place} · jusqu’à ${off.capOf(v)} invités${off.cap ? " " + unit(off.cap) : ""}</span><span class="vcard-name">${v.name}</span>
+      <span class="vcard-cta ul">Demander ce lieu</span></span></button>`).join("")}</div>
+  </section>
+
+  <section class="lp-sec" aria-labelledby="sTitle">
+    <div class="sec-head"><p class="t-cta t-eyebrow">Comment ça marche</p><div class="sec-head-txt"><h2 class="t-h2" id="sTitle">Trois étapes, un seul interlocuteur</h2></div></div>
+    <ol class="lp-steps">
+      <li class="lp-step"><span class="t-num">01</span><p class="t-h4">Vous décrivez votre événement</p><p class="t-text">Le format, la date, le nombre d’invités : quelques lignes suffisent.</p></li>
+      <li class="lp-step"><span class="t-num">02</span><p class="t-h4">Nous vous proposons les lieux</p><p class="t-text">Sous 24 heures ouvrées, les maisons qui s’y prêtent, avec leurs menus et leurs tarifs.</p></li>
+      <li class="lp-step"><span class="t-num">03</span><p class="t-h4">Nous vous accompagnons</p><p class="t-text">Visite, menus, déroulé : un interlocuteur dédié, jusqu’au dernier invité.</p></li>
+    </ol>
+  </section>
+
+  <section class="lp-scene" aria-label="Mise en situation">
+    <img src="${C.scene.img}" alt="" loading="lazy">
+    <div class="lp-scene-txt"><p class="t-mini">${C.scene.place} · mise en situation</p><p class="t-h3">${C.scene.title}</p></div>
+  </section>
+
+  <section class="lp-sec" aria-labelledby="fTitle">
+    <div class="sec-head"><p class="t-cta t-eyebrow">Tous les formats</p><div class="sec-head-txt"><h2 class="t-h2" id="fTitle">Quel événement préparez-vous&nbsp;?</h2></div></div>
+    <div class="lp-fmts">${FORMATS.map(f => `<button class="lp-fmt" type="button" data-fmt="${f.id}" aria-pressed="${f.id === C.format}"><svg viewBox="0 0 30 30" aria-hidden="true">${f.icon}</svg>
+      <span class="t-cta">${f.label}</span><small>${VENUES.filter(v => v[f.id]).length} lieux</small></button>`).join("")}</div>
+  </section>
+
+  <section class="lp-faq" aria-labelledby="qTitle">
+    <div class="faq">
+      <div class="faq-head"><p class="t-cta t-eyebrow">Questions fréquentes</p><h2 class="t-h2" id="qTitle">Avant de demander</h2></div>
+      <div class="faq-list" id="faqList">${C.faq.map(([q, a], i) => `
+        <div class="faq-item${i ? "" : " is-open"}">
+          <button class="faq-q" type="button" aria-expanded="${!i}" aria-controls="faq${i}"><span class="t-cta">${q}</span><i aria-hidden="true"><svg class="ic-x" viewBox="0 0 12 12"><path d="M1.5 1.5l9 9M10.5 1.5l-9 9"/></svg><svg class="ic-m" viewBox="0 0 12 12"><path d="M0 6h12"/></svg></i></button>
+          <div class="faq-a" id="faq${i}" role="region"${i ? "" : ' style="height:auto"'}><p class="t-text">${a}</p></div>
+        </div>`).join("")}</div>
+    </div>
+  </section>
+
+  <section class="closing" aria-labelledby="endTitle">
+    <div class="closing-bg" aria-hidden="true"></div>
+    <div class="closing-card">
+      <p class="t-cta t-eyebrow">Votre événement</p>
+      <div class="closing-head"><h2 class="t-h3" id="endTitle">Parlons de ${off.votre}</h2>
+        <p class="t-text">Une proposition sous 24 heures ouvrées, ou par téléphone au 07 64 07 06 61.</p></div>
+      <a class="go-end t-cta" href="#lpForm"><span>Recevoir une proposition</span>${ARROW}</a>
+    </div>
+  </section>`;
+
+  /* ---------- le formulaire court : il prépare le devis complet ---------- */
+  const form = $("lpForm");
+  let picked = null;
+  const pick = slug => {
+    picked = VENUES.find(v => v.slug === slug) || null;
+    $("picked").classList.toggle("is-on", !!picked);
+    if (picked) $("pickedName").textContent = picked.name;
+  };
+  $("unpick").addEventListener("click", () => pick(null));
+  const toForm = () => { form.scrollIntoView({behavior:"smooth", block:"center"}); setTimeout(() => $("fGuests").focus({preventScroll:true}), 600); };
+  document.addEventListener("click", e => {
+    const v = e.target.closest("[data-pick]"); if (v) { pick(v.dataset.pick); toForm(); return; }
+    const f = e.target.closest("[data-fmt]");
+    if (f) { $("fFormat").value = f.dataset.fmt; document.querySelectorAll("[data-fmt]").forEach(b => b.setAttribute("aria-pressed", b === f)); toForm(); return; }
+    const a = e.target.closest('a[href="#lpForm"]'); if (a) { e.preventDefault(); toForm(); }
+  });
+  $("fFormat").addEventListener("change", () => document.querySelectorAll("[data-fmt]").forEach(b => b.setAttribute("aria-pressed", b.dataset.fmt === $("fFormat").value)));
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const g = $("fGuests"), m = $("fEmail");
+    const okG = +g.value >= 2, okM = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m.value.trim());
+    g.closest(".fld").classList.toggle("is-bad", !okG); m.closest(".fld").classList.toggle("is-bad", !okM);
+    if (!okG || !okM) { (okG ? m : g).focus(); return; }
+    // l'e-mail ne passe pas dans l'adresse (historique, outils de mesure) : il suit dans la session de l'onglet
+    try { sessionStorage.setItem("bh-devis-email", m.value.trim()); } catch (err) {}
+    const q = new URLSearchParams({format:$("fFormat").value, invites:g.value, src:"landing-" + (CAMPAIGNS[key] ? key : "seminaire")});
+    if ($("fDate").value) q.set("date", $("fDate").value);
+    if (picked) q.set("l", picked.slug);
+    location.href = "devis.html?" + q;
+  });
+
+  /* questions fréquentes : une seule ouverte à la fois */
+  $("faqList").addEventListener("click", e => {
+    const b = e.target.closest(".faq-q"); if (!b) return;
+    const item = b.parentElement, open = !item.classList.contains("is-open");
+    if (open) $("faqList").querySelectorAll(".faq-item.is-open").forEach(o => {
+      o.classList.remove("is-open"); o.querySelector(".faq-q").setAttribute("aria-expanded", false);
+      gsap.to(o.querySelector(".faq-a"), {height:0, duration:.6, ease:"expo.out"});
+    });
+    item.classList.toggle("is-open", open); b.setAttribute("aria-expanded", open);
+    gsap.to(item.querySelector(".faq-a"), {height:open ? "auto" : 0, duration:.7, ease:"expo.out"});
+  });
+
+  /* mobile : le bouton fixe apparaît une fois le formulaire du hero dépassé */
+  new IntersectionObserver(es => $("sticky").classList.toggle("is-on", !es[0].isIntersecting && es[0].boundingClientRect.top < 0)).observe(form);
+})();
+</script>
+</body>
+</html>
