@@ -300,7 +300,8 @@ BH.parisMap = (box, opts = {}) => {
     el.dataset.x = c.x; el.dataset.y = c.y;
     const names = c.venues.map(v => v.name).join(", ");
     if (opts.focus && !c.venues.some(v => v.s === opts.focus)) el.classList.add("is-dim");
-    if (c.members.length > 1) { el.className += " pm-cl"; el.textContent = c.venues.length; el.setAttribute("aria-label", `${c.venues.length} lieux : ${names}. Zoomer`); }
+    // pastille : le rond intérieur grossit au survol, jamais le bouton placé (sinon elle sauterait)
+    if (c.members.length > 1) { el.className += " pm-cl"; el.innerHTML = `<span>${c.venues.length}</span>`; el.setAttribute("aria-label", `${c.venues.length} lieux : ${names}. Zoomer`); }
     else { el.className += " pm-pin"; el.innerHTML = "<i></i>"; el.setAttribute("aria-label", names); }
     return el;
   }
