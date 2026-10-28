@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="css/base.css?v=10">
 <link rel="stylesheet" href="css/menu.css?v=14">
 <link rel="stylesheet" href="css/coverflow.css?v=9">
-<link rel="stylesheet" href="css/home.css?v=22">
+<link rel="stylesheet" href="css/home.css?v=23">
 <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css">
 <script>/* loader à l’entrée sur le site ; on le saute quand on revient d’une autre page du site */try{var r=document.referrer&&new URL(document.referrer);if(r&&r.origin===location.origin&&r.pathname!==location.pathname)document.documentElement.classList.add("no-loader")}catch(e){}</script>
 <style>
@@ -234,7 +234,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
   <div class="foot-main">
     <nav class="foot-links" aria-label="Pied de page">
       <div class="foot-group">
-        <div class="foot-col"><a href="lieux.html">Nos lieux</a><a href="lieux.html">Événements</a><a href="#">Nous connaître</a></div>
+        <div class="foot-col"><a href="lieux.html">Nos lieux</a><a href="offres.html">Événements</a><a href="#">Nous connaître</a></div>
         <div class="foot-col"><a href="#">Engagement RSE</a><a href="#">Hôtels</a><a href="#">Journal</a></div>
       </div>
       <span class="foot-sep" aria-hidden="true"></span>
@@ -243,6 +243,8 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
         <div class="foot-col"><a href="devis.html">Demander un devis</a><a href="#">Contact</a><a href="#">English</a></div>
       </div>
     </nav>
+    <!-- les pages secteur (en production /secteurs/[secteur]) : reliées depuis toutes les pages sans toucher au menu -->
+    <nav class="foot-areas t-mini" aria-label="Nos quartiers"><span>Nos quartiers</span><a href="lieux.html?secteur=ouest">Champs-Élysées et Ouest</a><a href="lieux.html?secteur=centre">Opéra et centre</a><a href="lieux.html?secteur=rg">Rive gauche</a><a href="lieux.html?secteur=seine">Bords de Seine</a><a href="lieux.html?secteur=hors">Versailles et Disney Village</a></nav>
     <p class="foot-legal">L’abus d’alcool est dangereux pour la santé, à consommer avec modération.</p>
   </div>
   <div class="foot-bottom t-mini">
@@ -256,7 +258,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="js/data.js?v=10"></script>
-<script src="js/menu.js?v=12"></script>
+<script src="js/menu.js?v=13"></script>
 <script src="js/finder.js?v=7"></script>
 <script src="js/coverflow.js?v=11"></script>
 <script src="js/paris-map.js?v=3"></script>
@@ -481,7 +483,12 @@ addEventListener("pageshow", e => { if (e.persisted) document.getElementById("le
     // vue centrée sur nos adresses ; le cadre la recadre selon sa forme (preserveAspectRatio slice)
     const xs = G.map(g => g.x), ys = G.map(g => g.y);
     const cx = (Math.min(...xs) + Math.max(...xs)) / 2 + 40, cy = (Math.min(...ys) + Math.max(...ys)) / 2, VW = 1480, VH = 980;
-    const txt = ([t, x, y, an]) => `<text class="${t === "Paris" ? "pm-city" : "pm-lbl"}" x="${x}" y="${y}" text-anchor="${an}">${t}</text>`;
+    // chaque repère de quartier mène à la page de son secteur (en production /secteurs/[secteur])
+    const SEC = {"Champs-Élysées":"ouest", "Auteuil":"ouest", "Opéra":"centre", "Bastille":"centre", "Gare du Nord":"centre",
+      "Saint-Germain":"rg", "Montparnasse":"rg", "Levallois":"seine", "Saint-Ouen":"seine", "Issy":"seine"};
+    const txt = ([t, x, y, an]) => SEC[t]
+      ? `<a class="pm-area" href="lieux.html?secteur=${SEC[t]}"><text class="pm-lbl" x="${x}" y="${y}" text-anchor="${an}">${t}</text></a>`
+      : `<text class="pm-city" x="${x}" y="${y}" text-anchor="${an}">${t}</text>`;
     const pins = G.map((g, i) => `<g class="pm-pin" tabindex="0" role="button" data-i="${i}" transform="translate(${g.x} ${g.y})" style="--d:${(i * .03).toFixed(2)}s"
         aria-label="${g.list.map(v => v.name).join(", ")}"><circle class="pm-hit" r="16"/><circle class="pm-dot" r="5.5"/></g>`).join("");
     const edge = (list, cls, label, arrow) => list.length ? `<p class="pm-edge ${cls} t-mini">${arrow === "l" ? "← " : ""}${label}&nbsp;: ${list.map(v => `<a href="lieu.html?l=${v.slug}">${v.name}</a>`).join(", ")}${arrow === "r" ? " →" : ""}</p>` : "";

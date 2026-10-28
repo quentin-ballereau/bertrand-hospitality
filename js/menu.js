@@ -9,7 +9,7 @@
   const ARROW = '<svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg>';
   const ITEMS = [
     {label:"Nos lieux", href:"lieux.html", img:"assets/menu/nos-lieux.webp"},
-    {label:"Événements", href:"lieux.html", img:"assets/menu/evenements.webp"},
+    {label:"Événements", href:"offres.html", img:"assets/menu/evenements.webp"},
     {label:"Nous connaître", href:"#", img:"assets/menu/nous-connaitre.webp"},
     {label:"Engagement RSE", href:"#", img:"assets/menu/engagement-rse.webp"},
     {label:"Hôtels", href:"#", img:"assets/menu/hotels.webp"},
