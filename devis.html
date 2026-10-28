@@ -10,12 +10,13 @@
 <link rel="stylesheet" href="css/base.css?v=11">
 <link rel="stylesheet" href="css/menu.css?v=15">
 <style>
-/* Demande de devis (lot 2 · 08), d'après Figma 6560-1647 : la photo à gauche, fixe pendant la saisie ; le formulaire à droite
-   en trois blocs numérotés, champs encadrés. Le formulaire arrive pré-rempli depuis une fiche lieu ou une recherche
+/* Demande de devis (lot 2 · 08), d'après Figma 6567-1971 : l'écran coupé en deux, la photo bord à bord à gauche, fixe pendant
+   la saisie, le formulaire à droite en trois blocs numérotés, champs encadrés. Le menu et le logo, en blanc, se posent sur la photo. Le formulaire arrive pré-rempli depuis une fiche lieu ou une recherche
    (devis.html?l=polpo&format=cocktail&invites=120) ; la photo suit le lieu choisi.
    En production, l'envoi passe par Make vers BookingShake, puis la page /demande-de-devis/merci/ (mesure des conversions). */
 html,body{background:var(--cream)}
-.nav{position:relative;top:auto;left:auto;right:auto;padding:32px var(--gutter) 0}
+.nav{right:calc(50% + var(--gutter));color:#fff}   /* sur la photo : le logo centré sur elle */
+.nav-right{display:none}   /* on y est déjà */
 
 .t-h2{font-family:var(--serif);font-weight:400;font-size:40px;letter-spacing:.02em;text-transform:uppercase;line-height:1.1;text-box:trim-both cap alphabetic}
 .t-h5{font-family:var(--serif);font-weight:400;font-size:18px;letter-spacing:.02em;text-transform:uppercase;line-height:1.1;text-box:trim-both cap alphabetic}
@@ -25,12 +26,13 @@ html,body{background:var(--cream)}
 .t-text{font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink-soft);text-box:trim-both cap alphabetic}
 .t-eyebrow{color:var(--taupe)}
 
-/* la page : la photo (584 px sur 1280) et le formulaire (648 px, 100 px de marges) */
-.dv{display:grid;grid-template-columns:minmax(0,584fr) minmax(0,648fr);align-items:start;padding:0 0 100px var(--gutter)}
-.dv-aside{position:sticky;top:0;padding:48px 0}
-.dv-photo{position:relative;aspect-ratio:584/672;max-height:calc(100svh - 96px);margin-right:auto;overflow:hidden;background:var(--cream-2)}
-.dv-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .8s var(--ease)}
-.dv-main{display:flex;flex-direction:column;gap:48px;padding:96px 100px 48px}
+/* la page : deux moitiés, la photo sur toute la hauteur de l'écran, le formulaire (100 px de marges, 440 px de large au plus) */
+.dv{display:grid;grid-template-columns:1fr 1fr;align-items:start}
+.dv-aside{position:sticky;top:0;height:100svh}
+.dv-photo{position:absolute;inset:0;overflow:hidden;background:var(--ink)}
+.dv-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:9% 50%;transition:opacity .8s var(--ease)}
+.dv-photo::after{content:"";position:absolute;inset:0 0 auto;height:160px;background:linear-gradient(180deg,rgba(29,29,27,.45),rgba(29,29,27,0))}   /* le menu et le logo restent lisibles */
+.dv-main{display:flex;flex-direction:column;gap:48px;width:min(100%,640px);padding:96px 100px 100px}
 
 /* en-tête */
 .dv-head{display:flex;flex-direction:column;gap:32px}
@@ -70,8 +72,17 @@ html,body{background:var(--cream)}
 .dv-alt{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
 .dv-alt .t-text{color:var(--ink)}
 .dv-alt .ul{font-size:14px;color:var(--taupe)}
-.dv-legal{font-size:12px;font-weight:300;line-height:1.4;color:var(--muted)}
-.dv-legal a{text-decoration:underline;text-underline-offset:3px}
+/* consentement : case dessinée de 14 px, centrée sur la hauteur des capitales de la première ligne */
+.chk{display:flex;gap:12px;align-items:flex-start;font-size:12px;font-weight:300;line-height:1.4;color:var(--ink-soft);cursor:pointer}
+.chk > span{text-box:trim-both cap alphabetic}
+.chk input{flex:0 0 14px;width:14px;height:14px;margin:calc((1cap - 14px) / 2) 0 0;-webkit-appearance:none;appearance:none;border:.5px solid var(--taupe);border-radius:0;background:transparent;cursor:pointer;display:grid;place-content:center;transition:background .25s var(--ease),border-color .25s var(--ease)}
+.chk input::after{content:"";width:7px;height:4px;border-left:1px solid #fff;border-bottom:1px solid #fff;transform:translateY(-1px) rotate(-45deg);opacity:0;transition:opacity .2s}
+.chk input:checked{background:var(--taupe)}
+.chk input:checked::after{opacity:1}
+.chk input:focus-visible{outline:1px solid var(--ink);outline-offset:3px}
+.chk.is-bad input{border-color:#a0453a}
+.chk.is-bad .err{display:block;margin-top:8px}
+.chk a{text-decoration:underline;text-underline-offset:3px}
 
 /* état « merci » (en production : /demande-de-devis/merci/) */
 .dv-done{display:none;flex-direction:column;gap:32px}
@@ -85,16 +96,17 @@ html,body{background:var(--cream)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* pied de page réduit à sa dernière ligne */
-.dv-foot{display:flex;justify-content:space-between;gap:16px 24px;padding:24px var(--gutter) 23px;border-top:.5px solid var(--line);color:var(--muted)}
+.dv-foot{position:relative;z-index:1;display:flex;justify-content:space-between;gap:16px 24px;padding:24px var(--gutter) 23px;border-top:.5px solid var(--line);background:var(--cream);color:var(--muted)}
 .dv-foot nav{display:flex;flex-wrap:wrap;gap:12px 24px}
 .dv-foot a{transition:color .35s var(--ease)}
 .dv-foot a:hover{color:var(--ink)}
 
 @media (max-width:1023px){
-  .dv{grid-template-columns:1fr;padding:0 0 80px}
-  .dv-aside{position:relative;padding:24px var(--gutter) 0}
-  .dv-photo{aspect-ratio:4/3;max-height:none}
-  .dv-main{padding:64px var(--gutter) 0;max-width:648px}
+  .nav{right:var(--gutter)}
+  .dv{grid-template-columns:1fr}
+  .dv-aside{position:relative;height:46svh;min-height:320px}
+  .dv-photo img{object-position:20% 50%}
+  .dv-main{width:min(100%,648px);padding:64px var(--gutter) 80px}
   .dv-foot{flex-direction:column;align-items:center;text-align:center}
   .dv-foot nav{justify-content:center}
 }
@@ -110,7 +122,7 @@ html,body{background:var(--cream)}
 
 <header class="nav">
   <button class="nav-menu caps" type="button" aria-label="Ouvrir le menu"><i class="nav-ico" aria-hidden="true"></i><span>menu</span></button>
-  <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh-dark.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
+  <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
   <div class="nav-right">
     <div class="nav-quote">
       <a class="nav-cta ul caps" href="devis.html" aria-current="page"><span class="cta-long">Demander un </span>devis</a>
@@ -172,9 +184,9 @@ html,body{background:var(--cream)}
           <label for="message">Message (facultatif)</label>
           <textarea id="message" name="message"></textarea>
         </div>
+        <label class="chk" id="rgpdChk"><input type="checkbox" name="rgpd" id="rgpd" required><span>J’accepte que ces informations soient utilisées par Bertrand Hospitality pour traiter ma demande. <a href="#">Politique de confidentialité</a><span class="err">Cochez cette case pour envoyer votre demande.</span></span></label>
         <button class="send" type="submit">Envoyer ma demande<svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></button>
         <div class="dv-alt"><p class="t-text">Vous préférez en parler&nbsp;?</p><a class="ul caps" href="tel:+33764070661">07 64 07 06 61</a></div>
-        <p class="dv-legal">Vos informations servent uniquement à traiter votre demande. <a href="#">Politique de confidentialité</a></p>
       </section>
     </form>
 
@@ -244,12 +256,14 @@ html,body{background:var(--cream)}
     tel: el => el.value.replace(/\D/g, "").length >= 9,
   };
   const check = id => { const ok = rules[id]($(id)); $(id).closest(".fld").classList.toggle("is-bad", !ok); $(id).setAttribute("aria-invalid", !ok); return ok; };
+  $("rgpd").addEventListener("change", () => $("rgpdChk").classList.toggle("is-bad", !$("rgpd").checked));
   Object.keys(rules).forEach(id => $(id).addEventListener("input", () => { if ($(id).closest(".fld").classList.contains("is-bad")) check(id); }));
 
   $("form").addEventListener("submit", e => {
     e.preventDefault();
     const bad = Object.keys(rules).filter(id => !check(id));
-    if (bad.length) { $(bad[0]).focus(); return; }
+    const rgpd = $("rgpd").checked; $("rgpdChk").classList.toggle("is-bad", !rgpd);
+    if (bad.length || !rgpd) { (bad.length ? $(bad[0]) : $("rgpd")).focus(); return; }
     // POC : pas d'envoi réel. En production : Make → BookingShake, puis /demande-de-devis/merci/
     const btn = e.submitter || document.querySelector(".send");
     btn.disabled = true;
