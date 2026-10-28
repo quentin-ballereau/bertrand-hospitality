@@ -10,7 +10,6 @@
 <link rel="stylesheet" href="css/base.css?v=10">
 <link rel="stylesheet" href="css/menu.css?v=14">
 <link rel="stylesheet" href="css/home.css?v=23">
-<link rel="stylesheet" href="css/deck.css?v=1">
 <style>
 /* Page Événements (lot 2 · 05, en production /offres) : la liste de tous les formats,
    présentés avec la mise en page de l'ancienne section « Nos quartiers » de la home. */
@@ -98,16 +97,17 @@ html.lenis,html.lenis body{height:auto}
 
   <div class="ev" id="index"></div>
 
-  <!-- notre accompagnement : cartes empilées sur photo (css/deck.css), la dernière est l'appel final de la home -->
-  <section class="dk" aria-labelledby="howTitle">
-    <div class="dk-bg" aria-hidden="true"><img src="assets/offres/coupole-nuit.jpg" alt="" decoding="async"><span class="dk-shade"></span></div>
-    <div class="dk-title"><p class="t-cta t-eyebrow">Notre accompagnement</p><h2 class="t-h2" id="howTitle">Du premier échange au jour J</h2></div>
-    <ol class="dk-cards">
-        <li class="dk-card"><p class="t-cta t-eyebrow">Étape 1</p><div class="dk-head"><h3 class="t-h3">Vous décrivez votre événement</h3><p class="t-text">Le format, la date, le nombre d’invités&nbsp;: quelques lignes suffisent, en ligne ou par téléphone.</p></div></li>
-        <li class="dk-card"><p class="t-cta t-eyebrow">Étape 2</p><div class="dk-head"><h3 class="t-h3">Nous vous proposons les lieux</h3><p class="t-text">Sous 24 heures ouvrées, les maisons et les espaces qui s’y prêtent, avec leurs menus et leurs tarifs.</p></div></li>
-        <li class="dk-card"><p class="t-cta t-eyebrow">Étape 3</p><div class="dk-head"><h3 class="t-h3">Un seul interlocuteur</h3><p class="t-text">Il connaît chaque salon, chaque terrasse, et vous accompagne jusqu’au dernier invité.</p></div></li>
-      <li class="dk-card"><p class="t-cta t-eyebrow">Votre événement</p><div class="dk-head"><h3 class="t-h3">Parlons de votre projet</h3><p class="t-text">La date, le format, le nombre d’invités&nbsp;: nous vous proposons les lieux qui s’y prêtent, avec un seul interlocuteur du premier échange au jour J.</p></div><a class="go-end t-cta" href="devis.html"><span>Demander un devis</span><svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a></li>
-    </ol>
+  <!-- l'appel final de la home (Figma 6560-1198) : une carte crème posée sur la photo -->
+  <section class="closing" aria-labelledby="endTitle">
+    <div class="closing-bg" id="closingBg" role="img" aria-label="Une salle dressée pour un dîner, sous des arches"></div>
+    <div class="closing-card">
+      <p class="t-cta t-eyebrow">Votre événement</p>
+      <div class="closing-head">
+        <h2 class="t-h3" id="endTitle">Parlons de votre projet</h2>
+        <p class="t-text">La date, le format, le nombre d’invités&nbsp;: nous vous proposons les lieux qui s’y prêtent, avec un seul interlocuteur du premier échange au jour J.</p>
+      </div>
+      <a class="go-end t-cta" href="devis.html"><span>Demander un devis</span><svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a>
+    </div>
   </section>
 </main>
 
@@ -207,6 +207,22 @@ if (!matchMedia("(prefers-reduced-motion: reduce)").matches && window.Lenis) {
   /* entrée en scène : chaque élément apparaît en fondu quand il arrive à l'écran */
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } }), {rootMargin:"0px 0px -8% 0px"});
   document.querySelectorAll(".ev-fade").forEach((el, i) => { el.style.transitionDelay = el.closest(".ev-head") ? `${.1 + i * .08}s` : "0s"; io.observe(el); });
+
+  // appel final : la photo glisse lentement, comme sur la home
+  const cb = document.getElementById("closingBg"), cs = cb.parentElement;
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    let ticking = false;
+    const place = () => {
+      ticking = false;
+      const r = cs.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight) return;
+      const p = (r.top + r.height / 2 - innerHeight / 2) / (innerHeight / 2 + r.height / 2);
+      cb.style.transform = `translate3d(0,${(p * -r.height * .12).toFixed(1)}px,0)`;
+    };
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(place); } }, {passive:true});
+    addEventListener("resize", place);
+    place();
+  }
 })();
 </script>
 </body>
