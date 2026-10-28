@@ -3,7 +3,11 @@
    leur taille à l'écran quel que soit le zoom : les monuments, les noms de quartiers, les adresses et leurs pastilles. */
 .pmap{position:relative;width:100%;height:clamp(560px,78svh,760px);overflow:hidden;background:var(--cream);cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .pmap.is-dragging{cursor:grabbing}
-.pm-svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+/* le plan entier, à l'échelle 1, déplacé et zoomé par une transformation ; posé sur une couche GPU pendant les gestes,
+   redessiné net ensuite */
+.pm-stage{position:absolute;left:0;top:0;transform-origin:0 0}
+.pmap.is-moving .pm-stage{will-change:transform}
+.pm-svg{display:block;overflow:visible}
 .pm-plan{opacity:0;transition:opacity 1.2s var(--ease)}
 .pmap.is-loaded .pm-plan{opacity:1}
 /* les bords fondus dans le crème */
@@ -13,7 +17,7 @@
 /* les quartiers : invisibles au repos, une forme taupe au survol (son contour est un trait épais aux bouts arrondis) */
 .pm-zone{fill:rgba(141,121,116,0);stroke:rgba(141,121,116,0);stroke-width:90;stroke-linejoin:round;stroke-linecap:round;cursor:pointer;transition:fill .4s var(--ease),stroke .4s var(--ease)}
 .pm-zone.is-on,.pm-zone.is-focus{fill:rgba(141,121,116,.16);stroke:rgba(141,121,116,.16)}
-.pm-zone-tip{position:absolute;left:0;top:0;z-index:4;display:flex;flex-direction:column;gap:8px;padding:12px 14px;background:#fff;color:var(--ink);font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .25s var(--ease);box-shadow:0 18px 40px -24px rgba(29,29,27,.4)}
+.pm-zone-tip{position:absolute;left:0;top:0;z-index:4;text-decoration:none;display:flex;flex-direction:column;gap:8px;padding:12px 14px;background:#fff;color:var(--ink);font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .25s var(--ease);box-shadow:0 18px 40px -24px rgba(29,29,27,.4)}
 .pm-zone-tip small{font-family:var(--sans);font-size:12px;letter-spacing:-.01em;text-transform:none;color:var(--taupe)}
 .pm-zone-tip.is-on{opacity:1}
 
@@ -42,15 +46,18 @@
 
 /* les adresses : un point, ou une pastille numérotée quand plusieurs se touchent */
 .pm-pins{position:absolute;inset:0}
-.pm-pin,.pm-cl{pointer-events:auto;opacity:0;transition:opacity .8s var(--ease)}
-.pmap.is-in .pm-pin,.pmap.is-in .pm-cl{opacity:1}
-.pmap.is-in .is-dim{opacity:.35}   /* page Secteur : les adresses des autres quartiers */
+/* le placement passe par « transform » (à chaque image) : seuls l'opacité et le glissé « translate » sont animés */
+.pm-pin,.pm-cl{pointer-events:auto;transition:opacity .35s var(--ease),translate .45s var(--expo)}
+.pmap:not(.is-in) .pm-pins{opacity:0}
+.pm-pins{transition:opacity .8s var(--ease)}
+.pm-pin.is-dim,.pm-cl.is-dim{opacity:.35}   /* page Secteur : les adresses des autres quartiers */
+.pmap.is-dragging .pm-zone,.pmap.is-dragging .pm-pin,.pmap.is-dragging .pm-cl,.pmap.is-dragging .pm-lbl{pointer-events:none}   /* pendant un glissement, rien ne réagit au survol */
 .pm-pin{width:32px;height:32px;margin:-16px 0 0 -16px;display:grid;place-items:center;cursor:pointer}
 .pm-pin i{width:11px;height:11px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 1.5px var(--cream);transition:transform .45s var(--expo),background .3s,opacity .4s}
 .pm-pin:hover i,.pm-pin.is-on i,.pm-pin:focus-visible i{transform:scale(1.55);background:var(--taupe)}
 .pmap.is-hover .pm-pin:not(.is-on) i{opacity:.3}
-.pm-cl{width:30px;height:30px;margin:-15px 0 0 -15px;display:grid;place-items:center;border-radius:50%;background:var(--ink);color:var(--cream);font-family:var(--caps);font-size:12px;letter-spacing:.06em;line-height:1;box-shadow:0 0 0 1.5px var(--cream),0 8px 18px -8px rgba(29,29,27,.5);cursor:zoom-in;transition:background .3s var(--ease),transform .45s var(--expo),opacity .8s var(--ease)}
-.pm-cl:hover,.pm-cl:focus-visible{background:var(--taupe);transform:scale(1.1)}
+.pm-cl{width:30px;height:30px;margin:-15px 0 0 -15px;display:grid;place-items:center;border-radius:50%;background:var(--ink);color:var(--cream);font-family:var(--caps);font-size:12px;letter-spacing:.06em;line-height:1;box-shadow:0 0 0 1.5px var(--cream),0 8px 18px -8px rgba(29,29,27,.5);cursor:zoom-in;transition:background .3s var(--ease),scale .45s var(--expo),opacity .35s var(--ease),translate .45s var(--expo)}
+.pm-cl:hover,.pm-cl:focus-visible{background:var(--taupe);scale:1.1}
 
 /* commandes : zoomer, dézoomer, recentrer */
 .pm-ctrl{position:absolute;right:var(--gutter);top:32px;z-index:3;display:flex;flex-direction:column;background:#fff;box-shadow:0 18px 40px -24px rgba(29,29,27,.4)}
@@ -70,9 +77,9 @@
 .pm-edge--e{right:var(--gutter);text-align:right}
 
 /* la fiche d'un lieu */
-.pm-tip{position:absolute;z-index:5;display:flex;gap:12px;transform:translate(-50%,calc(-100% - 18px));opacity:0;pointer-events:none;transition:opacity .35s var(--ease);cursor:default}
+.pm-tip{position:absolute;z-index:5;display:flex;gap:12px;transform:translate(-50%,calc(-100% - 18px));opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s var(--ease),visibility 0s .3s;cursor:default}
 .pm-tip.is-below{transform:translate(-50%,18px)}
-.pm-tip.is-on{opacity:1;pointer-events:auto}
+.pm-tip.is-on{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .25s var(--ease)}
 .pm-card{display:flex;flex-direction:column;align-items:center;gap:12px;width:232px;padding:8px 8px 20px;background:#fff;text-align:center;box-shadow:0 24px 48px -28px rgba(29,29,27,.35)}
 .pm-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;margin-bottom:8px}
 .pm-card .t-mini{color:var(--taupe)}

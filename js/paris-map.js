@@ -20,11 +20,15 @@ BH.MONUMENTS = [
   {name:"Bastille", x:1047.0, y:884.6, icon:'<path d="M11 25h8M12 25v-3h6v3M14 22V9h2v13M13 9h4M15 9V5l2 1.5"/>'},
 ];
 
-/* La carte (home, pages Secteur), dans l'esprit de sireos.com/projets : on la fait glisser, on zoome
-   (boutons, double clic, Ctrl ou ⌘ + molette, pincement à deux doigts ; la molette seule fait défiler la page),
-   les adresses proches se regroupent en pastilles numérotées qui s'ouvrent au clic.
-   Les quartiers s'éclairent au survol et mènent à leur page Secteur ; les monuments servent de repères.
-   Les pastilles, les monuments et les noms gardent leur taille à l'écran : ils sont posés au-dessus du plan, en HTML.
+
+/* La carte (home, pages Secteur), dans l'esprit de sireos.com/projets.
+   — On la fait glisser (avec un peu d'élan), on zoome : boutons, double clic, Ctrl ou ⌘ + molette, pincement du pavé tactile,
+     deux doigts sur mobile. La molette seule et un doigt seul font défiler la page : la carte ne la piège jamais.
+   — Le plan est déplacé par une transformation (GPU) et redessiné net une fois le geste fini.
+   — Les adresses proches se regroupent en pastilles numérotées ; le regroupement est recalculé quand le zoom se pose,
+     et les pastilles se séparent ou se rejoignent en glissant (jamais de saut).
+   — Les quartiers s'éclairent au survol et mènent à leur page ; les monuments servent de repères.
+   Les pastilles, les monuments et les noms sont posés au-dessus du plan, en HTML : ils gardent leur taille à l'écran.
    opts.focus : l'id d'un secteur, mis en avant et cadré (pages Secteur). */
 BH.parisMap = (box, opts = {}) => {
   const M = BH.PARIS, {VENUES, SECTORS, capFor} = BH;
@@ -32,19 +36,22 @@ BH.parisMap = (box, opts = {}) => {
   const [X0, Y0, MW, MH] = M.vb;
   const SEC = {"Champs-Élysées":"ouest", "Auteuil":"ouest", "Opéra":"centre", "Bastille":"centre", "Gare du Nord":"centre",
     "Saint-Germain":"rg", "Montparnasse":"rg", "Levallois":"seine", "Saint-Ouen":"seine", "Issy":"seine"};
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const MIN_W = 300;           // zoom maximal : 300 unités de plan dans la largeur du cadre
+  const CLUSTER_PX = 32;       // deux adresses plus proches que cela à l'écran se regroupent
+  const HIDE_DELAY = 260;      // la fiche d'un lieu attend un peu avant de partir (le temps d'y glisser la souris)
 
-  // un point par adresse ; Versailles et Disney Village, hors du plan, vont en bord de carte
-  const groups = {}, outside = [];
+  /* ---------- les données : un point par adresse, Versailles et Disney Village en bord de carte ---------- */
+  const byKey = {}, outside = [];
   VENUES.forEach(v => {
     const pt = M.pts[v.slug]; if (!pt) return;
     const [x, y] = pt;
     if (x < X0 || x > X0 + MW || y < Y0 || y > Y0 + MH) { outside.push(v); return; }
-    const k = pt.join(); (groups[k] = groups[k] || {x, y, list:[]}).list.push(v);
+    (byKey[pt.join()] = byKey[pt.join()] || {x, y, list:[]}).list.push(v);
   });
-  const G = Object.values(groups);
+  const G = Object.values(byKey).sort((a, b) => a.x - b.x || a.y - b.y);   // ordre fixe : regroupement stable
 
-  /* les quartiers : une forme souple autour de leurs adresses (enveloppe convexe épaissie) ; un quartier éclaté
-     (les bords de Seine) a une forme par groupe d'adresses */
+  // les quartiers : une forme souple autour de leurs adresses (enveloppe convexe épaissie), une par groupe d'adresses
   const hull = pts => {
     if (pts.length < 3) return pts;
     const p = [...pts].sort((a, b) => a[0] - b[0] || a[1] - b[1]), cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
@@ -53,21 +60,29 @@ BH.parisMap = (box, opts = {}) => {
     for (const q of p.reverse()) { while (up.length > 1 && cr(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); }
     return lo.slice(0, -1).concat(up.slice(0, -1));
   };
-  const areaOf = id => {
-    const pts = VENUES.filter(v => v.s === id && M.pts[v.slug] && groups[M.pts[v.slug].join()]).map(v => M.pts[v.slug]);
-    const parts = [];   // regroupe les adresses distantes de moins de 260 unités
-    pts.forEach(p => { const g = parts.find(c => c.some(q => Math.hypot(q[0] - p[0], q[1] - p[1]) < 260)); g ? g.push(p) : parts.push([p]); });
+  const shapeOf = id => {
+    const parts = [];
+    G.filter(g => g.list.some(v => v.s === id)).forEach(g => {
+      const c = parts.find(c => c.some(q => Math.hypot(q[0] - g.x, q[1] - g.y) < 260));
+      c ? c.push([g.x, g.y]) : parts.push([[g.x, g.y]]);
+    });
     return parts.map(c => { const h = hull(c); return "M" + h.map(p => p.join(" ")).join("L") + (h.length < 3 ? "l.1 0" : "Z"); }).join(" ");
   };
-  const areas = SECTORS.map(s => ({...s, d:areaOf(s.id), n:VENUES.filter(v => v.s === s.id).length})).filter(a => a.d);
+  const areas = SECTORS.map(s => ({...s, d:shapeOf(s.id), n:VENUES.filter(v => v.s === s.id).length})).filter(a => a.d);
+  const areaById = id => areas.find(a => a.id === id);
 
+  /* ---------- la structure ---------- */
+  const edge = (list, cls, label, left) => list.length
+    ? `<p class="pm-edge ${cls} t-mini">${left ? "← " : ""}<a href="secteur.html?s=hors">${label}</a>&nbsp;: ${list.map(v => `<a href="lieu.html?l=${v.slug}">${v.name}</a>`).join(", ")}${left ? "" : " →"}</p>` : "";
   box.classList.add("pm");
   box.innerHTML = `
-    <svg class="pm-svg" preserveAspectRatio="none" aria-hidden="true">
-      <image class="pm-plan" x="${X0}" y="${Y0}" width="${MW}" height="${MH}" preserveAspectRatio="none"/>
-      <g class="pm-areas">${areas.map(a => `<path class="pm-zone" data-s="${a.id}" d="${a.d}"/>`).join("")}</g>
-    </svg>
-    <div class="pm-layer" aria-label="Carte de nos adresses à Paris">
+    <div class="pm-stage" aria-hidden="true">
+      <svg class="pm-svg" width="${MW}" height="${MH}" viewBox="${X0} ${Y0} ${MW} ${MH}">
+        <image class="pm-plan" x="${X0}" y="${Y0}" width="${MW}" height="${MH}" preserveAspectRatio="none"/>
+        <g>${areas.map(a => `<path class="pm-zone" data-s="${a.id}" d="${a.d}"/>`).join("")}</g>
+      </svg>
+    </div>
+    <div class="pm-layer" role="group" aria-label="Carte de nos adresses à Paris">
       ${BH.MONUMENTS.map(m => `<span class="pm-mon" data-x="${m.x}" data-y="${m.y}"><svg viewBox="0 0 30 30" aria-hidden="true">${m.icon}</svg><span class="pm-mon-name">${m.name}</span></span>`).join("")}
       ${M.labels.map(([t, x, y, an]) => SEC[t]
         ? `<a class="pm-lbl pm-lbl--${an}" href="secteur.html?s=${SEC[t]}" data-s="${SEC[t]}" data-x="${x}" data-y="${y}"><span>${t}</span></a>`
@@ -75,207 +90,354 @@ BH.parisMap = (box, opts = {}) => {
       <div class="pm-pins"></div>
     </div>
     <div class="pm-frame" aria-hidden="true"></div>
-    <p class="pm-zone-tip" aria-hidden="true"></p>
+    <a class="pm-zone-tip" href="#" tabindex="-1"></a>
     <div class="pm-ctrl">
       <button type="button" data-zoom="in" aria-label="Zoomer"><svg viewBox="0 0 14 14"><path d="M7 1v12M1 7h12"/></svg></button>
       <button type="button" data-zoom="out" aria-label="Dézoomer"><svg viewBox="0 0 14 14"><path d="M1 7h12"/></svg></button>
       <button type="button" data-zoom="reset" aria-label="Recentrer la carte"><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="4.5"/><path d="M7 0v3M7 11v3M0 7h3M11 7h3"/></svg></button>
     </div>
     <p class="pm-hint t-mini" aria-hidden="true"></p>
-    ${edge(outside.filter(v => v.place.includes("Versailles")), "pm-edge--w", "Versailles", "l")}${edge(outside.filter(v => !v.place.includes("Versailles")), "pm-edge--e", "Disney Village", "r")}
+    ${edge(outside.filter(v => v.place.includes("Versailles")), "pm-edge--w", "Versailles", true)}${edge(outside.filter(v => !v.place.includes("Versailles")), "pm-edge--e", "Disney Village", false)}
     <div class="pm-tip" aria-live="polite"></div>`;
-  function edge(list, cls, label, arrow) {
-    return list.length ? `<p class="pm-edge ${cls} t-mini">${arrow === "l" ? "← " : ""}<a href="secteur.html?s=hors">${label}</a>&nbsp;: ${list.map(v => `<a href="lieu.html?l=${v.slug}">${v.name}</a>`).join(", ")}${arrow === "r" ? " →" : ""}</p>` : "";
-  }
   const q = s => box.querySelector(s), qa = s => box.querySelectorAll(s);
-  const svg = q(".pm-svg"), pinsEl = q(".pm-pins"), tip = q(".pm-tip"), hint = q(".pm-hint"), ztip = q(".pm-zone-tip");
-  const placed = [...qa("[data-x]")];
-  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (opts.focus) { box.classList.add("has-focus"); qa(`.pm-zone[data-s="${opts.focus}"], .pm-lbl[data-s="${opts.focus}"]`).forEach(e => e.classList.add("is-focus")); }
+  const stage = q(".pm-stage"), pinsEl = q(".pm-pins"), tip = q(".pm-tip"), hint = q(".pm-hint"), ztip = q(".pm-zone-tip");
+  const fixed = [...qa(".pm-layer > [data-x]")];   // monuments et noms : toujours là
+  if (opts.focus) qa(`.pm-zone[data-s="${opts.focus}"], .pm-lbl[data-s="${opts.focus}"]`).forEach(e => e.classList.add("is-focus"));
 
-  /* ---------- la vue : un rectangle du plan (x, y, largeur), à l'échelle du cadre ---------- */
-  const MIN_W = 300, MAX_W = MW;
-  const ratio = () => box.clientHeight / box.clientWidth;
-  const fit = (pts, pad = 1.6, min = MIN_W) => {   // cadrer un ensemble de points, avec de l'air
+  /* ---------- la vue : un rectangle du plan (x, y, largeur) ; k = pixels d'écran par unité de plan ---------- */
+  let W = 0, H = 0;
+  let view = {x:0, y:0, w:1};
+  const k = () => W / view.w;
+  const maxW = () => Math.min(MW, MH * W / H);
+  const clampV = v => {
+    const w = Math.min(maxW(), Math.max(MIN_W, v.w)), h = w * H / W;
+    return {w, x:Math.min(X0 + MW - w, Math.max(X0, v.x)), y:Math.min(Y0 + MH - h, Math.max(Y0, v.y))};
+  };
+  const toScreen = (x, y) => [(x - view.x) * k(), (y - view.y) * k()];
+  const toMap = (sx, sy) => [view.x + sx / k(), view.y + sy / k()];
+  const fit = (pts, pad, min) => {   // cadrer des points, avec de l'air
     const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
     const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2;
-    const w = Math.max(min, (Math.max(...xs) - Math.min(...xs)) * pad, (Math.max(...ys) - Math.min(...ys)) * pad / ratio());
-    return {x:cx - w / 2, y:cy - w * ratio() / 2, w};
+    const w = Math.max(min, (Math.max(...xs) - Math.min(...xs)) * pad, (Math.max(...ys) - Math.min(...ys)) * pad * W / H);
+    return clampV({w, x:cx - w / 2, y:cy - w * H / W / 2});
   };
   // à l'arrivée : un peu plus serré que le plan entier, sur le cœur de Paris (ou sur le quartier de la page)
   const home = () => {
-    if (opts.focus) { const pts = VENUES.filter(v => v.s === opts.focus && M.pts[v.slug]).map(v => M.pts[v.slug]).filter(p => p[0] > X0 && p[0] < X0 + MW); if (pts.length) return fit(pts, 2.2, 640); }
-    const w = innerWidth < 768 ? 820 : 1080;
-    return {x:770 - w / 2, y:800 - w * ratio() / 2, w};
+    const pts = opts.focus ? G.filter(g => g.list.some(v => v.s === opts.focus)).map(g => [g.x, g.y]) : [];
+    if (pts.length) return fit(pts, 2.2, 640);
+    const w = W < 768 ? 820 : 1080;
+    return clampV({w, x:770 - w / 2, y:800 - w * H / W / 2});
   };
-  const clampV = v => {
-    const w = Math.min(MAX_W, Math.max(MIN_W, v.w)), h = w * ratio();
-    return {w, x:Math.min(X0 + MW - w, Math.max(X0, v.x)), y:Math.min(Y0 + MH - h, Math.max(Y0, v.y))};
-  };
-  let view = clampV(home()), lastW = 0;
-  const toScreen = (x, y) => [(x - view.x) / view.w * box.clientWidth, (y - view.y) / view.w * box.clientWidth];
-  const toMap = (sx, sy) => [view.x + sx / box.clientWidth * view.w, view.y + sy / box.clientWidth * view.w];
 
-  function render() {
-    svg.setAttribute("viewBox", `${view.x} ${view.y} ${view.w} ${view.w * ratio()}`);
-    box.style.setProperty("--k", (box.clientWidth / view.w).toFixed(4));   // échelle, pour les noms de monuments
-    box.classList.toggle("is-close", box.clientWidth / view.w > 1.55);   // de près (échelle à l'écran) : les noms des monuments s'affichent
-    if (Math.abs(view.w - lastW) > .5) { lastW = view.w; cluster(); }
-    for (const el of placed) { const [sx, sy] = toScreen(+el.dataset.x, +el.dataset.y); el.style.transform = `translate(${sx.toFixed(1)}px,${sy.toFixed(1)}px)`; }
+  /* ---------- une seule boucle d'affichage, une image à la fois ---------- */
+  let anim = null, raf = 0, settleT = 0, lastK = 0;
+  const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+  function frame(now) {
+    raf = 0;
+    if (anim) {
+      const done = anim.step(now);
+      if (done) anim = null; else kick();
+    }
+    draw();
+    // geste en cours : le plan reste sur sa couche GPU ; dès qu'il se pose, on le redessine net et on regroupe
+    box.classList.add("is-moving");
+    clearTimeout(settleT);
+    settleT = setTimeout(settle, anim ? 400 : 140);
+  }
+  function draw() {
+    const kk = k();
+    stage.style.transform = `translate3d(${(-(view.x - X0) * kk).toFixed(2)}px,${(-(view.y - Y0) * kk).toFixed(2)}px,0) scale(${kk.toFixed(5)})`;
+    for (const el of fixed) place(el);
+    for (const n of nodes.values()) place(n.el);
+    for (const el of leaving) place(el);
+    if (tipFor) placeTip();
+    box.classList.toggle("is-close", kk > 1.55);   // de près, les noms des monuments s'affichent
+  }
+  function place(el) { const [sx, sy] = toScreen(+el.dataset.x, +el.dataset.y); el.style.transform = `translate3d(${sx.toFixed(1)}px,${sy.toFixed(1)}px,0)`; }
+  function settle() {
+    if (anim || drag || pinch) return;
+    box.classList.remove("is-moving");
+    if (Math.abs(k() - lastK) > 1e-4) recluster(true);
+  }
+  const setView = v => { view = clampV(v); kick(); };
+
+  // déplacement animé (recentrage, ouverture d'une pastille) : courbe douce
+  function goTo(target, dur = 700) {
+    target = clampV(target); hide(true);
+    if (reduce) { view = target; kick(); return; }
+    const from = {...view}, t0 = performance.now();
+    anim = {step(now) {
+      const t = Math.min(1, (now - t0) / dur), e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      view = clampV({x:from.x + (target.x - from.x) * e, y:from.y + (target.y - from.y) * e, w:from.w + (target.w - from.w) * e});
+      return t >= 1;
+    }};
+    kick();
+  }
+  // zoom autour d'un point fixe de l'écran (molette, boutons, double clic) : la largeur glisse vers sa cible
+  let zoomTo = null;
+  function zoomAt(f, sx = W / 2, sy = H / 2) {
+    hide(true);
+    const [ax, ay] = toMap(sx, sy);
+    const tw = Math.min(maxW(), Math.max(MIN_W, (zoomTo ? zoomTo.w : view.w) * f));
+    zoomTo = {w:tw, ax, ay, sx, sy};
+    if (reduce) { setView({w:tw, x:ax - sx * tw / W, y:ay - sy * tw / W}); zoomTo = null; return; }
+    anim = {step() {
+      const w = view.w + (zoomTo.w - view.w) * .2;
+      const close = Math.abs(zoomTo.w - w) < .5, ww = close ? zoomTo.w : w;
+      view = clampV({w:ww, x:zoomTo.ax - zoomTo.sx * ww / W, y:zoomTo.ay - zoomTo.sy * ww / W});
+      if (close) zoomTo = null;
+      return close;
+    }};
+    kick();
+  }
+  // l'élan après un glissement : la vue continue, en ralentissant
+  function glide(vx, vy) {
+    if (reduce || Math.hypot(vx, vy) < .05) return;
+    let last = performance.now();
+    anim = {step(now) {
+      const dt = Math.min(32, now - last); last = now;
+      const f = Math.pow(.88, dt / 16);
+      vx *= f; vy *= f;
+      setView({w:view.w, x:view.x - vx * dt / k(), y:view.y - vy * dt / k()});
+      return Math.hypot(vx, vy) < .02;
+    }};
+    kick();
   }
 
-  /* ---------- les adresses : regroupées quand elles se touchent à l'écran ---------- */
-  function cluster() {
-    hide();
-    const R = 30, done = new Set(), out = [];
-    const S = G.map(g => toScreen(g.x, g.y));
+  /* ---------- les adresses : points et pastilles, recalculés quand le zoom se pose ---------- */
+  let nodes = new Map(), leaving = new Set(), owner = new Map();   // clé du groupe → nœud ; adresse → clé
+  const keyOf = members => members.join("-");
+  function recluster(animate) {
+    lastK = k();
+    const S = G.map(g => toScreen(g.x, g.y)), done = new Set(), out = [];
     G.forEach((g, i) => {
       if (done.has(i)) return;
       const members = [i]; done.add(i);
-      G.forEach((h, j) => { if (!done.has(j) && Math.hypot(S[i][0] - S[j][0], S[i][1] - S[j][1]) < R) { members.push(j); done.add(j); } });
-      const x = members.reduce((a, m) => a + G[m].x, 0) / members.length, y = members.reduce((a, m) => a + G[m].y, 0) / members.length;
-      out.push({x, y, members, n:members.reduce((a, m) => a + G[m].list.length, 0)});
+      for (let j = i + 1; j < G.length; j++) if (!done.has(j) && members.some(m => Math.hypot(S[m][0] - S[j][0], S[m][1] - S[j][1]) < CLUSTER_PX)) { members.push(j); done.add(j); }
+      members.sort((a, b) => a - b);
+      out.push({members, x:members.reduce((a, m) => a + G[m].x, 0) / members.length, y:members.reduce((a, m) => a + G[m].y, 0) / members.length,
+        venues:members.flatMap(m => G[m].list)});
     });
-    pinsEl.innerHTML = out.map((c, i) => {
-      const venues = c.members.flatMap(m => G[m].list);
-      const dim = opts.focus && !venues.some(v => v.s === opts.focus) ? " is-dim" : "";
-      return c.members.length > 1
-        ? `<button class="pm-cl${dim}" type="button" data-c="${i}" data-x="${c.x}" data-y="${c.y}" aria-label="${c.n} lieux : ${venues.map(v => v.name).join(", ")}. Zoomer">${c.n}</button>`
-        : `<button class="pm-pin${dim}" type="button" data-c="${i}" data-x="${c.x}" data-y="${c.y}" aria-label="${venues.map(v => v.name).join(", ")}"><i></i></button>`;
-    }).join("");
-    pinsEl.querySelectorAll("[data-x]").forEach(el => { placed.push(el); });
-    for (let k = placed.length - 1; k >= 0; k--) if (!placed[k].isConnected) placed.splice(k, 1);
-    clusters = out;
+    const next = new Map(), nextOwner = new Map();
+    for (const c of out) {
+      const key = keyOf(c.members);
+      let n = nodes.get(key);
+      if (!n) {
+        n = {el:make(c)};
+        pinsEl.appendChild(n.el); place(n.el);
+        // une pastille qui se sépare : ses morceaux partent de sa position ; des points qui se rejoignent : la pastille naît au milieu d'eux
+        const was = nodes.get(owner.get(c.members[0]));
+        if (animate && was && !reduce) slide(n.el, was.el, true);
+      }
+      n.c = c; next.set(key, n);
+      c.members.forEach(m => nextOwner.set(m, key));
+    }
+    for (const [key, n] of nodes) {
+      if (next.has(key)) continue;
+      if (tipFor === n) hide(true);
+      const to = next.get(nextOwner.get(n.c.members[0]));
+      n.el.tabIndex = -1;
+      if (animate && to && !reduce) { leaving.add(n.el); slide(n.el, to.el, false); setTimeout(() => { leaving.delete(n.el); n.el.remove(); }, 450); }
+      else n.el.remove();
+    }
+    nodes = next; owner = nextOwner;
   }
-  let clusters = [];
+  // glissé d'une position d'écran à une autre (propriété « translate », indépendante du placement)
+  function slide(el, ref, arriving) {
+    const a = ref.style.transform.match(/-?[\d.]+/g), b = el.style.transform.match(/-?[\d.]+/g);
+    const dx = a[0] - b[0], dy = a[1] - b[1];
+    if (arriving) {
+      el.style.transition = "none"; el.style.translate = `${dx}px ${dy}px`; el.style.opacity = "0";
+      el.getBoundingClientRect();
+      el.style.transition = ""; el.style.translate = "0 0"; el.style.opacity = "";
+    } else { el.style.translate = `${dx}px ${dy}px`; el.style.opacity = "0"; el.style.pointerEvents = "none"; }
+  }
+  function make(c) {
+    const el = document.createElement("button");
+    el.type = "button";
+    el.dataset.x = c.x; el.dataset.y = c.y;
+    const names = c.venues.map(v => v.name).join(", ");
+    if (opts.focus && !c.venues.some(v => v.s === opts.focus)) el.classList.add("is-dim");
+    if (c.members.length > 1) { el.className += " pm-cl"; el.textContent = c.venues.length; el.setAttribute("aria-label", `${c.venues.length} lieux : ${names}. Zoomer`); }
+    else { el.className += " pm-pin"; el.innerHTML = "<i></i>"; el.setAttribute("aria-label", names); }
+    return el;
+  }
 
-  /* ---------- déplacements animés (zoom, recentrage) ---------- */
-  let anim = null;
-  function goTo(target, dur = 600) {
-    target = clampV(target);
-    if (reduce) { view = target; render(); return; }
-    const from = {...view}, t0 = performance.now();
-    cancelAnimationFrame(anim);
-    const step = now => {
-      const t = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - t, 3);
-      view = {x:from.x + (target.x - from.x) * e, y:from.y + (target.y - from.y) * e, w:from.w + (target.w - from.w) * e};
-      render(); if (t < 1) anim = requestAnimationFrame(step);
-    };
-    anim = requestAnimationFrame(step);
+  /* ---------- la fiche d'un lieu : elle apparaît vite, part sans hâte, suit son point si la carte bouge ---------- */
+  let tipFor = null, pinned = false, showT = 0, hideT = 0;
+  const card = v => `<a class="pm-card" href="lieu.html?l=${v.slug}"><img src="assets/lieux/${v.slug}.jpg" alt="" loading="lazy">
+      <span class="t-mini">${v.place} · jusqu’à ${capFor(v)} invités</span><span class="t-h5">${v.name}</span></a>`;
+  function show(n, keep) {
+    clearTimeout(hideT); clearTimeout(showT);
+    if (tipFor !== n) {
+      if (tipFor) tipFor.el.classList.remove("is-on");
+      tipFor = n; n.el.classList.add("is-on");
+      tip.innerHTML = n.c.venues.map(card).join("");
+      placeTip();
+    }
+    pinned = !!keep;
+    box.classList.add("is-hover"); tip.classList.add("is-on");
   }
-  const zoomAt = (f, sx = box.clientWidth / 2, sy = box.clientHeight / 2, animate = true) => {
-    const [mx, my] = toMap(sx, sy), w = Math.min(MAX_W, Math.max(MIN_W, view.w * f));
-    const t = {w, x:mx - sx / box.clientWidth * w, y:my - sy / box.clientWidth * w};
-    animate ? goTo(t, 450) : (view = clampV(t), render());
-  };
-  q(".pm-ctrl").addEventListener("click", e => {
-    const b = e.target.closest("[data-zoom]"); if (!b) return;
-    if (b.dataset.zoom === "reset") goTo(home(), 800); else zoomAt(b.dataset.zoom === "in" ? 1 / 1.6 : 1.6);
+  function placeTip() {
+    const [sx, sy] = toScreen(+tipFor.el.dataset.x, +tipFor.el.dataset.y);
+    const half = tip.offsetWidth / 2 + 12;
+    tip.style.left = Math.min(Math.max(sx, half), W - half) + "px"; tip.style.top = sy + "px";
+    tip.classList.toggle("is-below", sy < H * .45);
+  }
+  function hide(now) {
+    clearTimeout(showT); clearTimeout(hideT);
+    const go = () => { if (tipFor) tipFor.el.classList.remove("is-on"); tipFor = null; pinned = false; tip.classList.remove("is-on"); box.classList.remove("is-hover"); };
+    if (now) go(); else hideT = setTimeout(go, HIDE_DELAY);
+  }
+  const nodeOf = el => { for (const n of nodes.values()) if (n.el === el) return n; };
+  pinsEl.addEventListener("pointerover", e => {
+    const el = e.target.closest(".pm-pin"); if (!el || e.pointerType !== "mouse" || drag || pinned) return;
+    const n = nodeOf(el); if (!n) return;
+    tipFor ? show(n) : (clearTimeout(showT), showT = setTimeout(() => show(n), 70));   // une fiche déjà ouverte change tout de suite
   });
+  pinsEl.addEventListener("pointerout", e => {
+    if (e.pointerType !== "mouse" || !e.target.closest(".pm-pin") || pinned) return;
+    if (e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".pm-tip")) return;
+    hide();
+  });
+  tip.addEventListener("pointerenter", () => clearTimeout(hideT));
+  tip.addEventListener("pointerleave", e => { if (e.pointerType === "mouse" && !pinned) hide(); });
+  pinsEl.addEventListener("focusin", e => { const n = nodeOf(e.target.closest(".pm-pin")); if (n) show(n); });
+  pinsEl.addEventListener("focusout", e => { if (!(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".pm-tip"))) hide(); });
+  let lastPointer = "mouse";
+  box.addEventListener("pointerdown", e => lastPointer = e.pointerType, true);
+  pinsEl.addEventListener("click", e => {
+    if (dragged) return;
+    const el = e.target.closest(".pm-pin, .pm-cl"); if (!el) return;
+    const n = nodeOf(el); if (!n) return;
+    if (el.classList.contains("pm-cl")) { goTo(fit(n.c.members.map(m => [G[m].x, G[m].y]), 2, MIN_W)); return; }
+    // souris ou clavier sur une seule maison : on y va ; au doigt, ou adresse partagée : la fiche reste ouverte (un second appui la ferme)
+    if (lastPointer !== "touch" && n.c.venues.length === 1) { location.href = `lieu.html?l=${n.c.venues[0].slug}`; return; }
+    tipFor === n && pinned ? hide(true) : show(n, true);
+  });
+  document.addEventListener("pointerdown", e => { if (pinned && !box.contains(e.target)) hide(true); });
+  box.addEventListener("pointerdown", e => { if (pinned && !e.target.closest(".pm-pin, .pm-cl, .pm-tip")) hide(true); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") { hide(true); clearZone(); } });
 
-  /* ---------- glisser (souris, stylet) ---------- */
-  let drag = null, moved = false;
+  /* ---------- glisser à la souris, avec élan ---------- */
+  let drag = null, dragged = false;
   box.addEventListener("pointerdown", e => {
-    if (e.pointerType === "touch" || e.button > 0 || e.target.closest(".pm-ctrl, .pm-tip, .pm-edge")) return;
-    drag = {sx:e.clientX, sy:e.clientY, x:view.x, y:view.y}; moved = false;
+    if (e.pointerType === "touch" || e.button > 0 || e.target.closest(".pm-ctrl, .pm-tip, .pm-edge, .pm-zone-tip")) return;
+    anim = null; zoomTo = null;
+    drag = {sx:e.clientX, sy:e.clientY, x:view.x, y:view.y, t:performance.now(), vx:0, vy:0, lx:e.clientX, ly:e.clientY}; dragged = false;
   });
   addEventListener("pointermove", e => {
     if (!drag) return;
     const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
-    if (!moved && Math.hypot(dx, dy) > 4) { moved = true; box.classList.add("is-dragging"); hide(); }
-    if (moved) { const k = view.w / box.clientWidth; view = clampV({w:view.w, x:drag.x - dx * k, y:drag.y - dy * k}); render(); }
+    if (!dragged && Math.hypot(dx, dy) > 4) { dragged = true; box.classList.add("is-dragging"); hide(true); clearZone(); }
+    if (!dragged) return;
+    const now = performance.now(), dt = Math.max(1, now - drag.t);
+    drag.vx = drag.vx * .6 + (e.clientX - drag.lx) / dt * .4; drag.vy = drag.vy * .6 + (e.clientY - drag.ly) / dt * .4;
+    drag.t = now; drag.lx = e.clientX; drag.ly = e.clientY;
+    setView({w:view.w, x:drag.x - dx / k(), y:drag.y - dy / k()});
   });
-  addEventListener("pointerup", () => { if (!drag) return; drag = null; box.classList.remove("is-dragging"); setTimeout(() => moved = false, 0); });
-  box.addEventListener("dblclick", e => { if (e.target.closest(".pm-ctrl, .pm-tip")) return; const r = box.getBoundingClientRect(); zoomAt(1 / 1.8, e.clientX - r.left, e.clientY - r.top); });
+  const endDrag = () => {
+    if (!drag) return;
+    const d = drag; drag = null; box.classList.remove("is-dragging");
+    if (dragged && performance.now() - d.t < 80) glide(d.vx, d.vy);
+    setTimeout(() => dragged = false, 0);
+  };
+  addEventListener("pointerup", endDrag);
+  addEventListener("pointercancel", endDrag);   // appui interrompu (alerte système, changement de fenêtre)
+  box.addEventListener("click", e => { if (dragged && e.target.closest("a")) e.preventDefault(); }, true);   // pas de lien ouvert en fin de glissement
+  box.addEventListener("dblclick", e => {
+    if (e.target.closest(".pm-ctrl, .pm-tip, .pm-pin, .pm-cl")) return;
+    const r = box.getBoundingClientRect(); zoomAt(1 / 1.8, e.clientX - r.left, e.clientY - r.top);
+  });
 
-  /* ---------- molette : la page défile, Ctrl ou ⌘ zoome (le pincement du pavé tactile passe aussi par là) ---------- */
-  let hintT;
-  const say = txt => { hint.textContent = txt; hint.classList.add("is-on"); clearTimeout(hintT); hintT = setTimeout(() => hint.classList.remove("is-on"), 1400); };
+  /* ---------- boutons ---------- */
+  q(".pm-ctrl").addEventListener("click", e => {
+    const b = e.target.closest("[data-zoom]"); if (!b) return;
+    b.dataset.zoom === "reset" ? goTo(home(), 800) : zoomAt(b.dataset.zoom === "in" ? 1 / 1.7 : 1.7);
+  });
+
+  /* ---------- molette : la page défile ; Ctrl ou ⌘ (et le pincement du pavé tactile) zooment ---------- */
+  let hintT = 0, hintAt = 0;
+  const say = txt => {
+    if (performance.now() - hintAt < 2500 && hint.classList.contains("is-on")) return;
+    hintAt = performance.now(); hint.textContent = txt; hint.classList.add("is-on");
+    clearTimeout(hintT); hintT = setTimeout(() => hint.classList.remove("is-on"), 1500);
+  };
   const mac = /Mac|iPhone|iPad/.test(navigator.platform);
   box.addEventListener("wheel", e => {
-    if (!(e.ctrlKey || e.metaKey)) { say(`Maintenez ${mac ? "⌘" : "Ctrl"} et faites défiler pour zoomer`); return; }
+    if (!(e.ctrlKey || e.metaKey)) { if (Math.abs(e.deltaY) > 4) say(`Maintenez ${mac ? "⌘" : "Ctrl"} et faites défiler pour zoomer`); return; }
     e.preventDefault(); e.stopPropagation();
-    const r = box.getBoundingClientRect();
-    zoomAt(Math.exp(e.deltaY * (e.deltaMode ? .05 : .0025)), e.clientX - r.left, e.clientY - r.top, false);
+    const r = box.getBoundingClientRect(), d = Math.max(-60, Math.min(60, e.deltaMode ? e.deltaY * 16 : e.deltaY));
+    zoomAt(Math.exp(d * .0045), e.clientX - r.left, e.clientY - r.top);
   }, {passive:false});
 
   /* ---------- mobile : un doigt fait défiler la page, deux doigts déplacent et zooment ---------- */
-  let pinch = null;
-  const mid = t => [(t[0].clientX + t[1].clientX) / 2, (t[0].clientY + t[1].clientY) / 2], dist = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+  let pinch = null, touch1 = null;
+  const mid = t => [(t[0].clientX + t[1].clientX) / 2, (t[0].clientY + t[1].clientY) / 2];
+  const dist = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
   box.addEventListener("touchstart", e => {
-    if (e.touches.length === 2) { const r = box.getBoundingClientRect(), [cx, cy] = mid(e.touches); pinch = {d:dist(e.touches), view:{...view}, at:toMap(cx - r.left, cy - r.top)}; hide(); }
-    else if (e.touches.length === 1 && !e.target.closest(".pm-pin, .pm-cl, .pm-ctrl, .pm-tip, a")) say("Utilisez deux doigts pour déplacer la carte");
+    if (e.touches.length === 2) {
+      anim = null; zoomTo = null; touch1 = null; hide(true); clearZone();
+      const r = box.getBoundingClientRect(), [cx, cy] = mid(e.touches);
+      pinch = {d:dist(e.touches), w:view.w, at:toMap(cx - r.left, cy - r.top)};
+    } else if (e.touches.length === 1) touch1 = {x:e.touches[0].clientX, y:e.touches[0].clientY, said:false};
   }, {passive:true});
   box.addEventListener("touchmove", e => {
-    if (!pinch || e.touches.length !== 2) return;
-    e.preventDefault();
-    const r = box.getBoundingClientRect(), [cx, cy] = mid(e.touches), sx = cx - r.left, sy = cy - r.top;
-    const w = Math.min(MAX_W, Math.max(MIN_W, pinch.view.w * pinch.d / dist(e.touches)));
-    view = clampV({w, x:pinch.at[0] - sx / box.clientWidth * w, y:pinch.at[1] - sy / box.clientWidth * w}); render();
+    if (pinch && e.touches.length === 2) {
+      e.preventDefault();
+      const r = box.getBoundingClientRect(), [cx, cy] = mid(e.touches), sx = cx - r.left, sy = cy - r.top;
+      const w = Math.min(maxW(), Math.max(MIN_W, pinch.w * pinch.d / dist(e.touches)));
+      setView({w, x:pinch.at[0] - sx * w / W, y:pinch.at[1] - sy * w / W});
+    } else if (touch1 && !touch1.said && e.touches.length === 1) {
+      // un geste plutôt horizontal à un doigt : on rappelle comment déplacer la carte
+      const dx = Math.abs(e.touches[0].clientX - touch1.x), dy = Math.abs(e.touches[0].clientY - touch1.y);
+      if (dx > 14 && dx > dy * 1.5) { touch1.said = true; say("Utilisez deux doigts pour déplacer la carte"); }
+    }
   }, {passive:false});
-  box.addEventListener("touchend", e => { if (e.touches.length < 2) pinch = null; });
+  box.addEventListener("touchend", e => { if (e.touches.length < 2) { if (pinch) kick(); pinch = null; } if (!e.touches.length) touch1 = null; });
 
-  /* ---------- les fiches : au survol d'une adresse, au toucher ; une pastille zoome sur son groupe ---------- */
-  let pinned = null;
-  const card = v => `<a class="pm-card" href="lieu.html?l=${v.slug}"><img src="assets/lieux/${v.slug}.jpg" alt="" loading="lazy">
-      <span class="t-mini">${v.place} · jusqu’à ${capFor(v)} invités</span><span class="t-h5">${v.name}</span></a>`;
-  function show(el, keep) {
-    const c = clusters[+el.dataset.c]; if (!c) return;
-    const venues = c.members.flatMap(m => G[m].list);
-    qa(".pm-pin").forEach(p => p.classList.toggle("is-on", p === el));
-    box.classList.add("is-hover");
-    tip.innerHTML = venues.map(card).join("");
-    const r = el.getBoundingClientRect(), b = box.getBoundingClientRect();
-    const x = r.left + r.width / 2 - b.left, y = r.top + r.height / 2 - b.top;
-    tip.style.left = Math.min(Math.max(x, 140), b.width - 140) + "px"; tip.style.top = y + "px";
-    tip.classList.toggle("is-below", y < b.height * .45);
-    tip.classList.add("is-on");
-    if (keep) pinned = el;
-  }
-  function hide() { pinned = null; tip.classList.remove("is-on"); box.classList.remove("is-hover"); qa(".pm-pin.is-on").forEach(p => p.classList.remove("is-on")); }
-  pinsEl.addEventListener("mouseover", e => { const el = e.target.closest(".pm-pin"); if (el && !pinned && !drag) show(el); });
-  pinsEl.addEventListener("focusin", e => { const el = e.target.closest(".pm-pin"); if (el) show(el); });
-  pinsEl.addEventListener("click", e => {
-    if (moved) return;
-    const cl = e.target.closest(".pm-cl");
-    if (cl) { const c = clusters[+cl.dataset.c]; goTo(fit(c.members.map(m => [G[m].x, G[m].y]))); return; }
-    const el = e.target.closest(".pm-pin"); if (!el) return;
-    const venues = clusters[+el.dataset.c].members.flatMap(m => G[m].list);
-    // souris sur une seule maison : on y va ; toucher ou adresse partagée : la fiche reste ouverte
-    if (e.pointerType === "mouse" && venues.length === 1 && !matchMedia("(hover: none)").matches) location.href = `lieu.html?l=${venues[0].slug}`;
-    else show(el, true);
-  });
-  box.addEventListener("mouseleave", () => { if (!pinned) hide(); clearZone(); });
-  pinsEl.addEventListener("mouseout", e => { if (!pinned && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".pm-pin, .pm-tip"))) hide(); });
-  document.addEventListener("click", e => { if (pinned && !e.target.closest(".pm-pin, .pm-tip")) hide(); });
-  document.addEventListener("keydown", e => { if (e.key === "Escape") hide(); });
-
-  /* ---------- les quartiers : survol mis en avant, clic vers la page Secteur ---------- */
+  /* ---------- les quartiers : survol mis en avant, clic vers la page Secteur (au doigt : premier appui pour voir, second pour y aller) ---------- */
   let zoneOn = null;
-  const setZone = id => {
-    if (zoneOn === id) return; zoneOn = id;
-    qa(".pm-zone, .pm-lbl").forEach(z => z.classList.toggle("is-on", z.dataset.s === id));
-    box.classList.toggle("is-zone", !!id);
-    const a = areas.find(x => x.id === id);
-    ztip.innerHTML = a ? `${a.name}<small>${a.n} lieu${a.n > 1 ? "x" : ""} · voir le quartier →</small>` : "";
-  };
-  const clearZone = () => { setZone(null); ztip.classList.remove("is-on"); };
-  svg.addEventListener("mousemove", e => {
-    if (drag && moved) return;
+  function setZone(id, sx, sy) {
+    if (zoneOn !== id) {
+      zoneOn = id;
+      qa(".pm-zone, .pm-lbl").forEach(z => z.classList.toggle("is-on", !!id && z.dataset.s === id));
+      const a = id && areaById(id);
+      if (a) { ztip.innerHTML = `${a.name}<small>${a.n} lieu${a.n > 1 ? "x" : ""} · voir le quartier →</small>`; ztip.href = `secteur.html?s=${id}`; }
+    }
+    ztip.classList.toggle("is-on", !!id && sx != null);
+    if (id && sx != null) ztip.style.transform = `translate(${Math.min(sx + 16, W - ztip.offsetWidth - 8)}px,${Math.min(sy + 16, H - ztip.offsetHeight - 8)}px)`;
+  }
+  const clearZone = () => setZone(null);
+  stage.addEventListener("pointermove", e => {
+    if (e.pointerType !== "mouse" || drag) return;
+    const z = e.target.closest(".pm-zone"), r = box.getBoundingClientRect();
+    z ? setZone(z.dataset.s, e.clientX - r.left, e.clientY - r.top) : clearZone();
+  });
+  stage.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") clearZone(); });
+  stage.addEventListener("click", e => {
+    if (dragged) return;
     const z = e.target.closest(".pm-zone");
     if (!z) { clearZone(); return; }
-    setZone(z.dataset.s);
-    const b = box.getBoundingClientRect();
-    ztip.style.transform = `translate(${e.clientX - b.left + 16}px,${e.clientY - b.top + 16}px)`; ztip.classList.add("is-on");
+    if (lastPointer !== "touch" || zoneOn === z.dataset.s) { location.href = `secteur.html?s=${z.dataset.s}`; return; }
+    const r = box.getBoundingClientRect(); setZone(z.dataset.s, e.clientX - r.left, e.clientY - r.top);
   });
-  svg.addEventListener("mouseleave", clearZone);
-  svg.addEventListener("click", e => { const z = e.target.closest(".pm-zone"); if (z && !moved) location.href = `secteur.html?s=${z.dataset.s}`; });
-  qa(".pm-lbl").forEach(l => { l.addEventListener("mouseenter", () => setZone(l.dataset.s)); l.addEventListener("mouseleave", clearZone); });
-  // les liens ne s'ouvrent pas à la fin d'un glissement
-  box.addEventListener("click", e => { if (moved && e.target.closest("a")) e.preventDefault(); }, true);
+  qa(".pm-lbl").forEach(l => {
+    l.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") setZone(l.dataset.s); });
+    l.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") clearZone(); });
+  });
 
-  addEventListener("resize", () => { hide(); lastW = 0; view = clampV(view); render(); });
-  render();
+  /* ---------- mise en route ---------- */
+  // au premier affichage, la vue d'arrivée ; ensuite, la même portion de plan dans le nouveau cadre
+  let started = false;
+  const layout = () => {
+    const w0 = W, h0 = H; W = box.clientWidth; H = box.clientHeight;
+    if (!W || !H || (started && W === w0 && H === h0)) return;
+    view = started ? clampV({...view, w:view.w * W / w0}) : home();
+    started = true; hide(true); recluster(false); kick();
+  };
+  layout();                                   // tout de suite si le cadre a déjà sa taille
+  new ResizeObserver(layout).observe(box);    // puis à chaque changement de taille
 
   // le plan (≈ 1 Mo compressé) n'est demandé qu'à l'approche de la section, puis apparaît en fondu
   const plan = q(".pm-plan");

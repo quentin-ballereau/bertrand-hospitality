@@ -1,6 +1,6 @@
 /* Sections communes aux pages Format (offre.html) et Secteur (secteur.html), d'après Figma 6560-607 et 6560-899 :
    les lieux filtrables, les autres formats en carrousel, les questions fréquentes. L'appel final reprend .closing (home.css). */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;height:52px;padding:0 28px;background:var(--taupe);color:#fff;font-family:var(--caps);font-size:14px;letter-spacing:.14em;text-transform:uppercase;transition:background .45s var(--ease)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;height:52px;padding:0 24px;background:var(--taupe);color:#fff;font-family:var(--caps);font-size:14px;letter-spacing:.14em;text-transform:uppercase;transition:background .45s var(--ease)}
 .btn:hover{background:var(--ink)}
 
 /* en-tête centré : surtitre, titre, sous-titre */
@@ -11,7 +11,6 @@
 /* ---------- les lieux ---------- */
 .vl{padding:128px 0}
 .vl-filter{position:relative;left:auto;bottom:auto;transform:none;width:min(584px,calc(100% - 2*var(--gutter)));margin:48px auto 0}
-.vl-filter .go{flex-basis:168px}
 @media (min-width:768px){
   .vl-filter .pop{top:calc(100% + 8px);bottom:auto;transform:translateY(-8px)}
   .vl-filter .pop.is-open{transform:none}

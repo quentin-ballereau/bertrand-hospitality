@@ -38,7 +38,7 @@
 .mnu-foot{display:flex;flex-direction:column;gap:24px;padding-top:24px;border-top:1px solid var(--line)}
 .mnu-sec{display:flex;align-items:flex-start;gap:24px;font-size:14px;color:var(--taupe)}
 .mnu-sec a{text-box:trim-both cap alphabetic}   /* texte rogné aux capitales : filet à 6 px, comme le CTA du Figma */
-.mnu-quote{display:flex;align-items:center;justify-content:center;gap:12px;height:52px;background:var(--taupe);color:#fff;font-size:14px;transition:background .45s var(--ease)}
+.mnu-quote{display:flex;align-items:center;justify-content:center;gap:12px;height:52px;padding:0 24px;background:var(--taupe);color:#fff;font-size:14px;transition:background .45s var(--ease)}
 .mnu-quote:hover{background:var(--ink)}
 .mnu-quote svg{transition:transform .4s var(--ease)}
 .mnu-quote:hover svg{transform:translateX(4px)}
