@@ -42,6 +42,11 @@ a{color:inherit;text-decoration:none}
 .nav-logo{display:block;width:164px;height:32px}
 .nav-logo img{width:164px;height:32px;display:block}
 .nav-cta{justify-self:end;font-size:14px}
+/* à droite : le téléphone, joignable d'un geste, puis la demande de devis */
+.nav-right{justify-self:end;display:flex;align-items:center;gap:32px}
+.nav-tel{display:flex;align-items:center;gap:10px;font-size:14px;transition:opacity .3s var(--ease)}
+.nav-tel svg{width:13px;height:13px;flex:0 0 13px;fill:none;stroke:currentColor;stroke-width:1.1}
+.nav-tel:hover{opacity:.7}
 
 /* ---------- SOULIGNEMENT (un seul, partout) ----------
    trait fin au repos ; au survol il se retire vers la droite puis se redessine depuis la gauche */
@@ -127,6 +132,9 @@ a{color:inherit;text-decoration:none}
   .nav-menu span{display:none}
   .nav-logo,.nav-logo img{width:123px;height:24px}
   .nav-cta{font-size:11px}
+  .nav-right{gap:20px}
+  .nav-tel span{display:none}   /* sur mobile : l'icône seule, un toucher lance l'appel */
+  .nav-tel svg{width:15px;height:15px}
   .cta-long{display:none}
   .finder{bottom:16px;left:16px;right:16px;width:auto;transform:none}
   .bar{flex-wrap:wrap;height:auto}
