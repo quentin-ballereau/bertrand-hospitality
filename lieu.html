@@ -249,7 +249,7 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 <div class="sv" id="sv" aria-hidden="true"><button class="ul caps" id="svClose" type="button">Fermer la vue 360°</button></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="js/data.js?v=9"></script>
+<script src="js/data.js?v=10"></script>
 <script src="js/menu.js?v=10"></script>
 <script src="js/detail.js?v=9"></script>
 <script>
@@ -263,6 +263,8 @@ const mobile = () => innerWidth < 768;
 const params = new URLSearchParams(location.search);
 const venue = VENUES.find(v => v.slug === params.get("l")) || VENUES[0];
 const filters = fromQuery();                         // format et invites transmis depuis la recherche
+const FSEL = (filters.format || "").split(",").filter(Boolean);   // la recherche peut porter sur plusieurs formats
+filters.format = FSEL[0] || null;                  // la fiche part du premier
 const D = BH.DETAIL[venue.slug] || {
   // en attendant leur contenu, les autres lieux s'ouvrent sur leur photo et leurs capacités
   tagline: venue.tag,
@@ -288,7 +290,7 @@ $("more").addEventListener("click", () => {
 if (D.brochure) $("brochure").href = D.brochure; else $("brochure").hidden = true;
 const capRow = () => {
   $("pCaps").innerHTML = FORMATS.filter(f => venue[f.id]).map(f =>
-    `<span class="capi${filters.format === f.id ? " is-on" : ""}" title="${f.label}"><svg viewBox="0 0 30 30" aria-hidden="true">${f.icon}</svg>${venue[f.id]}</span>`).join("");
+    `<span class="capi${FSEL.includes(f.id) ? " is-on" : ""}" title="${f.label}"><svg viewBox="0 0 30 30" aria-hidden="true">${f.icon}</svg>${venue[f.id]}</span>`).join("");
 };
 capRow();
 

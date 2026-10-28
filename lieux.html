@@ -97,13 +97,13 @@ body{color:var(--ink)}
 <div class="finder is-light is-floating" id="finder" aria-hidden="true"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="js/data.js?v=9"></script>
+<script src="js/data.js?v=10"></script>
 <script src="js/menu.js?v=10"></script>
-<script src="js/finder.js?v=6"></script>
-<script src="js/coverflow.js?v=9"></script>
+<script src="js/finder.js?v=7"></script>
+<script src="js/coverflow.js?v=10"></script>
 <script>
 (() => {
-const {results, capFor, fmtOf, secOf, FORMATS, BASE, toQuery, fromQuery} = BH;
+const {results, capFor, fmtOf, fmtPhrase, secOf, FORMATS, BASE, toQuery, fromQuery} = BH;
 const $ = id => document.getElementById(id);
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const state = fromQuery();
@@ -114,11 +114,11 @@ const cf = BH.coverflow($("cf"), {wheel:"all", format:() => state.format, query:
 const WHERE = {ouest:"aux Champs-Élysées et dans l’Ouest", centre:"entre l’Opéra, les Grands Boulevards et le centre",
   rg:"sur la Rive gauche", seine:"en bord de Seine", hors:"à Versailles et Disney Village"};
 function renderHeadline() {
-  const k = results(state).length, f = fmtOf(state.format);
+  const k = results(state).length, f = fmtPhrase(state.format);
   const count = k ? `${k} lieu${k > 1 ? "x" : ""}` : "Aucun lieu";
   const touched = state.format || state.guests || state.sector;
   $("headline").textContent = !touched ? `${count} à Paris et en Île-de-France`
-    : `${count} pour ${f ? f.phrase : "votre événement"}${state.guests ? ` de ${state.guests} personnes` : ""}${state.sector ? " " + WHERE[state.sector] : ""}`;
+    : `${count} pour ${f || "votre événement"}${state.guests ? ` de ${state.guests} personnes` : ""}${state.sector ? " " + WHERE[state.sector] : ""}`;
 }
 function build(intro) {
   const list = results(state);

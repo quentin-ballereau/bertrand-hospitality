@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="css/base.css?v=8">
 <link rel="stylesheet" href="css/menu.css?v=13">
 <link rel="stylesheet" href="css/coverflow.css?v=9">
-<link rel="stylesheet" href="css/home.css?v=20">
+<link rel="stylesheet" href="css/home.css?v=21">
 <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css">
 <script>/* loader à l’entrée sur le site ; on le saute quand on revient d’une autre page du site */try{var r=document.referrer&&new URL(document.referrer);if(r&&r.origin===location.origin&&r.pathname!==location.pathname)document.documentElement.classList.add("no-loader")}catch(e){}</script>
 <style>
@@ -146,18 +146,6 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 </section>
 
 <!-- Section 5 : entrer par le quartier (Figma « Frame 8 ») : cinq photos en quinconce -->
-<!-- « Nos quartiers » mis de côté le 27/10/2026 (remplacé par la carte de Paris) : gardé masqué pour pouvoir y revenir -->
-<section class="areas" hidden aria-labelledby="areaTitle">
-  <div class="sec-head">
-    <p class="t-cta t-eyebrow rv">Nos quartiers</p>
-    <div class="sec-head-txt">
-      <h2 class="t-h2 rv" id="areaTitle">De la Seine aux Champs‑Élysées</h2>
-      <p class="t-text rv">Commencez par le quartier&nbsp;: nous vous montrons les lieux qui s’y trouvent.</p>
-    </div>
-  </div>
-  <div class="areas-grid" id="areasGrid"></div>
-</section>
-
 <!-- Section 5 : la carte de Paris et de ses abords, un point par maison du groupe ; au survol, la fiche du lieu -->
 <section class="map-sec" aria-labelledby="mapTitle">
   <div class="sec-head">
@@ -253,11 +241,11 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="js/data.js?v=9"></script>
+<script src="js/data.js?v=10"></script>
 <script src="js/menu.js?v=10"></script>
-<script src="js/finder.js?v=6"></script>
-<script src="js/coverflow.js?v=9"></script>
-<script src="js/paris-map.js?v=1"></script>
+<script src="js/finder.js?v=7"></script>
+<script src="js/coverflow.js?v=10"></script>
+<script src="js/paris-map.js?v=2"></script>
 <script>
 /* ----- intro : le titre se révèle ligne par ligne, puis la navigation et la recherche ----- */
 const title = document.querySelector(".hero-title");
@@ -369,21 +357,6 @@ addEventListener("pageshow", e => { if (e.persisted) document.getElementById("le
       <span class="fcard-txt rv"><span class="fcard-name t-h5">${f.label}</span><span class="t-mini">${n(results({format:f.id}).length)}</span></span>
     </a>`).join("");
 
-  // quartiers : trois rangées en quinconce (petite + grande, une large au centre, grande + petite), comme le Figma
-  const AREA = {ouest:["s", "assets/home/area-1.jpg"], centre:["l", "assets/home/area-2.jpg"], rg:["xl", "assets/home/area-3.jpg"], seine:["l", "assets/home/area-4.jpg"], hors:["s", "assets/home/area-5.jpg"]};
-  const acard = s => {
-    const [size, img] = AREA[s.id], list = results({sector:s.id});
-    const names = list.slice(0, 3).map(v => v.name).join(", ") + (list.length > 3 ? "…" : "");
-    return `<a class="acard acard--${size}" href="lieux.html?secteur=${s.id}">
-      <span class="acard-img"><img class="acard-px" src="${img}" alt="" loading="lazy"></span>
-      <span class="acard-txt rv"><span class="acard-name t-h4">${s.name}</span><span class="t-cta t-eyebrow">${n(list.length)} · ${names}</span></span>
-    </a>`;
-  };
-  const sec = id => SECTORS.find(s => s.id === id);
-  $("areasGrid").innerHTML = `
-    <div class="ar-row">${acard(sec("ouest"))}${acard(sec("centre"))}</div>
-    <div class="ar-solo">${acard(sec("rg"))}</div>
-    <div class="ar-row">${acard(sec("seine"))}${acard(sec("hors"))}</div>`;
 
   // questions fréquentes, reprises en données structurées pour Google et les IA
   const FAQ = [
@@ -448,8 +421,9 @@ addEventListener("pageshow", e => { if (e.persisted) document.getElementById("le
     window.__checkReveal = checkReveal;   // pour les tests
   }
 
-  // carte de Paris : fond projeté une fois pour toutes (js/paris-map.js), un point par adresse (deux maisons à la même adresse
-  // partagent un point) ; au survol ou au toucher, la fiche du lieu ; Versailles et Disney Village sont signalés au bord.
+  // carte de Paris, en traits fins (référence : plan de sobha-privy-collection.com, en crème) : contour de Paris teinté,
+  // autoroutes et grands axes, Seine ; un point par adresse (deux maisons à la même adresse partagent un point).
+  // Le cadre est fixe, la carte le remplit (recadrée, jamais déformée) ; au survol ou au toucher, la fiche du lieu.
   (() => {
     const M = BH.PARIS, box = $("pmap");
     if (!M || !box) return;
@@ -463,33 +437,36 @@ addEventListener("pageshow", e => { if (e.persisted) document.getElementById("le
       const k = ll.join(); (groups[k] = groups[k] || {x, y, list:[]}).list.push(v);
     });
     const G = Object.values(groups);
-    // repères de quartier, en Mini tag beige, posés à côté des points (ancre : start, middle ou end)
-    const LABELS = [["Champs-Élysées", 48.8668, 2.2975, "end"], ["Opéra", 48.8752, 2.3345, "middle"], ["Saint-Germain", 48.8562, 2.3285, "end"],
+    // vue centrée sur Paris ; le cadre la recadre selon sa forme (preserveAspectRatio slice)
+    const [cx, cy] = xy([48.862, 2.322]), VW = 1240, VH = 820;
+    const LABELS = [["Champs-Élysées", 48.8668, 2.2975, "end"], ["Opéra", 48.8755, 2.3345, "middle"], ["Saint-Germain", 48.8562, 2.3285, "end"],
       ["Montparnasse", 48.8392, 2.3235, "end"], ["Bastille", 48.8505, 2.3725, "start"], ["Gare du Nord", 48.8822, 2.3605, "start"],
       ["Auteuil", 48.8445, 2.2635, "middle"], ["Levallois", 48.8995, 2.2865, "start"], ["Saint-Ouen", 48.9119, 2.3405, "start"], ["Issy", 48.8215, 2.2635, "start"]];
-    const labels = LABELS.map(([t, la, lo, an]) => { const [x, y] = xy([la, lo]); return `<text class="pm-lbl" x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${an}">${t}</text>`; }).join("");
+    const txt = ([t, la, lo, an], cls) => { const [x, y] = xy([la, lo]); return `<text class="${cls}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${an}">${t}</text>`; };
     const pins = G.map((g, i) => `<g class="pm-pin" tabindex="0" role="button" data-i="${i}" transform="translate(${g.x.toFixed(1)} ${g.y.toFixed(1)})" style="--d:${(i * .03).toFixed(2)}s"
-        aria-label="${g.list.map(v => v.name).join(", ")}"><circle class="pm-hit" r="16"/><circle class="pm-dot" r="5"/></g>`).join("");
-    const versailles = outside.filter(v => v.place.includes("Versailles")), disney = outside.filter(v => !v.place.includes("Versailles"));
-    const edge = (list, cls, label, arrow) => list.length ? `<p class="pm-edge ${cls} t-mini">${arrow === "l" ? "← " : ""}${label}&nbsp;: ${list.map(v => `<a class="hlink" href="lieu.html?l=${v.slug}">${v.name}</a>`).join(", ")}${arrow === "r" ? " →" : ""}</p>` : "";
-    box.innerHTML = `<svg viewBox="0 0 ${M.w} ${M.h}" aria-hidden="false" role="group" aria-label="Carte de nos adresses à Paris">
-        <g class="pm-arr">${M.arr.map(a => `<path d="${a.d}"/>`).join("")}</g>
+        aria-label="${g.list.map(v => v.name).join(", ")}"><circle class="pm-hit" r="14"/><circle class="pm-dot" r="4.5"/></g>`).join("");
+    const edge = (list, cls, label, arrow) => list.length ? `<p class="pm-edge ${cls} t-mini">${arrow === "l" ? "← " : ""}${label}&nbsp;: ${list.map(v => `<a href="lieu.html?l=${v.slug}">${v.name}</a>`).join(", ")}${arrow === "r" ? " →" : ""}</p>` : "";
+    box.innerHTML = `<svg viewBox="${(cx - VW / 2).toFixed(0)} ${(cy - VH / 2).toFixed(0)} ${VW} ${VH}" preserveAspectRatio="xMidYMid slice" role="group" aria-label="Carte de nos adresses à Paris">
+        <path class="pm-paris" d="${M.paris}"/>
+        <path class="pm-trunk" d="${M.trunk}"/><path class="pm-motorway" d="${M.motorway}"/>
         <path class="pm-seine" d="${M.seine}"/>
-        <g class="pm-lbls">${labels}</g>
+        <g>${LABELS.map(l => txt(l, "pm-lbl")).join("")}${txt(["Paris", 48.8585, 2.4035, "middle"], "pm-city")}</g>
         <g class="pm-pins">${pins}</g></svg>
-      ${edge(versailles, "pm-edge--w", "Versailles", "l")}${edge(disney, "pm-edge--e", "Disney Village", "r")}
+      <div class="pm-frame" aria-hidden="true"></div>
+      ${edge(outside.filter(v => v.place.includes("Versailles")), "pm-edge--w", "Versailles", "l")}${edge(outside.filter(v => !v.place.includes("Versailles")), "pm-edge--e", "Disney Village", "r")}
       <div class="pm-tip" id="pmTip" aria-live="polite"></div>`;
     const tip = $("pmTip"), svg = box.querySelector("svg");
     let pinned = null;
     const card = v => `<a class="pm-card" href="lieu.html?l=${v.slug}"><img src="assets/lieux/${v.slug}.jpg" alt="" loading="lazy">
         <span class="t-mini">${v.place} · jusqu’à ${capFor(v)} invités</span><span class="t-h5">${v.name}</span></a>`;
     const show = (el, keep) => {
-      const g = G[+el.dataset.i];
+      const g = G[+el.dataset.i], r = el.querySelector(".pm-dot").getBoundingClientRect(), b = box.getBoundingClientRect();
       box.querySelectorAll(".pm-pin").forEach(p => p.classList.toggle("is-on", p === el));
       box.classList.add("is-hover");
       tip.innerHTML = g.list.map(card).join("");
-      tip.style.left = (g.x / M.w * 100) + "%"; tip.style.top = (g.y / M.h * 100) + "%";
-      tip.classList.toggle("is-below", g.y / M.h < .42);
+      const x = r.left + r.width / 2 - b.left, y = r.top + r.height / 2 - b.top;
+      tip.style.left = Math.min(Math.max(x, 140), b.width - 140) + "px"; tip.style.top = y + "px";
+      tip.classList.toggle("is-below", y < b.height * .45);
       tip.classList.add("is-on");
       if (keep) pinned = el;
     };
@@ -509,12 +486,13 @@ addEventListener("pageshow", e => { if (e.persisted) document.getElementById("le
     tip.addEventListener("mouseleave", e => { if (!pinned && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".pm-pin"))) hide(); });
     document.addEventListener("click", e => { if (pinned && !e.target.closest(".pm-pin, .pm-tip")) hide(); });
     document.addEventListener("keydown", e => { if (e.key === "Escape") hide(); });
+    addEventListener("resize", hide);
     // les points apparaissent un à un quand la carte arrive à l'écran
     const io = new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)) { box.classList.add("is-in"); io.disconnect(); } }, {threshold:.25});
     io.observe(box);
   })();
-  // formats et quartiers : chaque photo glisse doucement dans son cadre au défilement (±24 px), calculé une fois par image affichée
-  const fpx = [...document.querySelectorAll(".fcard-px, .acard-px")];
+  // formats : chaque photo glisse doucement dans son cadre au défilement (±24 px), calculé une fois par image affichée
+  const fpx = [...document.querySelectorAll(".fcard-px")];
   if (!reduce && fpx.length) {
     let ticking = false;
     const run = () => {

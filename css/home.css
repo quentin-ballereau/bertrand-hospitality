@@ -47,8 +47,8 @@
 .fcard{display:flex;flex-direction:column;gap:24px}
 /* la photo, un peu plus haute que son cadre, glisse au défilement (parallax) et se rapproche lentement au survol */
 .fcard-img{position:relative;display:block;aspect-ratio:82/110;overflow:hidden;background:var(--cream-2)}
-.fcard-px,.acard-px{position:absolute;left:0;top:-24px;width:100%;height:calc(100% + 48px);object-fit:cover;display:block;scale:1.001;transition:scale 1.6s var(--expo)}
-.fcard:hover .fcard-px,.fcard:focus-visible .fcard-px,.acard:hover .acard-px,.acard:focus-visible .acard-px{scale:1.05}
+.fcard-px{position:absolute;left:0;top:-24px;width:100%;height:calc(100% + 48px);object-fit:cover;display:block;scale:1.001;transition:scale 1.6s var(--expo)}
+.fcard:hover .fcard-px,.fcard:focus-visible .fcard-px{scale:1.05}
 .fcard-txt{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
 /* H5 du Figma ; un filet fin se dessine sous le nom au survol */
 .t-h5{font-family:var(--serif);font-weight:400;font-size:18px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
@@ -58,47 +58,37 @@
 .fcard .t-mini{color:var(--taupe)}
 
 /* ---------- quartiers (Figma « Frame 8 ») : 100 px au-dessus, 200 px en dessous, cinq photos en quinconce dans 1184 px ---------- */
-.areas{display:flex;flex-direction:column;align-items:center;gap:100px;padding:100px var(--gutter) 200px;background:var(--cream)}
-.areas .sec-head{width:min(776px,100%)}
-.areas .sec-head .t-text{max-width:242px}
-.areas-grid{display:flex;flex-direction:column;gap:100px;width:100%;max-width:1184px}
-.ar-row{display:flex;justify-content:space-between;align-items:flex-start}
-.ar-solo{display:flex;justify-content:center}
-.acard{display:flex;flex-direction:column;gap:24px}
-.acard--s{width:40.88%;--ar:484/323}
-.acard--l{width:49.32%;--ar:584/612}
-.acard--xl{width:66.22%;--ar:784/556}
-.acard-img{position:relative;display:block;aspect-ratio:var(--ar);overflow:hidden;background:var(--cream-2)}
-.acard-txt{display:flex;flex-direction:column;gap:16px}
-.acard-txt .t-eyebrow{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}   /* légende sur une ligne, comme le Figma */
 .t-h4{font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
-.acard-name{position:relative;align-self:flex-start;padding-bottom:6px;margin-bottom:-6px}
-.acard-name::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform:scale(0,.6);transform-origin:left bottom;transition:transform .8s var(--expo)}
-.acard:hover .acard-name::after,.acard:focus-visible .acard-name::after{transform:scale(1,.6)}
 
 /* ---------- hôtellerie (Figma « Frame 9 ») : 832 px, photo plein cadre, dégradé noir du quart de la hauteur jusqu'en bas ---------- */
-/* ---------- carte de Paris (remplace « Nos quartiers ») : fond crème, arrondissements en filets, Seine taupe clair ---------- */
-.map-sec{display:flex;flex-direction:column;align-items:center;gap:64px;padding:100px var(--gutter) 200px;background:var(--cream)}
-.map-sec .sec-head{width:min(776px,100%)}
+/* ---------- carte de Paris (remplace « Nos quartiers ») : plan en traits fins, cadre fixe aux bords fondus dans le crème ---------- */
+.map-sec{display:flex;flex-direction:column;align-items:center;gap:64px;padding:100px 0 200px;background:var(--cream)}
+.map-sec .sec-head{width:min(776px,100%);padding:0 var(--gutter)}
 .map-sec .sec-head .t-text{max-width:416px}
-.pmap{position:relative;width:min(1184px,100%)}
-.pmap svg{display:block;width:100%;height:auto;overflow:visible}
-.pm-arr path{fill:var(--cream-2);stroke:#e2dbd5;stroke-width:1;vector-effect:non-scaling-stroke;transition:fill .6s var(--ease)}
-.pm-seine{fill:none;stroke:#dcd1ca;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
-.pm-lbl{font-family:var(--caps);font-size:10px;letter-spacing:.14em;text-transform:uppercase;fill:var(--taupe);pointer-events:none;transition:opacity .4s}
-.pmap.is-hover .pm-lbl{opacity:.4}
+.pmap{position:relative;width:100%;height:clamp(560px,78svh,760px);overflow:hidden;background:var(--cream)}
+.pmap svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.pm-paris{fill:var(--cream-2);stroke:var(--cream-2);stroke-width:1}
+.pm-trunk,.pm-motorway,.pm-seine{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.pm-trunk{stroke:#e2d9d2;stroke-width:.8;vector-effect:non-scaling-stroke}
+.pm-motorway{stroke:#d3c8c0;stroke-width:1.1;vector-effect:non-scaling-stroke}
+.pm-seine{stroke:#e3d8cf;stroke-width:6.5}
+.pm-lbl{font-family:var(--caps);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;fill:var(--muted);pointer-events:none;transition:opacity .4s}
+.pm-city{font-family:var(--serif);font-size:30px;letter-spacing:.2em;text-transform:uppercase;fill:var(--ink);pointer-events:none;transition:opacity .4s}
+.pmap.is-hover .pm-lbl,.pmap.is-hover .pm-city{opacity:.35}
+.pm-frame{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(var(--cream),rgba(250,248,247,0) 14%,rgba(250,248,247,0) 86%,var(--cream)),linear-gradient(90deg,var(--cream),rgba(250,248,247,0) 10%,rgba(250,248,247,0) 90%,var(--cream))}
 .pm-pin{cursor:pointer;outline:none;opacity:0;transition:opacity .8s var(--ease) var(--d,0s)}
 .pmap.is-in .pm-pin{opacity:1}
 .pm-hit{fill:transparent}
-.pm-dot{fill:var(--ink);stroke:var(--cream);stroke-width:2;transition:r .45s var(--expo),fill .3s,opacity .4s}
-.pmap.is-hover .pm-dot{opacity:.35}
-.pm-pin.is-on .pm-dot,.pm-pin:focus-visible .pm-dot{r:8;fill:var(--taupe);opacity:1}
-.pm-edge{position:absolute;color:var(--taupe)}
+.pm-dot{fill:var(--ink);stroke:var(--cream);stroke-width:1.5;transition:r .45s var(--expo),fill .3s,opacity .4s}
+.pmap.is-hover .pm-dot{opacity:.3}
+.pm-pin.is-on .pm-dot,.pm-pin:focus-visible .pm-dot{r:7;fill:var(--taupe);opacity:1}
+.pm-edge{position:absolute;z-index:2;bottom:28px;color:var(--taupe)}
 .pm-edge a{color:var(--ink)}
-.pm-edge--w{left:0;bottom:12%}
-.pm-edge--e{right:0;top:28%;text-align:right}
-.pm-tip{position:absolute;z-index:2;display:flex;gap:12px;transform:translate(-50%,calc(-100% - 20px));opacity:0;pointer-events:none;transition:opacity .35s var(--ease)}
-.pm-tip.is-below{transform:translate(-50%,20px)}
+.pm-edge--w{left:var(--gutter)}
+.pm-edge--e{right:var(--gutter);text-align:right}
+.pm-tip{position:absolute;z-index:3;display:flex;gap:12px;transform:translate(-50%,calc(-100% - 18px));opacity:0;pointer-events:none;transition:opacity .35s var(--ease)}
+.pm-tip.is-below{transform:translate(-50%,18px)}
 .pm-tip.is-on{opacity:1;pointer-events:auto}
 .pm-card{display:flex;flex-direction:column;align-items:center;gap:12px;width:232px;padding:8px 8px 20px;background:#fff;text-align:center;box-shadow:0 24px 48px -28px rgba(29,29,27,.35)}
 .pm-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;margin-bottom:8px}
@@ -194,28 +184,23 @@
   .care-txt{padding:120px var(--gutter)}
   .faq{flex-direction:column;gap:48px}
   .faq-head{flex:none}
-  .ar-row{flex-direction:column;gap:64px}
-  .areas-grid{gap:64px}
-  .acard--s,.acard--l,.acard--xl{width:100%}
   .formats-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 16px}
   .foot-links{gap:48px}
   .foot-col{width:150px}
 }
 @media (max-width:767px){
-  .map-sec{gap:40px;padding:64px 0 100px} .map-sec .sec-head{padding:0 var(--gutter)}
-  .pm-edge{position:static;margin:16px var(--gutter) 0;text-align:left}
+  .map-sec{gap:40px;padding:64px 0 100px}
+  .pmap{height:520px}
+  .pm-edge{bottom:16px;max-width:46%}
   .pm-card{width:180px}
-  .pmap{overflow:hidden}
-  .pmap svg{width:180%;margin-left:-22%}   /* sur mobile, la carte est recadrée sur Paris : points et repères restent lisibles */
-  .pm-dot{r:9;stroke-width:3}
-  .pm-pin.is-on .pm-dot{r:13}
-  .pm-hit{r:24}
-  .pm-lbl{font-size:17px}
+  .pm-dot{r:6;stroke-width:2}
+  .pm-pin.is-on .pm-dot{r:9}
+  .pm-hit{r:18}
+  .pm-city{display:none}   /* sur mobile le cadre est trop étroit pour le nom de la ville */
   .hsec{padding:120px 24px}
   .t-h2{font-size:28px}
   .t-h3{font-size:24px}
   .evts{padding:80px 24px;gap:40px}
-  .areas{padding:80px 24px 120px;gap:48px}
   .t-h4{font-size:20px}
   .figures{padding-top:64px} .figs-row{flex-wrap:wrap;gap:40px 0;padding:40px 0}
   .fig{flex:0 0 50%}

@@ -1,14 +1,14 @@
 /* Barre de recherche commune à la home et à la page des lieux.
    BH.finder(el, {state, onSubmit(state), onChange(state), submitLabel(n, touched)}) */
 BH.finder = (root, opts = {}) => {
-  const {FORMATS, SECTORS, results, fmtOf, secOf} = BH;
+  const {FORMATS, SECTORS, results, fmtsOf, secOf} = BH;
   const state = opts.state || {format:null, guests:null, sector:null};
   const GUEST_CHIPS = [20, 50, 100, 200, 400];
   const ARROW = '<svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg>';
 
   root.innerHTML = `
     <div class="pop" data-lenis-prevent data-id="format" role="dialog" aria-label="Format de l’événement">
-      <div class="pop-head"><p class="pop-title">Quel événement&nbsp;?</p><p class="pop-hint">Un seul choix</p></div>
+      <div class="pop-head"><p class="pop-title">Quel événement&nbsp;?</p><p class="pop-hint">Plusieurs choix possibles</p></div>
       <div class="formats">${FORMATS.map(f =>
         `<button class="fmt" type="button" data-f="${f.id}" aria-pressed="false"><svg viewBox="0 0 30 30" aria-hidden="true">${f.icon}</svg><span class="caps">${f.label}</span></button>`).join("")}</div>
     </div>
@@ -78,11 +78,11 @@ BH.finder = (root, opts = {}) => {
   const defaultLabel = (n, touched) => touched ? (n ? (n > 1 ? `Voir les ${n} lieux` : "Voir le lieu") : "Nous consulter") : "Trouver un lieu";
 
   function update(silent) {
-    const f = fmtOf(state.format), s = secOf(state.sector);
-    setVal("format", f ? f.label : "Tous formats", !f);
+    const fs = fmtsOf(state.format), s = secOf(state.sector);
+    setVal("format", fs.length > 1 ? `${fs.length} formats` : fs.length ? fs[0].label : "Tous formats", !fs.length);
     setVal("guests", state.guests ? `${state.guests} personnes` : "Combien ?", !state.guests);
     setVal("sector", s ? s.name : "Tout Paris", !s);
-    qa(".fmt").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === state.format));
+    qa(".fmt").forEach(b => b.setAttribute("aria-pressed", fmtsOf(state.format).some(f => f.id === b.dataset.f)));
     qa(".chip").forEach(b => b.setAttribute("aria-pressed", +b.dataset.g === state.guests));
     const g = state.guests ?? 50;
     q(".g-num").textContent = g; range.value = g;
@@ -100,8 +100,11 @@ BH.finder = (root, opts = {}) => {
   document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
   q(".formats").addEventListener("click", e => {
     const b = e.target.closest(".fmt"); if (!b) return;
-    state.format = state.format === b.dataset.f ? null : b.dataset.f;
-    update(); setTimeout(() => open("guests"), 220);   // enchaîne vers l'étape suivante
+    // plusieurs formats : chaque clic ajoute ou retire le sien (le lieu devra tous les accueillir) ; on reste sur la feuille
+    const on = new Set(fmtsOf(state.format).map(f => f.id));
+    on.has(b.dataset.f) ? on.delete(b.dataset.f) : on.add(b.dataset.f);
+    state.format = FORMATS.filter(f => on.has(f.id)).map(f => f.id).join(",") || null;
+    update();
   });
   range.addEventListener("input", () => setGuests(+range.value));
   qa("[data-step]").forEach(b => b.addEventListener("click", () => setGuests((state.guests ?? 50) + +b.dataset.step)));

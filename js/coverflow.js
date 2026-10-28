@@ -7,7 +7,7 @@
    const cf = BH.coverflow(root, {wheel:"all" | "x", format:() => "cocktail" | null, query:() => "format=…"});
    cf.set(list, {intro})   affiche une liste ; cf.refresh(list) la remplace avec un fondu */
 BH.coverflow = (root, opts = {}) => {
-  const {fmtOf, capFor} = BH;
+  const {fmtsOf, capFor} = BH;
   // chaque lieu s'ouvre sur sa visite immersive ; la recherche en cours la suit
   const hrefOf = v => `lieu.html?l=${v.slug}` + (opts.query && opts.query() ? "&" + opts.query() : "");
   const stage = root.querySelector(".stage"), inner = root.querySelector(".stage-inner"),
@@ -58,8 +58,8 @@ BH.coverflow = (root, opts = {}) => {
   /* ---------- fiche du lieu au centre ---------- */
   const field = k => info.querySelector(`[data-k="${k}"]`);
   function fill(v) {
-    const f = fmtOf(opts.format ? opts.format() : null);
-    field("place").textContent = f ? `${v.place} · ${v[f.id]} invités ${f.unit}` : `${v.place} · jusqu’à ${capFor(v)} invités`;
+    const sel = opts.format ? opts.format() : null, fs = fmtsOf(sel);
+    field("place").textContent = fs.length === 1 ? `${v.place} · ${v[fs[0].id]} invités ${fs[0].unit}` : `${v.place} · jusqu’à ${capFor(v, sel)} invités`;
     field("name").textContent = v.name;
     field("tag").textContent = v.desc || v.tag;   // description longue quand elle existe, sinon l’accroche
     field("cta").href = hrefOf(v);

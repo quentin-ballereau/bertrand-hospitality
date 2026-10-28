@@ -42,17 +42,20 @@ window.BH = (() => {
   ];
   const FORMATS = [
     {id:"reunion", label:"Séminaire", phrase:"un séminaire", unit:"en réunion",
-      icon:'<path d="M5 6h20v12H5z"/><path d="M15 18v6M10 27l5-3 5 3"/><path d="M9 10h7M9 13h11"/>'},
+      icon:'<rect x="9.5" y="7.5" width="11" height="15" rx="1"/><path d="M6 11v2M6 17v2M24 11v2M24 17v2M14 4.5h2M14 25.5h2"/>'},
     {id:"assis", label:"Repas assis", phrase:"un repas assis", unit:"assis",
-      icon:'<circle cx="15" cy="15" r="7"/><circle cx="15" cy="15" r="4"/><path d="M4 6v6a2 2 0 0 0 2 2v10M6 6v5M8 6v6a2 2 0 0 1-2 2"/><path d="M25 6c-2 1-2.5 4-2.5 7h2.5v11"/>'},
+      icon:'<circle cx="15" cy="15" r="6.5"/><circle cx="15" cy="15" r="4"/><path d="M5 7.5v4.5a1.6 1.6 0 0 0 3 0V7.5M6.5 7.5v15"/><path d="M25 7.5c-1.6 1.4-2 4.2-2 6.8h2v8.2"/>'},
     {id:"cocktail", label:"Cocktail", phrase:"un cocktail", unit:"en cocktail",
-      icon:'<path d="M7 6h16l-8 10z"/><path d="M15 16v9M10 25h10"/><path d="M19 4l-3 6"/>'},
+      icon:'<path d="M8.5 9.5h13c0 4-2.9 6.3-6.5 6.3s-6.5-2.3-6.5-6.3z"/><path d="M15 15.8v7.7M11.5 23.5h7"/>'},
     {id:"dansant", label:"Soirée dansante", phrase:"une soirée dansante", unit:"en soirée dansante",
-      icon:'<circle cx="15" cy="17" r="7.5"/><path d="M15 3v6.5M7.5 17h15M15 9.5c-2.5 2-2.5 13 0 15M15 9.5c2.5 2 2.5 13 0 15M9 13h12M9 21h12"/>'},
+      icon:'<path d="M12.5 20.5V8.5l10-2v12"/><circle cx="10.5" cy="20.5" r="2"/><circle cx="20.5" cy="18.5" r="2"/>'},
   ];
   const BASE = "https://evenement.groupe-bertrand.com/lieux/";
 
-  const capFor = (v, f) => f ? v[f] : Math.max(v.assis, v.cocktail, v.reunion, v.dansant);
+  // plusieurs formats possibles (« reunion,cocktail ») : le lieu doit tous les accueillir, sa jauge est la plus petite des deux
+  const fmtsOf = str => (str || "").split(",").map(id => FORMATS.find(f => f.id === id)).filter(Boolean);
+  const capFor = (v, f) => f ? Math.min(...String(f).split(",").map(id => v[id] || 0)) : Math.max(v.assis, v.cocktail, v.reunion, v.dansant);
+  const fmtPhrase = str => { const p = fmtsOf(str).map(f => f.phrase); return p.length > 1 ? p.slice(0, -1).join(", ") + " et " + p[p.length - 1] : p[0] || ""; };
   const match = (v, st) => {
     const c = capFor(v, st.format);
     return !!c && !(st.guests && c < st.guests) && !(st.sector && v.s !== st.sector);
@@ -76,9 +79,9 @@ window.BH = (() => {
   };
   const fromQuery = (search = location.search) => {
     const q = new URLSearchParams(search);
-    const f = q.get("format"), g = +q.get("invites"), s = q.get("secteur");
-    return {format: fmtOf(f) ? f : null, guests: g >= 10 ? Math.min(600, g) : null, sector: secOf(s) ? s : null};
+    const f = fmtsOf(q.get("format")).map(x => x.id).join(","), g = +q.get("invites"), s = q.get("secteur");
+    return {format: f || null, guests: g >= 10 ? Math.min(600, g) : null, sector: secOf(s) ? s : null};
   };
 
-  return {SECTORS, VENUES, FORMATS, BASE, capFor, match, results, fmtOf, secOf, toQuery, fromQuery};
+  return {SECTORS, VENUES, FORMATS, BASE, capFor, match, results, fmtOf, fmtsOf, fmtPhrase, secOf, toQuery, fromQuery};
 })();
