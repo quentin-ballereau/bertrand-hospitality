@@ -51,13 +51,13 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 @keyframes wave{to{transform:translateX(-12px)}}
 .yt{position:fixed;left:-9999px;top:0;width:1px;height:1px;overflow:hidden}
 
-/* la même vue, remplie de monde : seconde image superposée, cadrage identique */
+/* la même vue, remplie de monde, en journée ou en soirée : images superposées, cadrage identique */
 .layer img.evt,.space-img img.evt{opacity:0;transition:opacity 1.2s var(--ease)}
 .space-img{position:relative}
-.space-img img.evt{position:absolute;inset:0}
-.is-event .layer img.evt,.is-event .space-img img.evt{opacity:1}
+.space-img img.evt{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.is-day .evt-day,.is-night .evt-night{opacity:1!important}
 .caption em{display:block;margin-top:10px;font-style:normal;font-size:12px;color:rgba(255,255,255,.7);opacity:0;transition:opacity .6s}
-.is-event .caption em{opacity:1}
+.is-day .caption em,.is-night .caption em{opacity:1}
 .caption{position:fixed;left:calc(24px + 400px + 40px);bottom:30px;z-index:3;color:#fff;transition:opacity .4s}
 .caption small{display:block;font-size:12px;color:rgba(255,255,255,.75)}
 .caption b{display:block;margin-top:9px;font-family:var(--serif);font-weight:400;font-size:20px;letter-spacing:.02em;text-transform:uppercase}
@@ -243,7 +243,8 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 <div class="hint caps" id="hint">Glissez pour regarder autour</div>
 <div class="mode" id="mode" role="group" aria-label="Affichage" hidden><span class="knob" aria-hidden="true"></span>
   <button class="caps" type="button" data-mode="vide" aria-pressed="true">Lieu vide</button>
-  <button class="caps" type="button" data-mode="event" aria-pressed="false">En événement</button></div>
+  <button class="caps" type="button" data-mode="day" aria-pressed="false">En journée</button>
+  <button class="caps" type="button" data-mode="night" aria-pressed="false">En soirée</button></div>
 <div class="corner">
   <button class="music" id="music" type="button" aria-pressed="false" hidden>
     <svg viewBox="0 0 30 12" aria-hidden="true"><g class="amp"><path class="w" d="M0 6 Q3 3.5 6 6 T12 6 T18 6 T24 6 T30 6 T36 6 T42 6"/></g></svg><span class="caps">Musique</span></button>
@@ -256,7 +257,7 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="js/data.js?v=10"></script>
 <script src="js/menu.js?v=13"></script>
-<script src="js/detail.js?v=9"></script>
+<script src="js/detail.js?v=10"></script>
 <script>
 (() => {
 const {VENUES, FORMATS, BASE, fmtOf, fromQuery, toQuery} = BH;
@@ -313,10 +314,13 @@ const ICON = {
   phone:'<svg viewBox="0 0 16 16"><path d="M5.5 2h-2A1.5 1.5 0 0 0 2 3.5C2 9.3 6.7 14 12.5 14a1.5 1.5 0 0 0 1.5-1.5v-2l-3-1-1.5 1.5a8 8 0 0 1-4-4L7 5.5Z"/></svg>',
   mail:'<svg viewBox="0 0 16 16"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4 5.5 4.5L13.5 4"/></svg>',
 };
+// les photos en situation d'un espace : de jour et de soirée, posées sur la photo vide (vignette ou vue plein écran)
+const evtImgs = (s, name, lazy) => (s.dayOk ? `<img class="evt evt-day" src="${s.day}" alt="${name ? name + ", en journée" : ""}"${lazy ? ' loading="lazy"' : ""}>` : "")
+  + (s.eventOk ? `<img class="evt evt-night" src="${s.event}" alt="${name ? name + ", en soirée" : ""}"${lazy ? ' loading="lazy"' : ""}>` : "");
 const TABS = [
   {id:"espaces", label:"Espaces", show:D.scenes.length > 1, html:() =>
     `<div class="spaces">${D.scenes.map(s => `<button class="space" type="button" data-go="${s.id}">
-       <div class="space-img"><img src="${s.thumb}" alt="" loading="lazy">${s.eventOk ? `<img class="evt" src="${s.event}" alt="" loading="lazy">` : ""}</div>
+       <div class="space-img"><img src="${s.thumb}" alt="" loading="lazy">${evtImgs(s, "", true)}</div>
        <p class="space-name">${s.name}</p><p class="space-cap">${capsTxt(s.caps)}</p></button>`).join("")}</div>`},
   {id:"capacites", label:"Capacités", show:true, html:() =>
     `<div class="fmts">${FORMATS.filter(f => venue[f.id]).map(f => `<button class="fmt2" type="button" data-f="${f.id}" aria-pressed="false"><svg viewBox="0 0 30 30" aria-hidden="true">${f.icon}</svg><span class="caps">${f.label}</span></button>`).join("")}</div>
@@ -437,10 +441,11 @@ function show(id, first) {
   current = s.id;
   const el = document.createElement("div");
   el.className = "layer";
-  el.innerHTML = `<img src="${s.img}" alt="${s.name}">` + (s.eventOk ? `<img class="evt" src="${s.event}" alt="${s.name}, en événement">` : "") + s.hot.map(h => {
+  el.innerHTML = `<img src="${s.img}" alt="${s.name}">` + evtImgs(s, s.name) + s.hot.map(h => {
     const to = byId(h.to);
     return `<button class="hot" type="button" style="left:${h.x}%;top:${h.y}%" data-go="${to.id}" aria-label="${to.name}"><span class="caps">${to.name}</span></button>`;
   }).join("");
+  if (s.pos) el.querySelectorAll("img").forEach(i => i.style.objectPosition = s.pos);   // cadrage propre à l'espace (photo en hauteur)
   scene.appendChild(el);
   const old = layer; layer = el;
   pan.x = pan.y = 0;
@@ -510,18 +515,18 @@ if (D.streetview) {
   addEventListener("keydown", e => { if (e.key === "Escape") $("svClose").click(); });
 }
 
-/* ---------- en événement : la même vue, remplie de monde ----------
-   Chaque espace peut avoir sa photo « event » au même cadrage. On vérifie lesquelles existent :
-   le bouton n'apparaît que s'il y en a au moins une. */
+/* ---------- en situation : la même vue, remplie de monde, en journée ou en soirée ----------
+   Chaque espace peut avoir ses photos « day » et « event » (soirée) au même cadrage. On vérifie lesquelles existent :
+   le sélecteur n'apparaît que s'il y en a au moins une ; un espace sans la sienne garde sa photo. */
 const probe = src => new Promise(res => { const i = new Image(); i.onload = () => res(true); i.onerror = () => res(false); i.src = src; });
-Promise.all(D.scenes.map(sc => sc.event ? probe(sc.event).then(ok => sc.eventOk = ok) : false)).then(() => {
-  if (!D.scenes.some(sc => sc.eventOk)) return;
-  // les vignettes et la vue en cours reçoivent leur version « en événement »
+Promise.all(D.scenes.flatMap(sc => [sc.day ? probe(sc.day).then(ok => sc.dayOk = ok) : 0, sc.event ? probe(sc.event).then(ok => sc.eventOk = ok) : 0])).then(() => {
+  if (!D.scenes.some(sc => sc.eventOk || sc.dayOk)) return;
+  // les vignettes et la vue en cours reçoivent leurs versions en situation
   const pane = document.querySelector('[data-pane="espaces"]');
   if (pane) pane.innerHTML = TABS.find(t => t.id === "espaces").html();
   document.querySelectorAll(".space").forEach(b => b.classList.toggle("is-on", b.dataset.go === current));
   const sc = byId(current);
-  if (layer && sc.eventOk && !layer.querySelector(".evt")) layer.querySelector("img").insertAdjacentHTML("afterend", `<img class="evt" src="${sc.event}" alt="${sc.name}, en événement">`);
+  if (layer && !layer.querySelector(".evt")) { layer.querySelector("img").insertAdjacentHTML("afterend", evtImgs(sc, sc.name)); if (sc.pos) layer.querySelectorAll("img").forEach(i => i.style.objectPosition = sc.pos); }
   $("mode").hidden = false; placeKnob();
 });
 function placeKnob() {
@@ -529,12 +534,13 @@ function placeKnob() {
   $("mode").style.setProperty("--kw", on.offsetWidth + "px");
   $("mode").style.setProperty("--kx", on.offsetLeft + "px");
 }
-function setMode(event) {
-  document.body.classList.toggle("is-event", event);
-  $("mode").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", (b.dataset.mode === "event") === event));
+function setMode(mode) {
+  document.body.classList.toggle("is-day", mode === "day");
+  document.body.classList.toggle("is-night", mode === "night");
+  $("mode").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === mode));
   placeKnob();
 }
-$("mode").addEventListener("click", e => { const b = e.target.closest("[data-mode]"); if (b) setMode(b.dataset.mode === "event"); });
+$("mode").addEventListener("click", e => { const b = e.target.closest("[data-mode]"); if (b) setMode(b.dataset.mode); });
 addEventListener("resize", () => { if (!$("mode").hidden) placeKnob(); });
 
 /* ---------- musique d'ambiance : jamais en lecture automatique, montée et descente en fondu ---------- */

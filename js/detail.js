@@ -3,8 +3,10 @@
    Les autres lieux s'affichent avec leur photo principale et leurs capacités (BH.VENUES) en attendant leur contenu.
 
    Points de passage (hot) : position en % de l'image ; « to » = espace de destination.
-   event : photo du même espace en situation d'événement, au même cadrage (à ajouter par espace, par ex. event:"assets/polpo/babord-event.jpg") ;
-   le bouton « En événement » n'apparaît que si au moins une existe. Tant qu'aucune n'est fournie, rien n'est demandé au serveur. */
+   day / event : photos du même espace en situation d'événement, au même cadrage, en journée et en soirée
+   (par ex. day:"assets/polpo/bar-jour.jpg", event:"assets/polpo/bar-soir.jpg") ; le sélecteur « Lieu vide · En journée · En soirée »
+   n'apparaît que si au moins une existe. Un espace sans photo vide (img) peut s'ouvrir directement sur sa photo de jour.
+   pos : cadrage de la photo (object-position), pour une photo en hauteur. */
 BH.DETAIL = {
   polpo: {
     tagline: "La plus grande barge d’Europe, amarrée face à la Seine",
@@ -61,14 +63,23 @@ BH.DETAIL = {
        desc:"En surplomb de la salle, un espace cocktail confidentiel avec vue plongeante.",
        caps:{cocktail:25},
        hot:[{x:72, y:56, to:"terrasse"}, {x:30, y:64, to:"tribord"}]},
-      {id:"bar", name:"Le Bar", img:"assets/polpo/bar.jpg", thumb:"assets/polpo/bar-thumb.jpg",
+      {id:"bar", name:"Le Bar", img:"assets/polpo/bar.jpg", thumb:"assets/polpo/bar-thumb.jpg", day:"assets/polpo/bar-jour.jpg", event:"assets/polpo/bar-soir.jpg",
        desc:"Carrelage vert et bibliothèque de spiritueux, le cœur des afterworks et des cocktails dînatoires.",
        caps:{cocktail:100},
        hot:[{x:22, y:48, to:"babord"}, {x:70, y:66, to:"restaurant"}]},
       {id:"terrasse", name:"Terrasse sur Seine", img:"assets/polpo/terrasse.jpg", thumb:"assets/polpo/terrasse-thumb.jpg",
        desc:"Une vue panoramique sur la Seine. Couverte et chauffée selon la saison.",
        caps:{cocktail:100},
-       hot:[{x:76, y:54, to:"babord"}]},
+       hot:[{x:76, y:54, to:"babord"}, {x:30, y:56, to:"plage"}]},
+      // mises en situation fournies le 28/10/2026 (photos d'ambiance, non contractuelles) : capacités à confirmer avec Polpo
+      {id:"plage", name:"La Plage", pos:"50% 38%", img:"assets/polpo/plage.jpg", thumb:"assets/polpo/plage-thumb.jpg", event:"assets/polpo/plage-soir.jpg",
+       desc:"Transats, sable et lanternes au bord de l’eau, sous une voile tressée : l’été sur la Seine.",
+       caps:{},
+       hot:[{x:52, y:44, to:"terrasse"}]},
+      {id:"tente", name:"Salle sous la tente", img:"assets/polpo/tente.jpg", thumb:"assets/polpo/tente-thumb.jpg", event:"assets/polpo/tente-soir.jpg",
+       desc:"Sous ses arceaux et ses suspensions en osier, une salle lumineuse ouverte sur le quai, pour les déjeuners et les dîners.",
+       caps:{},
+       hot:[{x:50, y:60, to:"bar"}]},
       {id:"restaurant", name:"Privatisation totale", img:"assets/polpo/restaurant.jpg", thumb:"assets/polpo/restaurant-thumb.jpg",
        desc:"Toute la barge pour vous : tables rondes, piste de danse, jusqu’à 500 invités en cocktail.",
        caps:{assis:350, cocktail:500, reunion:250, dansant:500},
