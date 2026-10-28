@@ -141,7 +141,8 @@ a{color:inherit;text-decoration:none}
   .cta-long{display:none}
   .finder{bottom:16px;left:16px;right:16px;width:auto;transform:none}
   .bar{flex-wrap:wrap;height:auto}
-  .seg{flex:1 1 33%;height:58px;padding:0 12px}
+  .seg{flex:1 1 33%;height:58px;padding:0 10px}
+  .seg-label{letter-spacing:.08em}   /* « Événement » tient dans le tiers de barre */
   .go{flex:1 1 100%;height:50px;margin:6px 0 0}
   .pop{position:fixed;left:0;right:0;bottom:0;z-index:2;max-height:80svh;overflow:auto;padding:24px 16px 28px;transform:translateY(100%)}
   .pop.is-open{transform:none}

@@ -5,7 +5,7 @@
    Points de passage (hot) : position en % de l'image ; « to » = espace de destination.
    day / event : photos du même espace en situation d'événement, au même cadrage, en journée et en soirée
    (par ex. day:"assets/polpo/bar-jour.jpg", event:"assets/polpo/bar-soir.jpg") ; le sélecteur « Lieu vide · En journée · En soirée »
-   n'apparaît que si au moins une existe. Un espace sans photo vide (img) peut s'ouvrir directement sur sa photo de jour.
+   ne s'affiche que sur les espaces qui en ont. empty:false : pas de photo du lieu vide, img est déjà la photo de jour.
    pos : cadrage de la photo (object-position), pour une photo en hauteur. */
 BH.DETAIL = {
   polpo: {
@@ -72,11 +72,11 @@ BH.DETAIL = {
        caps:{cocktail:100},
        hot:[{x:76, y:54, to:"babord"}, {x:30, y:56, to:"plage"}]},
       // mises en situation fournies le 28/10/2026 (photos d'ambiance, non contractuelles) : capacités à confirmer avec Polpo
-      {id:"plage", name:"La Plage", pos:"50% 38%", img:"assets/polpo/plage.jpg", thumb:"assets/polpo/plage-thumb.jpg", event:"assets/polpo/plage-soir.jpg",
+      {id:"plage", name:"La Plage", empty:false, pos:"50% 38%", img:"assets/polpo/plage.jpg", thumb:"assets/polpo/plage-thumb.jpg", event:"assets/polpo/plage-soir.jpg",
        desc:"Transats, sable et lanternes au bord de l’eau, sous une voile tressée : l’été sur la Seine.",
        caps:{},
        hot:[{x:52, y:44, to:"terrasse"}]},
-      {id:"tente", name:"Salle sous la tente", img:"assets/polpo/tente.jpg", thumb:"assets/polpo/tente-thumb.jpg", event:"assets/polpo/tente-soir.jpg",
+      {id:"tente", name:"Salle sous la tente", empty:false, img:"assets/polpo/tente.jpg", thumb:"assets/polpo/tente-thumb.jpg", event:"assets/polpo/tente-soir.jpg",
        desc:"Sous ses arceaux et ses suspensions en osier, une salle lumineuse ouverte sur le quai, pour les déjeuners et les dîners.",
        caps:{},
        hot:[{x:50, y:60, to:"bar"}]},

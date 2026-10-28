@@ -7,7 +7,7 @@
 <meta name="description" content="Visitez le lieu, ses espaces et leurs capacités, et demandez un devis.">
 <link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/base.css?v=11">
+<link rel="stylesheet" href="css/base.css?v=12">
 <link rel="stylesheet" href="css/menu.css?v=15">
 <style>
 html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
@@ -36,6 +36,7 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 /* lieu vide / en événement : un bloc crème glisse d'un mot à l'autre */
 .mode{position:fixed;top:96px;left:50%;transform:translateX(-50%);z-index:3;display:inline-flex;padding:3px;border:1px solid rgba(255,255,255,.5);color:#fff}
 .mode[hidden]{display:none}
+.mode button:disabled{opacity:.35;cursor:default}
 .mode button{position:relative;z-index:1;padding:9px 14px 8px;font-size:12px;color:#fff;transition:color .5s var(--ease)}
 .mode button[aria-pressed="true"]{color:var(--ink)}
 .mode .knob{position:absolute;top:3px;bottom:3px;left:0;width:var(--kw,0px);background:var(--cream);transform:translateX(var(--kx,3px));transition:transform .7s var(--expo),width .7s var(--expo)}
@@ -196,7 +197,8 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
   .reopen{display:none}
   .caption{left:20px;bottom:auto;top:84px}
   .corner{right:16px;bottom:auto;top:84px;gap:16px}
-  .mode{top:80px}
+  .mode{top:76px;max-width:calc(100% - 2*var(--gutter))}
+  .mode button{white-space:nowrap;padding:9px 9px 8px;letter-spacing:.06em}   /* les trois choix sur une ligne */
   .caption{top:136px}
   .corner #svOpen,.corner #allLink,.music span{display:none}
   .hint{top:34%}
@@ -459,6 +461,7 @@ function show(id, first) {
     if (old) gsap.to(old, {opacity:0, duration:1, ease:"power2.out", onComplete:() => old.remove()});
   }
   $("capName").textContent = s.name;
+  syncMode(s);
   document.querySelectorAll(".space").forEach(b => b.classList.toggle("is-on", b.dataset.go === s.id));
 }
 // tout ce qui porte data-go (points de passage, vignettes, lignes de capacité) mène à un espace
@@ -520,6 +523,7 @@ if (D.streetview) {
    le sélecteur n'apparaît que s'il y en a au moins une ; un espace sans la sienne garde sa photo. */
 const probe = src => new Promise(res => { const i = new Image(); i.onload = () => res(true); i.onerror = () => res(false); i.src = src; });
 Promise.all(D.scenes.flatMap(sc => [sc.day ? probe(sc.day).then(ok => sc.dayOk = ok) : 0, sc.event ? probe(sc.event).then(ok => sc.eventOk = ok) : 0])).then(() => {
+  probed = true;
   if (!D.scenes.some(sc => sc.eventOk || sc.dayOk)) return;
   // les vignettes et la vue en cours reçoivent leurs versions en situation
   const pane = document.querySelector('[data-pane="espaces"]');
@@ -527,19 +531,32 @@ Promise.all(D.scenes.flatMap(sc => [sc.day ? probe(sc.day).then(ok => sc.dayOk =
   document.querySelectorAll(".space").forEach(b => b.classList.toggle("is-on", b.dataset.go === current));
   const sc = byId(current);
   if (layer && !layer.querySelector(".evt")) { layer.querySelector("img").insertAdjacentHTML("afterend", evtImgs(sc, sc.name)); if (sc.pos) layer.querySelectorAll("img").forEach(i => i.style.objectPosition = sc.pos); }
-  $("mode").hidden = false; placeKnob();
+  syncMode(sc);
 });
+/* le sélecteur suit l'espace affiché : il disparaît là où il n'y a pas de mise en situation,
+   et propose seulement les vues qui existent (pas de « Lieu vide » sans photo vide) */
+let probed = false, mode = "vide";
+function syncMode(s) {
+  if (!probed) return;
+  const has = {vide:s.empty !== false, day:!!s.dayOk || s.empty === false, night:!!s.eventOk};
+  $("mode").hidden = !(s.dayOk || s.eventOk);
+  if ($("mode").hidden) { applyMode("vide"); return; }
+  $("mode").querySelectorAll("button").forEach(b => b.disabled = !has[b.dataset.mode]);
+  applyMode(has[mode] ? mode : (has.day ? "day" : "night"));
+}
 function placeKnob() {
   const on = $("mode").querySelector('[aria-pressed="true"]');
   $("mode").style.setProperty("--kw", on.offsetWidth + "px");
   $("mode").style.setProperty("--kx", on.offsetLeft + "px");
 }
-function setMode(mode) {
-  document.body.classList.toggle("is-day", mode === "day");
-  document.body.classList.toggle("is-night", mode === "night");
-  $("mode").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === mode));
-  placeKnob();
+// le choix de la personne est gardé d'un espace à l'autre (mode) ; l'affichage suit ce que l'espace permet (applyMode)
+function applyMode(m) {
+  document.body.classList.toggle("is-day", m === "day");
+  document.body.classList.toggle("is-night", m === "night");
+  $("mode").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === m));
+  if (!$("mode").hidden) placeKnob();
 }
+function setMode(m) { mode = m; applyMode(m); }
 $("mode").addEventListener("click", e => { const b = e.target.closest("[data-mode]"); if (b) setMode(b.dataset.mode); });
 addEventListener("resize", () => { if (!$("mode").hidden) placeKnob(); });
 
