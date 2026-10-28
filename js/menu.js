@@ -16,7 +16,7 @@
     {label:"Journal", href:"#", img:"assets/menu/journal.webp"},
   ];
   // deux lignes de liens, comme dans le Figma
-  const SECONDARY = [[["FAQ", "#"], ["Coffrets cadeaux", "#"]], [["Nous rejoindre", "#"], ["Bertrand Hospitality", "https://www.groupe-bertrand.com/activities/bertrand-hospitality/"]]];
+  const SECONDARY = [[["FAQ", "#"], ["Coffrets cadeaux", "#"]], [["Nous rejoindre", "#"], ["Bertrand Hospitality", "https://bertrand-hospitality.com/"]]];
   const EASE = {smooth:"cubic-bezier(.5,0,0,1)", accelerate:"cubic-bezier(1,0,1,1)", out:"cubic-bezier(.17,.17,.25,1)", in:"cubic-bezier(.17,0,.83,.83)"};
   const link = ([l, h]) => `<a class="ul" href="${h}"${/^http/.test(h) ? ' target="_blank" rel="noopener"' : ""}>${l}</a>`;
 
@@ -34,7 +34,7 @@
         </nav>
         <div class="mnu-foot">
           ${SECONDARY.map(row => `<p class="mnu-sec caps">${row.map(link).join("")}</p>`).join("")}
-          <a class="mnu-quote caps" href="https://evenement.groupe-bertrand.com/demande-de-devis/">Demander un devis${ARROW}</a>
+          <a class="mnu-quote caps" href="devis.html">Demander un devis${ARROW}</a>
         </div>
       </div>
     </aside>

@@ -7,7 +7,7 @@
 <meta name="description" content="Brasseries historiques, restaurants, péniche et terrasses : une trentaine de lieux à privatiser à Paris et en Île-de-France, avec un interlocuteur dédié.">
 <link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/hero-c.jpg" as="image">
+<link rel="preload" as="image" href="assets/home/hero-1.jpg" imagesrcset="assets/home/hero-1-m.jpg 1280w, assets/home/hero-1.jpg 2400w" imagesizes="100vw">
 <link rel="stylesheet" href="css/base.css?v=8">
 <link rel="stylesheet" href="css/menu.css?v=13">
 <link rel="stylesheet" href="css/coverflow.css?v=9">
@@ -31,11 +31,16 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 
 /* ---------- HERO ---------- */
 .hero{position:relative;height:100svh;min-height:640px;overflow:hidden;color:var(--white);isolation:isolate}
-.hero-bg{position:absolute;inset:0;z-index:0;background:url(assets/hero-c.jpg) center/cover no-repeat;will-change:transform,translate}
+.hero-bg{position:absolute;inset:0;z-index:0;background:var(--ink);will-change:transform,translate}
+/* trois photos en fondu enchaîné (rythme inspiré de paris-society-events.com, ralenti) : chacune reste 7 s,
+   apparaît en 2,4 s par-dessus la précédente et recule très lentement de 106 % à 100 % */
+.hero-slide{position:absolute;inset:0;overflow:hidden;opacity:0}
+.hero-slide:first-child{opacity:1}
+.hero-slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;will-change:transform}
 /* dégradé du Figma : un vrai calque posé au-dessus de la photo (et non un z-index négatif,
    que certains navigateurs repassent sous la photo dès qu'elle est animée) */
 .hero-shade{position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(180deg,rgba(29,29,27,.8) 0%,rgba(29,29,27,0) 100%)}
+  background:linear-gradient(180deg,rgba(29,29,27,.9) 20%,rgba(29,29,27,0) 60%)}   /* Figma « hero » : noir 90 % jusqu'à 20 %, transparent à 60 % */
 .hero-title{z-index:2}
 
 .hero-title{position:absolute;left:50%;top:clamp(132px,23vh,192px);transform:translateX(-50%);width:min(786px,calc(100% - 2*var(--gutter)));
@@ -78,13 +83,17 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 <div class="loader" id="loader" aria-hidden="true"><div class="loader-logo"><img class="lg-dim" src="assets/logo-footer.svg" alt=""><img class="lg-fill" src="assets/logo-footer.svg" alt=""></div></div>
 
 <section class="hero" aria-label="Accueil">
-  <div class="hero-bg" role="img" aria-label="Terrasse du café Le Nemours, place Colette, le soir"></div>
+  <div class="hero-bg" id="heroBg">
+    <div class="hero-slide"><img src="assets/home/hero-1.jpg" srcset="assets/home/hero-1-m.jpg 1280w, assets/home/hero-1.jpg 2400w" sizes="100vw" alt="Terrasse du café Le Nemours, place Colette, le soir" fetchpriority="high"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero-2-m.jpg 1280w, assets/home/hero-2.jpg 2400w" sizes="100vw" alt="La Seine et le pont de Bir-Hakeim, la nuit"></div>
+    <div class="hero-slide"><img data-srcset="assets/home/hero-3-m.jpg 1280w, assets/home/hero-3.jpg 2400w" sizes="100vw" alt="La façade du Vaudeville illuminée, le soir"></div>
+  </div>
   <div class="hero-shade" aria-hidden="true"></div>
 
   <header class="nav">
     <button class="nav-menu caps" type="button" aria-label="Ouvrir le menu"><i class="nav-ico" aria-hidden="true"></i><span>menu</span></button>
     <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
-    <a class="nav-cta ul caps" href="https://evenement.groupe-bertrand.com/demande-de-devis/"><span class="cta-long">Demander un </span>devis</a>
+    <a class="nav-cta ul caps" href="devis.html"><span class="cta-long">Demander un </span>devis</a>
   </header>
 
   <h1 class="hero-title">Privatisez les plus belles adresses de Paris</h1>
@@ -207,7 +216,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
       <h2 class="t-h3" id="endTitle">Parlons de votre projet</h2>
       <p class="t-text">La date, le format, le nombre d’invités&nbsp;: nous vous proposons les lieux qui s’y prêtent, avec un seul interlocuteur du premier échange au jour J.</p>
     </div>
-    <a class="go-end t-cta" href="https://evenement.groupe-bertrand.com/demande-de-devis/"><span>Demander un devis</span><svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a>
+    <a class="go-end t-cta" href="devis.html"><span>Demander un devis</span><svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a>
   </div>
 </section>
 
@@ -226,14 +235,14 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
       <span class="foot-sep" aria-hidden="true"></span>
       <div class="foot-group">
         <div class="foot-col"><a href="#">FAQ</a><a href="#">Coffrets cadeaux</a><a href="#">Nous rejoindre</a></div>
-        <div class="foot-col"><a href="https://evenement.groupe-bertrand.com/demande-de-devis/">Demander un devis</a><a href="#">Contact</a><a href="#">English</a></div>
+        <div class="foot-col"><a href="devis.html">Demander un devis</a><a href="#">Contact</a><a href="#">English</a></div>
       </div>
     </nav>
     <p class="foot-legal">L’abus d’alcool est dangereux pour la santé, à consommer avec modération.</p>
   </div>
   <div class="foot-bottom t-mini">
     <span>© 2026 Bertrand Hospitality</span>
-    <nav aria-label="Liens légaux"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Cookies</a><a href="https://www.groupe-bertrand.com" target="_blank" rel="noopener">Groupe Bertrand</a></nav>
+    <nav aria-label="Liens légaux"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Cookies</a><a href="https://bertrand-hospitality.com/" target="_blank" rel="noopener">Bertrand Hospitality</a></nav>
     <a href="https://www.digidop.com" target="_blank" rel="noopener">Site web par Digidop</a>
   </div>
 </footer>
@@ -242,7 +251,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="js/data.js?v=10"></script>
-<script src="js/menu.js?v=10"></script>
+<script src="js/menu.js?v=11"></script>
 <script src="js/finder.js?v=7"></script>
 <script src="js/coverflow.js?v=11"></script>
 <script src="js/paris-map.js?v=3"></script>
@@ -266,7 +275,7 @@ function start() {
   splitTitle();
   requestAnimationFrame(() => requestAnimationFrame(() => document.documentElement.classList.add("is-ready")));
 }
-const bg = new Image(); bg.src = "assets/hero-c.jpg";
+const bg = document.querySelector(".hero-slide img");
 // loader : 1,5 s de remplissage du logo, puis le rideau se lève (0,5 s) pendant que le hero entre en scène ;
 // il est sauté quand on revient sur la home depuis une autre page du site
 const loaderEl = document.getElementById("loader");
@@ -283,6 +292,33 @@ const loaderDone = new Promise(res => {
 });
 Promise.all([document.fonts.ready, bg.decode().catch(() => {}), loaderDone]).then(start);
 setTimeout(start, 3200);   // filet de sécurité si une ressource tarde
+
+/* ----- hero : trois photos en fondu enchaîné, une toutes les 7 s ; la nouvelle se pose sur la précédente en 2,4 s
+   et recule lentement (106 % → 100 % en 9 s). Pause quand le hero n'est plus à l'écran ou l'onglet masqué ----- */
+(() => {
+  const slides = [...document.querySelectorAll(".hero-slide")], imgs = slides.map(s => s.firstElementChild);
+  if (slides.length < 2 || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const HOLD = 7000, FADE = 2.4, DRIFT = 9;
+  let cur = 0, timer = null, z = 1, visible = true;
+  const drift = i => gsap.fromTo(imgs[i], {scale:1.06}, {scale:1, duration:DRIFT, ease:"sine.out", overwrite:true});
+  const load = img => { if (img.dataset.srcset) { img.srcset = img.dataset.srcset; delete img.dataset.srcset; } return img.decode ? img.decode().catch(() => {}) : Promise.resolve(); };
+  function next() {
+    const i = (cur + 1) % slides.length, prev = cur;
+    load(imgs[i]).then(() => {
+      slides[i].style.zIndex = ++z;
+      gsap.fromTo(slides[i], {opacity:0}, {opacity:1, duration:FADE, ease:"power2.inOut", onComplete:() => gsap.set(slides[prev], {opacity:0})});
+      drift(i);
+      cur = i;
+      schedule();
+    });
+  }
+  const schedule = () => { clearTimeout(timer); if (visible && !document.hidden) timer = setTimeout(next, HOLD); };
+  // départ après l'entrée en scène du hero ; les photos suivantes se chargent pendant ce temps
+  const go = () => { drift(0); imgs.slice(1).forEach(load); schedule(); };
+  const wait = setInterval(() => { if (document.documentElement.classList.contains("is-ready")) { clearInterval(wait); setTimeout(go, 1200); } }, 200);
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; visible ? schedule() : clearTimeout(timer); }).observe(slides[0].parentElement);
+  document.addEventListener("visibilitychange", schedule);
+})();
 
 /* ----- défilement doux (Lenis), léger : la page glisse un peu après la molette, sans inertie appuyée.
    Il tourne sur l'horloge de GSAP pour rester synchronisé avec les animations ----- */

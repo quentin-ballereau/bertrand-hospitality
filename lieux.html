@@ -87,7 +87,7 @@ html.is-grid body{height:auto;overflow:visible;overscroll-behavior:auto}
 <header class="nav">
   <button class="nav-menu caps" type="button" aria-label="Ouvrir le menu"><i class="nav-ico" aria-hidden="true"></i><span>menu</span></button>
   <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh-dark.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
-  <a class="nav-cta ul caps" href="https://evenement.groupe-bertrand.com/demande-de-devis/"><span class="cta-long">Demander un </span>devis</a>
+  <a class="nav-cta ul caps" href="devis.html"><span class="cta-long">Demander un </span>devis</a>
 </header>
 
 <main class="page">
@@ -114,7 +114,7 @@ html.is-grid body{height:auto;overflow:visible;overscroll-behavior:auto}
         <small>Élargissez un critère, ou laissez notre équipe, qui connaît chaque salon, composer une solution sur mesure.</small>
         <div class="row">
           <button class="cta ul caps" type="button" id="widen">Élargir la recherche</button>
-          <a class="cta ul caps" href="https://evenement.groupe-bertrand.com/demande-de-devis/">Demander un devis</a>
+          <a class="cta ul caps" href="devis.html">Demander un devis</a>
         </div>
       </div>
     </div>
@@ -135,7 +135,7 @@ html.is-grid body{height:auto;overflow:visible;overscroll-behavior:auto}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="js/data.js?v=10"></script>
-<script src="js/menu.js?v=10"></script>
+<script src="js/menu.js?v=11"></script>
 <script src="js/finder.js?v=7"></script>
 <script src="js/coverflow.js?v=11"></script>
 <script>
@@ -191,9 +191,13 @@ function setView(v, first) {
 document.querySelectorAll(".view").forEach(b => b.addEventListener("click", () => { if (b.dataset.view !== view) setView(b.dataset.view); }));
 const url = () => { const q = new URLSearchParams(toQuery(state)); if (view === "grille") q.set("vue", "grille"); return "lieux.html" + (q.toString() ? "?" + q : ""); };
 setView(view, true);
+// les liens « Demander un devis » emportent la recherche en cours
+const devisLinks = () => document.querySelectorAll('a[href^="devis.html"]').forEach(a => a.href = "devis.html" + (toQuery(state) ? "?" + toQuery(state) : ""));
+devisLinks();
 let rebuildT;
 function rebuild() {
   history.replaceState(null, "", url());
+  devisLinks();
   clearTimeout(rebuildT);
   rebuildT = setTimeout(() => build(false), 280);
 }

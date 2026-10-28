@@ -211,7 +211,7 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 <header class="nav">
   <button class="nav-menu caps" type="button" aria-label="Ouvrir le menu"><i class="nav-ico" aria-hidden="true"></i><span>menu</span></button>
   <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
-  <a class="nav-cta ul caps" href="https://evenement.groupe-bertrand.com/demande-de-devis/"><span class="cta-long">Demander un </span>devis</a>
+  <a class="nav-cta ul caps" href="devis.html"><span class="cta-long">Demander un </span>devis</a>
 </header>
 
 <aside class="panel" id="panel" aria-label="Le lieu">
@@ -227,7 +227,7 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
   <div class="tabs" role="tablist" id="tabs"></div>
   <div class="p-body" id="pBody"></div>
   <div class="p-foot">
-    <a class="go caps" href="https://evenement.groupe-bertrand.com/demande-de-devis/" id="quote">Demander un devis</a>
+    <a class="go caps" href="devis.html" id="quote">Demander un devis</a>
     <a class="ul caps" id="brochure" target="_blank" rel="noopener">Plaquette</a>
   </div>
 </aside>
@@ -250,7 +250,7 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="js/data.js?v=10"></script>
-<script src="js/menu.js?v=10"></script>
+<script src="js/menu.js?v=11"></script>
 <script src="js/detail.js?v=9"></script>
 <script>
 (() => {
@@ -288,6 +288,9 @@ $("more").addEventListener("click", () => {
   $("more").textContent = open ? "Lire plus" : "Lire moins";
 });
 if (D.brochure) $("brochure").href = D.brochure; else $("brochure").hidden = true;
+// le devis part avec le lieu et la recherche en cours (formats, invités) : le formulaire arrive déjà rempli
+{ const q = new URLSearchParams(toQuery({format:FSEL.join(",") || null, guests:filters.guests})); q.set("l", venue.slug);
+  document.querySelectorAll('a[href="devis.html"]').forEach(a => a.href = "devis.html?" + q); }
 const capRow = () => {
   $("pCaps").innerHTML = FORMATS.filter(f => venue[f.id]).map(f =>
     `<span class="capi${FSEL.includes(f.id) ? " is-on" : ""}" title="${f.label}"><svg viewBox="0 0 30 30" aria-hidden="true">${f.icon}</svg>${venue[f.id]}</span>`).join("");

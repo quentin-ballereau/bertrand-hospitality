@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demander un devis — Bertrand Hospitality</title>
+<meta name="description" content="Privatisez l’une de nos trente maisons à Paris et en Île-de-France : décrivez votre événement, notre équipe événementielle vous répond sous 24 heures ouvrées.">
+<link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/base.css?v=8">
+<link rel="stylesheet" href="css/menu.css?v=13">
+<style>
+/* Demande de devis (lot 2 · 08) : le formulaire à gauche, la photo du lieu demandé à droite, fixe pendant la saisie.
+   Le formulaire arrive pré-rempli depuis une fiche lieu ou une recherche (devis.html?l=polpo&format=cocktail&invites=120).
+   En production, l'envoi passe par Make vers BookingShake, puis la page /demande-de-devis/merci/ (mesure des conversions). */
+html,body{background:var(--cream)}
+.nav-cta{display:none}   /* on y est déjà */
+.nav{right:calc(44% + var(--gutter))}   /* sur ordinateur, la navigation reste dans la colonne du formulaire, le logo centré sur elle */
+
+.dv{display:grid;grid-template-columns:minmax(0,1fr) 44%;min-height:100svh}
+.dv-main{padding:148px var(--gutter) 120px;display:flex;justify-content:center}
+.dv-col{width:min(560px,100%)}
+
+/* photo du lieu, fixe à droite */
+.dv-aside{position:relative}
+.dv-photo{position:sticky;top:0;height:100svh;overflow:hidden;background:var(--ink)}
+.dv-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .8s var(--ease)}
+.dv-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(29,29,27,0) 45%,rgba(29,29,27,.75) 100%)}
+.dv-cap{position:absolute;left:48px;right:48px;bottom:48px;z-index:1;color:#fff;display:flex;flex-direction:column;gap:16px}
+.dv-cap .t-mini{color:rgba(255,255,255,.75)}
+.dv-cap .t-h3{color:#fff}
+
+/* en-tête */
+.dv-head{display:flex;flex-direction:column;gap:24px;margin-bottom:64px}
+.dv-head .t-text{max-width:440px}
+.t-h2,.t-h3{font-family:var(--serif);font-weight:400;letter-spacing:.02em;text-transform:uppercase;line-height:1.1;text-box:trim-both cap alphabetic;text-wrap:balance}
+.t-h2{font-size:40px}
+.t-h3{font-size:32px}
+.t-cta,.t-mini{font-family:var(--caps);font-weight:400;text-transform:uppercase;letter-spacing:.14em;line-height:1.3;text-box:trim-both cap alphabetic}
+.t-cta{font-size:12px}
+.t-mini{font-size:10px}
+.t-text{font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink-soft)}
+.t-eyebrow{color:var(--taupe)}
+
+/* blocs du formulaire */
+.dv-block{display:flex;flex-direction:column;gap:32px;padding:40px 0;border-top:1px solid var(--line)}
+.dv-block-head{display:flex;align-items:baseline;gap:16px}
+.dv-num{font-family:var(--caps);font-size:10px;letter-spacing:.14em;color:var(--taupe)}
+.dv-block-title{font-family:var(--serif);font-weight:400;font-size:18px;letter-spacing:.02em;text-transform:uppercase;line-height:1.1}
+.dv-row{display:grid;grid-template-columns:1fr 1fr;gap:32px 24px}
+.dv-row--1{grid-template-columns:1fr}
+
+.fld{position:relative;display:flex;flex-direction:column;gap:12px}
+.fld > label,.fld > .lbl{font-family:var(--caps);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.fld > label small,.fld > .lbl small{letter-spacing:.06em;text-transform:none;font-family:var(--sans);font-weight:300;font-size:11px}
+.fld input,.fld select,.fld textarea{width:100%;font:300 15px/1.4 var(--sans);color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:4px 0 12px;outline:none;transition:border-color .3s var(--ease);-webkit-appearance:none;appearance:none}
+.fld textarea{min-height:120px;resize:vertical}
+.fld select{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%231d1d1b'/%3E%3C/svg%3E") right 2px top 11px no-repeat;padding-right:24px;cursor:pointer}
+.fld input::placeholder,.fld textarea::placeholder{color:#b9b2ac}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-bottom-color:var(--ink)}
+.fld.is-bad input,.fld.is-bad select,.fld.is-bad textarea{border-bottom-color:#a0453a}
+.err{display:none;font-size:11.5px;font-weight:300;color:#a0453a}
+.fld.is-bad .err,.chk.is-bad .err{display:block}
+
+/* formats : plusieurs choix, mêmes pictogrammes que la recherche */
+.fmts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.fmt{display:flex;flex-direction:column;align-items:center;gap:12px;padding:18px 6px 16px;background:var(--white);border:1px solid transparent;transition:border-color .3s var(--ease)}
+.fmt svg{width:28px;height:28px;stroke:var(--ink);fill:none;stroke-width:1.1}
+.fmt span{font-family:var(--caps);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;text-align:center;line-height:1.3}
+.fmt:hover{border-color:var(--line)}
+.fmt[aria-pressed="true"]{border-color:var(--ink)}
+
+.chk{display:flex;gap:12px;align-items:flex-start;font-size:13px;font-weight:300;line-height:1.45;color:var(--ink-soft);cursor:pointer}
+.chk input{flex:0 0 14px;width:14px;height:14px;margin-top:2px;accent-color:var(--ink)}
+.chk a{text-decoration:underline;text-underline-offset:3px}
+
+.dv-send{display:flex;flex-direction:column;gap:24px;padding-top:40px;border-top:1px solid var(--line)}
+.send{display:flex;align-items:center;justify-content:center;gap:12px;height:56px;width:100%;background:var(--taupe);color:#fff;font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:background .45s var(--ease)}
+.send:hover{background:var(--ink)}
+.send svg{transition:transform .4s var(--ease)}
+.send:hover svg{transform:translateX(4px)}
+.send[disabled]{opacity:.6;cursor:wait}
+.dv-alt{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.dv-alt a{color:var(--ink)}
+
+/* état « merci » (en production : /demande-de-devis/merci/) */
+.dv-done{display:none;flex-direction:column;gap:32px}
+.is-sent .dv-form,.is-sent .dv-head{display:none}
+.is-sent .dv-done{display:flex}
+.dv-recap{display:flex;flex-direction:column;gap:12px;padding:24px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.dv-recap p{display:flex;justify-content:space-between;gap:24px;font-size:13px;font-weight:300;color:var(--ink-soft)}
+.dv-recap b{font-weight:400;color:var(--ink);text-align:right}
+.dv-links{display:flex;gap:32px;flex-wrap:wrap}
+
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+@media (max-width:1023px){
+  .dv{grid-template-columns:1fr}
+  .dv-aside{order:-1}
+  .dv-photo{position:relative;height:46svh;min-height:300px}
+  .dv-main{padding:64px var(--gutter) 100px}
+  .nav{right:var(--gutter);color:#fff}
+  .nav-logo img{filter:brightness(0) invert(1)}
+}
+@media (max-width:767px){
+  .dv-main{padding:48px var(--gutter) 80px}
+  .dv-cap{left:24px;right:24px;bottom:24px}
+  .dv-cap .t-h3{font-size:24px}
+  .t-h2{font-size:28px}
+  .dv-head{margin-bottom:40px}
+  .dv-row{grid-template-columns:1fr;gap:28px}
+  .fmts{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <button class="nav-menu caps" type="button" aria-label="Ouvrir le menu"><i class="nav-ico" aria-hidden="true"></i><span>menu</span></button>
+  <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh-dark.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
+  <a class="nav-cta ul caps" href="devis.html" aria-current="page">Demander un devis</a>
+</header>
+
+<main class="dv" id="dv">
+  <div class="dv-main">
+    <div class="dv-col">
+      <div class="dv-head">
+        <p class="t-cta t-eyebrow">Demande de devis</p>
+        <h1 class="t-h2">Parlons de votre événement</h1>
+        <p class="t-text">Quelques informations suffisent&nbsp;: notre équipe événementielle vous répond sous 24&nbsp;heures ouvrées, avec les lieux et les formules qui s’y prêtent. Un seul interlocuteur, du premier échange au jour J.</p>
+      </div>
+
+      <form class="dv-form" id="form" novalidate>
+        <section class="dv-block" aria-labelledby="b1">
+          <div class="dv-block-head"><span class="dv-num">01</span><h2 class="dv-block-title" id="b1">Votre événement</h2></div>
+          <div class="dv-row dv-row--1">
+            <div class="fld">
+              <label for="lieu">Lieu souhaité</label>
+              <select id="lieu" name="lieu"></select>
+            </div>
+          </div>
+          <div class="fld">
+            <span class="lbl" id="fmtLbl">Format <small>(plusieurs choix possibles)</small></span>
+            <div class="fmts" id="fmts" role="group" aria-labelledby="fmtLbl"></div>
+          </div>
+          <div class="dv-row">
+            <div class="fld">
+              <label for="invites">Nombre d’invités</label>
+              <input id="invites" name="invites" type="number" inputmode="numeric" min="2" max="1000" placeholder="Ex. 80" required>
+              <span class="err">Indiquez un nombre d’invités.</span>
+            </div>
+            <div class="fld">
+              <label for="date">Date envisagée</label>
+              <input id="date" name="date" type="date">
+            </div>
+          </div>
+          <label class="chk"><input type="checkbox" name="flexible" id="flexible">Mes dates sont flexibles</label>
+        </section>
+
+        <section class="dv-block" aria-labelledby="b2">
+          <div class="dv-block-head"><span class="dv-num">02</span><h2 class="dv-block-title" id="b2">Vos coordonnées</h2></div>
+          <div class="dv-row">
+            <div class="fld"><label for="prenom">Prénom</label><input id="prenom" name="prenom" autocomplete="given-name" required><span class="err">Indiquez votre prénom.</span></div>
+            <div class="fld"><label for="nom">Nom</label><input id="nom" name="nom" autocomplete="family-name" required><span class="err">Indiquez votre nom.</span></div>
+            <div class="fld"><label for="email">E-mail</label><input id="email" name="email" type="email" autocomplete="email" required><span class="err">Indiquez une adresse e-mail valide.</span></div>
+            <div class="fld"><label for="tel">Téléphone</label><input id="tel" name="tel" type="tel" autocomplete="tel" required><span class="err">Indiquez un numéro de téléphone.</span></div>
+          </div>
+          <div class="dv-row dv-row--1">
+            <div class="fld"><label for="societe">Société <small>(facultatif)</small></label><input id="societe" name="societe" autocomplete="organization"></div>
+          </div>
+        </section>
+
+        <section class="dv-block" aria-labelledby="b3">
+          <div class="dv-block-head"><span class="dv-num">03</span><h2 class="dv-block-title" id="b3">Votre projet</h2></div>
+          <div class="fld">
+            <label for="message">Message <small>(facultatif)</small></label>
+            <textarea id="message" name="message" placeholder="L’occasion, le déroulé, le budget par personne, vos envies…"></textarea>
+          </div>
+        </section>
+
+        <div class="dv-send">
+          <label class="chk" id="rgpdChk"><input type="checkbox" name="rgpd" id="rgpd" required><span>J’accepte que ces informations soient utilisées par Bertrand Hospitality pour traiter ma demande. <a href="#">Politique de confidentialité</a><span class="err">Merci de cocher cette case pour envoyer votre demande.</span></span></label>
+          <button class="send" type="submit">Envoyer ma demande<svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></button>
+          <p class="dv-alt t-text"><span>Vous préférez en parler&nbsp;?</span><a class="ul caps" href="tel:+33764070661" style="font-size:11px">07 64 07 06 61</a></p>
+        </div>
+      </form>
+
+      <div class="dv-done" id="done" tabindex="-1" aria-live="polite">
+        <p class="t-cta t-eyebrow">Demande envoyée</p>
+        <h1 class="t-h2" id="doneTitle">Merci</h1>
+        <p class="t-text">Votre demande est bien partie. Notre équipe événementielle vous répond sous 24&nbsp;heures ouvrées, par e-mail ou par téléphone, avec les lieux et les formules qui s’y prêtent.</p>
+        <div class="dv-recap" id="recap"></div>
+        <div class="dv-links"><a class="ul caps" href="lieux.html" style="font-size:11px;color:var(--taupe)">Découvrir d’autres lieux</a><a class="ul caps" href="index.html" style="font-size:11px;color:var(--taupe)">Retour à l’accueil</a></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="dv-aside" aria-hidden="true">
+    <div class="dv-photo">
+      <img id="photo" src="assets/home/closing.jpg" alt="">
+      <div class="dv-cap"><p class="t-mini" id="capPlace">Trente maisons à Paris et en Île-de-France</p><p class="t-h3" id="capName">Votre événement</p></div>
+    </div>
+  </aside>
+</main>
+
+<script src="js/data.js?v=10"></script>
+<script src="js/menu.js?v=11"></script>
+<script>
+(() => {
+  const {VENUES, FORMATS, fmtsOf, fromQuery, capFor} = BH;
+  const $ = id => document.getElementById(id);
+  const params = new URLSearchParams(location.search), q = fromQuery();
+  const sorted = [...VENUES].sort((a, b) => a.name.localeCompare(b.name, "fr"));
+
+  /* lieux : par ordre alphabétique, avec « Laissez-nous vous conseiller » en tête */
+  $("lieu").innerHTML = `<option value="">Laissez-nous vous conseiller</option>` +
+    sorted.map(v => `<option value="${v.slug}">${v.name} · ${v.place}</option>`).join("");
+  $("fmts").innerHTML = FORMATS.map(f =>
+    `<button class="fmt" type="button" data-f="${f.id}" aria-pressed="false"><svg viewBox="0 0 30 30" aria-hidden="true">${f.icon}</svg><span>${f.label}</span></button>`).join("");
+
+  /* pré-remplissage depuis une fiche lieu ou une recherche */
+  const pre = VENUES.find(v => v.slug === params.get("l"));
+  if (pre) $("lieu").value = pre.slug;
+  fmtsOf(q.format).forEach(f => $("fmts").querySelector(`[data-f="${f.id}"]`).setAttribute("aria-pressed", "true"));
+  if (q.guests) $("invites").value = q.guests;
+
+  /* la photo et la légende suivent le lieu choisi */
+  const photo = $("photo");
+  function syncPhoto() {
+    const v = VENUES.find(x => x.slug === $("lieu").value);
+    const src = v ? `assets/lieux/${v.slug}.jpg` : "assets/home/closing.jpg";
+    $("capPlace").textContent = v ? `${v.place} · jusqu’à ${capFor(v)} invités` : "Trente maisons à Paris et en Île-de-France";
+    $("capName").textContent = v ? v.name : "Votre événement";
+    if (photo.getAttribute("src") === src) return;
+    photo.style.opacity = 0;
+    const next = new Image(); next.onload = () => { photo.src = src; photo.style.opacity = 1; }; next.src = src;
+  }
+  $("lieu").addEventListener("change", syncPhoto);
+  syncPhoto();
+
+  $("fmts").addEventListener("click", e => {
+    const b = e.target.closest(".fmt"); if (!b) return;
+    b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") !== "true");
+  });
+
+  /* vérification simple, champ par champ, au moment d'envoyer puis à la saisie */
+  const rules = {
+    invites: el => +el.value >= 2,
+    prenom: el => el.value.trim().length > 0,
+    nom: el => el.value.trim().length > 0,
+    email: el => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(el.value.trim()),
+    tel: el => el.value.replace(/\D/g, "").length >= 9,
+  };
+  const check = id => { const ok = rules[id]($(id)); $(id).closest(".fld").classList.toggle("is-bad", !ok); $(id).setAttribute("aria-invalid", !ok); return ok; };
+  Object.keys(rules).forEach(id => $(id).addEventListener("input", () => { if ($(id).closest(".fld").classList.contains("is-bad")) check(id); }));
+  $("rgpd").addEventListener("change", () => $("rgpdChk").classList.toggle("is-bad", !$("rgpd").checked));
+
+  $("form").addEventListener("submit", e => {
+    e.preventDefault();
+    const bad = Object.keys(rules).filter(id => !check(id));
+    const rgpd = $("rgpd").checked; $("rgpdChk").classList.toggle("is-bad", !rgpd);
+    if (bad.length || !rgpd) { (bad.length ? $(bad[0]) : $("rgpd")).focus(); return; }
+    // POC : pas d'envoi réel. En production : Make → BookingShake, puis /demande-de-devis/merci/
+    const btn = e.submitter || document.querySelector(".send");
+    btn.disabled = true;
+    setTimeout(() => {
+      const v = VENUES.find(x => x.slug === $("lieu").value);
+      const fs = [...$("fmts").querySelectorAll('[aria-pressed="true"]')].map(b => FORMATS.find(f => f.id === b.dataset.f).label);
+      const d = $("date").value ? new Date($("date").value + "T12:00").toLocaleDateString("fr-FR", {day:"numeric", month:"long", year:"numeric"}) : "À définir";
+      const row = (k, val) => `<p><span>${k}</span><b>${val}</b></p>`;
+      $("doneTitle").textContent = `Merci, ${$("prenom").value.trim()}`;
+      $("recap").innerHTML = row("Lieu", v ? v.name : "À nous de vous conseiller") + row("Format", fs.join(", ") || "À définir")
+        + row("Invités", $("invites").value) + row("Date", d + ($("flexible").checked ? " (flexible)" : ""));
+      document.body.classList.add("is-sent");
+      history.replaceState(null, "", "devis.html?envoye=1");
+      scrollTo({top:0});
+      $("done").focus({preventScroll:true});
+    }, 500);
+  });
+})();
+</script>
+</body>
+</html>
