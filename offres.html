@@ -153,60 +153,17 @@ html,body{background:var(--cream)}
 
 <script src="js/data.js?v=10"></script>
 <script src="js/menu.js?v=13"></script>
+<script src="js/offres-data.js?v=2"></script>
 <script>
 (() => {
-  const {VENUES, capFor} = BH;
   const $ = id => document.getElementById(id);
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* les neuf formats du site actuel (evenement.groupe-bertrand.com/offres et /privatisation), sans en oublier un.
-     cap : jauge du filtre de recherche (les lieux qui le proposent, avec la plus grande capacité) ;
-     sinon, les lieux conseillés pour ce format sur le site actuel.
-     url : adresse actuelle, conservée en production (/offres/[format], /privatisation/[occasion]) */
-  const GROUPS = [
-    {id:"pro", label:"Rendez-vous professionnels", items:[
-      {name:"Réunion & séminaire", url:"/offres/reunion-seminaire/", cap:"reunion", img:"assets/home/fmt-1.jpg",
-       txt:"Des salles modulables en théâtre, en U ou en cabaret, les pauses, le déjeuner et le matériel technique : tout s’enchaîne, jusqu’au team building."},
-      {name:"Déjeuner & dîner", url:"/offres/dejeuner-diner/", cap:"assis", img:"assets/home/fmt-2.jpg",
-       txt:"Repas d’affaires ou dîner de fête, servis à table autour des spécialités qui ont fait la réputation de nos brasseries."},
-      {name:"Cocktail", url:"/offres/cocktail/", cap:"cocktail", img:"assets/home/fmt-3.jpg",
-       txt:"Canapés et mignardises pour mêler les groupes, dans une brasserie Art déco, un jardin ou les pieds dans l’eau."},
-      {name:"Afterwork", url:"/offres/afterwork/", img:"assets/polpo/galerie/02.jpg",
-       picks:["sirwinston", "vaudeville", "au-pied-de-cochon", "auteuil-brasserie", "les-2-stations", "public-house", "amanie"],
-       txt:"Un verre en terrasse, une planche de produits de saison : décompresser entre collègues, au cœur de Paris."},
-      {name:"Petit-déjeuner, goûter & brunch", url:"/offres/petit-dejeuner-gouter/", img:"assets/lieux/angelina-rivoli.jpg",
-       picks:["sirwinston", "angelina-rivoli", "grand-cafe-capucines", "au-pied-de-cochon", "les-2-stations", "procope", "bofinger", "flora-danica"],
-       txt:"Viennoiseries, pâtisseries d’Angelina, brunchs scandinaves ou italiens : pour ouvrir un séminaire ou réunir ses proches."},
-      {name:"Salon privatif", url:"/offres/salon-privatif/", img:"assets/lieux/procope.jpg",
-       picks:["procope", "au-pied-de-cochon", "dancing-coupole", "copenhague", "angelina-rivoli", "bofinger", "pavillon-lile", "sirwinston"],
-       txt:"Plus de trente-cinq salons privés et semi-privés, pour les réceptions intimistes, au calme, dans une maison qui vit autour."},
-    ]},
-    {id:"fetes", label:"Fêtes et célébrations", items:[
-      {name:"Soirée dansante", url:"/offres/soiree-dansante/", cap:"dansant", img:"assets/home/fmt-4.jpg",
-       txt:"Une piste, un DJ et des lieux qui se transforment à la nuit tombée, jusqu’au bout de la soirée."},
-      {name:"Soirée à thème", url:"/privatisation/festif-soiree-a-theme/", img:"assets/lieux/dancing-coupole.jpg",
-       picks:["polpo", "angelina-rivoli", "pavillon-lile", "dancing-coupole"],
-       txt:"Années folles, Gatsby, guinguette ou garden party : nos lieux se prêtent à tous les décors, et nos équipes aux mises en scène."},
-      {name:"Mariage", url:"/privatisation/mariage/", img:"assets/home/closing.jpg",
-       picks:["lile", "auteuil-brasserie", "polpo", "angelina-rivoli", "pavillon-lile", "flora-danica", "terrasse-de-madame", "amanie"],
-       txt:"Salons intimes, terrasses d’été ou grandes salles de réception : nous vous accompagnons de la première visite au jour J."},
-    ]},
-  ];
-
-  // nombre de lieux et jauge : depuis les capacités pour les quatre formats du filtre, depuis la sélection sinon
-  const all = GROUPS.flatMap(g => g.items);
-  all.forEach((f, i) => {
-    f.n = i + 1;
-    const list = f.cap ? VENUES.filter(v => v[f.cap]) : VENUES.filter(v => f.picks.includes(v.slug));
-    f.count = list.length;
-    f.max = f.cap ? Math.max(...list.map(v => v[f.cap])) : Math.max(...list.map(v => capFor(v)));
-    // en production : /offres/[format] ; ici, la page des lieux filtrée quand le format est l'un des quatre du filtre
-    f.href = f.cap ? `lieux.html?format=${f.cap}` : "lieux.html";
-    f.meta = `${f.count} lieux · jusqu’à ${f.max} invités`;
-  });
+  // les neuf formats : js/offres-data.js (communs avec les pages Format)
+  const {GROUPS} = BH.OFFRES;
 
   // quinconce : petite + grande, une large au centre, grande + petite… (le motif de l'ancienne section « Nos quartiers »)
-  const card = (f, size) => `<a class="acard acard--${size} ev-fade" href="${f.href}" data-url="${f.url}">
+  const card = (f, size) => `<a class="acard acard--${size} ev-fade" href="${f.href}">
       <span class="acard-img"><img class="acard-px" src="${f.img}" alt="" loading="lazy"></span>
       <span class="acard-txt"><span class="acard-name t-h4">${f.name}</span><span class="t-cta t-eyebrow">${f.meta}</span><span class="t-text">${f.txt}</span></span>
     </a>`;
