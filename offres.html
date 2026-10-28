@@ -45,14 +45,25 @@ html,body{background:var(--cream)}
 .acard-txt .t-text{max-width:440px}
 
 /* comment ça se passe */
-.ev-how{background:var(--cream-2);padding:160px var(--gutter)}
-.ev-how-in{width:min(1184px,100%);margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:80px}
-.ev-steps{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:48px;width:100%}
-.ev-step{display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center;padding:0 16px}
-.ev-step + .ev-step{border-left:1px solid var(--line)}
-.ev-step .t-num{font-family:var(--serif);font-size:48px;line-height:1;text-box:trim-both cap alphabetic}
-.ev-step .t-h5{font-size:18px}
-.ev-step .t-text{max-width:280px}
+/* notre accompagnement : le grand titre reste en fond, trois cartes montent et se posent l'une sur l'autre
+   (réf. lorunser.com pour la carte à double filet, cartes empilées au défilement) ; chacune laisse voir le numéro de la précédente */
+.ev-how{background:var(--cream-2);padding:160px var(--gutter) 160px}
+.hw-stage{position:relative;width:min(1184px,100%);margin:0 auto}
+.hw-pin{position:relative}   /* le titre reste fixe tant que les cartes défilent, puis repart avec elles */
+.hw-title{position:sticky;top:22svh;z-index:0;display:flex;flex-direction:column;align-items:center;gap:32px;text-align:center;pointer-events:none}
+.hw-title h2{font-family:var(--serif);font-weight:400;font-size:clamp(48px,7.4vw,104px);line-height:1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance;max-width:1000px}
+.hw-cards{position:relative;z-index:1;list-style:none;display:flex;flex-direction:column;align-items:center;gap:34svh;margin-top:18svh}
+/* une carte collante est libérée dès que sa marge touche le bas de la liste : l'écart passe donc par « gap »,
+   et une cale après la dernière carte garde la pile complète posée un moment avant qu'elle ne reparte */
+.hw-cards::after{content:"";display:block;height:28svh;margin-top:-34svh}
+.hw-card{--i:0;position:sticky;top:calc(16svh + var(--i) * 68px);width:min(440px,100%);height:min(54svh,500px);min-height:380px;flex:none;
+  display:flex;flex-direction:column;background:var(--cream);border:1px solid var(--taupe);box-shadow:0 30px 60px -40px rgba(29,29,27,.35);transform-origin:50% 100%;will-change:transform}
+.hw-card::after{content:"";position:absolute;inset:5px;border:1px solid rgba(141,121,116,.45);pointer-events:none}   /* second filet, comme une carte imprimée */
+.hw-num{display:flex;align-items:center;height:68px;padding:0 28px;border-bottom:1px solid var(--line);font-family:var(--serif);font-size:24px;line-height:1;color:var(--taupe)}
+.hw-body{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:32px 28px 32px}
+.hw-body h3{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
+.hw-body .t-text{max-width:340px}
+.hw-end{position:relative;z-index:1;display:flex;justify-content:center;margin-top:64px}
 .ev-cta{display:flex;align-items:center;gap:32px}
 .ev-quote{display:flex;align-items:center;justify-content:center;gap:12px;height:56px;padding:0 32px;background:var(--taupe);color:#fff;font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:background .45s var(--ease)}
 .ev-quote:hover{background:var(--ink)}
@@ -75,8 +86,10 @@ html,body{background:var(--cream)}
   .ev{gap:100px;padding-bottom:120px}
   .ev-group{gap:40px}
   .ev-how{padding:100px var(--gutter)}
-  .ev-steps{grid-template-columns:1fr;gap:56px}
-  .ev-step + .ev-step{border-left:0;border-top:1px solid var(--line);padding-top:56px}
+  .hw-card{top:calc(14svh + var(--i) * 60px);height:auto;min-height:340px}
+  .hw-num{height:60px;padding:0 24px}
+  .hw-body{padding:28px 24px}
+  .hw-body h3{font-size:24px}
   .ev-cta{flex-direction:column;gap:24px}
 }
 @media (prefers-reduced-motion:reduce){.js .ev-fade{opacity:1;translate:none}}
@@ -106,19 +119,23 @@ html,body{background:var(--cream)}
   <div class="ev" id="index"></div>
 
   <section class="ev-how" aria-labelledby="howTitle">
-    <div class="ev-how-in">
-      <div class="sec-head ev-fade">
+    <div class="hw-stage">
+      <div class="hw-pin">
+      <div class="hw-title">
         <p class="t-cta t-eyebrow">Notre accompagnement</p>
-        <div class="sec-head-txt"><h2 class="t-h2" id="howTitle">Du premier échange au jour J</h2></div>
+        <h2 id="howTitle">Du premier échange au jour J</h2>
       </div>
-      <ol class="ev-steps">
-        <li class="ev-step ev-fade"><span class="t-num">1</span><h3 class="t-h5">Vous décrivez votre événement</h3><p class="t-text">Le format, la date, le nombre d’invités&nbsp;: quelques lignes suffisent, en ligne ou par téléphone.</p></li>
-        <li class="ev-step ev-fade"><span class="t-num">2</span><h3 class="t-h5">Nous vous proposons les lieux</h3><p class="t-text">Sous 24 heures ouvrées, les maisons et les espaces qui s’y prêtent, avec leurs menus et leurs tarifs.</p></li>
-        <li class="ev-step ev-fade"><span class="t-num">3</span><h3 class="t-h5">Un seul interlocuteur</h3><p class="t-text">Il connaît chaque salon, chaque terrasse, et vous accompagne jusqu’au dernier invité.</p></li>
+      <ol class="hw-cards" id="hwCards">
+        <li class="hw-card" style="--i:0"><p class="hw-num">1.</p><div class="hw-body"><h3>Vous décrivez votre événement</h3><p class="t-text">Le format, la date, le nombre d’invités&nbsp;: quelques lignes suffisent, en ligne ou par téléphone.</p></div></li>
+        <li class="hw-card" style="--i:1"><p class="hw-num">2.</p><div class="hw-body"><h3>Nous vous proposons les lieux</h3><p class="t-text">Sous 24 heures ouvrées, les maisons et les espaces qui s’y prêtent, avec leurs menus et leurs tarifs.</p></div></li>
+        <li class="hw-card" style="--i:2"><p class="hw-num">3.</p><div class="hw-body"><h3>Un seul interlocuteur</h3><p class="t-text">Il connaît chaque salon, chaque terrasse, et vous accompagne jusqu’au dernier invité.</p></div></li>
       </ol>
-      <div class="ev-cta ev-fade">
-        <a class="ev-quote" href="devis.html">Demander un devis<svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a>
-        <a class="cta ul caps" href="lieux.html">Voir tous nos lieux</a>
+      </div>
+      <div class="hw-end">
+        <div class="ev-cta">
+          <a class="ev-quote" href="devis.html">Demander un devis<svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a>
+          <a class="cta ul caps" href="lieux.html">Voir tous nos lieux</a>
+        </div>
       </div>
     </div>
   </section>
@@ -199,6 +216,25 @@ html,body{background:var(--cream)}
     };
     addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(run); } }, {passive:true});
     run();
+  }
+
+  /* cartes de l'accompagnement : elles montent légèrement penchées et se redressent en se posant sur la pile,
+     chacune gardant un très léger angle (comme des cartes déposées à la main) */
+  const cards = [...document.querySelectorAll(".hw-card")];
+  if (!reduce && cards.length) {
+    const REST = [-1.2, .9, -.5], TILT = [5, -4, 4];
+    let ticking = false;
+    const tilt = () => {
+      ticking = false;
+      cards.forEach((c, i) => {
+        const stick = parseFloat(getComputedStyle(c).top), d = c.getBoundingClientRect().top - stick;
+        const p = Math.min(1, Math.max(0, d / (innerHeight * .55)));   // 1 en bas de l'écran, 0 une fois posée
+        c.style.transform = `rotate(${(REST[i] + TILT[i] * p).toFixed(2)}deg)`;
+      });
+    };
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(tilt); } }, {passive:true});
+    addEventListener("resize", tilt);
+    tilt();
   }
 
   /* entrée en scène : chaque élément apparaît en fondu quand il arrive à l'écran */
