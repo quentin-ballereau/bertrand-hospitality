@@ -5,7 +5,8 @@
    Les voisines s'inclinent vers le centre, comme dans le POC de Thomas.
 
    const cf = BH.coverflow(root, {wheel:"all" | "x", format:() => "cocktail" | null, query:() => "format=…"});
-   cf.set(list, {intro})   affiche une liste ; cf.refresh(list) la remplace avec un fondu */
+   cf.set(list, {intro})   affiche une liste ; cf.refresh(list) la remplace avec un fondu
+   enabled:() => bool      facultatif : quand il renvoie false, molette et clavier ne pilotent plus le carrousel */
 BH.coverflow = (root, opts = {}) => {
   const {fmtsOf, capFor} = BH;
   // chaque lieu s'ouvre sur sa visite immersive ; la recherche en cours la suit
@@ -88,8 +89,9 @@ BH.coverflow = (root, opts = {}) => {
   // molette / trackpad : avance proportionnelle au geste, puis aimant quasi instantané à l'arrêt.
   // "all" : la page entière pilote le carrousel ; "x" : seul le geste horizontal sur la scène (la page continue de défiler)
   let snapT, dir = 0;
+  const on = () => !opts.enabled || opts.enabled();   // la page lieux peut masquer le carrousel (vue en grille)
   (opts.wheel === "x" ? stage : window).addEventListener("wheel", e => {
-    if (!n || e.target.closest(".finder")) return;
+    if (!n || !on() || e.target.closest(".finder")) return;
     const horizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY);
     if (opts.wheel === "x" && !horizontal) return;
     e.preventDefault();
@@ -138,13 +140,13 @@ BH.coverflow = (root, opts = {}) => {
   });
   // flèches du clavier, seulement quand le carrousel est à l'écran
   addEventListener("keydown", e => {
-    if (!n || e.target.closest?.(".finder")) return;
+    if (!n || !on() || e.target.closest?.(".finder")) return;
     const r = stage.getBoundingClientRect();
     if (r.bottom < 0 || r.top > innerHeight) return;
     if (e.key === "ArrowRight") go(Math.round(target) + 1);
     if (e.key === "ArrowLeft") go(Math.round(target) - 1);
   });
-  addEventListener("resize", () => { if (n) { measure(); render(); } });
+  addEventListener("resize", () => { if (n && on()) { measure(); render(); } });
 
   /* ---------- construction ---------- */
   /* entrée : rien ne glisse ni ne se dévoile. Chaque photo apparaît en fondu en reculant légèrement,

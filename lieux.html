@@ -41,8 +41,31 @@ body{color:var(--ink)}
 .empty small{display:block;margin:14px auto 26px;max-width:420px;font-size:13.5px;font-weight:300;color:var(--ink-soft);line-height:1.5}
 .empty .row{display:flex;gap:28px;justify-content:center}
 
+/* deux vues : le carrousel (par défaut) ou une grille classique ; en grille, la page défile normalement */
+.tools{display:flex;align-items:center;justify-content:center;gap:24px;margin-top:16px}
+.tools .edit{margin-top:0}
+.tools-sep{width:1px;height:12px;background:var(--line)}
+.views{display:flex;gap:16px}
+.view{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--muted);transition:color .3s}
+.view svg{width:14px;height:12px;fill:none;stroke:currentColor;stroke-width:1}
+.view:hover,.view[aria-pressed="true"]{color:var(--ink)}
+.grid{display:none;grid-template-columns:repeat(3,1fr);gap:56px 32px;width:min(1184px,calc(100% - 2*var(--gutter)));margin:48px auto 0;padding-bottom:120px}
+.gcard{display:flex;flex-direction:column;gap:20px;text-align:left}
+.gcard-img{position:relative;aspect-ratio:3/2;overflow:hidden;background:var(--cream-2)}
+.gcard-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.4s var(--expo)}
+.gcard:hover .gcard-img img,.gcard:focus-visible .gcard-img img{transform:scale(1.04)}
+.gcard-txt{display:flex;flex-direction:column;gap:14px}
+.gcard-place{font-size:10px;color:var(--taupe)}
+.gcard-name{font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+.grid-empty{grid-column:1/-1;text-align:center;padding:80px 0}
+html.is-grid,html.is-grid body{height:auto;overflow:auto;overflow-x:clip}
+.is-grid .page{height:auto;min-height:0}
+.is-grid .cf{display:none}
+.is-grid .grid{display:grid}
+@media (max-width:1023px){ .grid{grid-template-columns:repeat(2,1fr);gap:40px 20px} }
+
 /* intro */
-.js .eyebrow, .js .headline, .js .edit, .js .info, .js .nav{opacity:0}
+.js .eyebrow, .js .headline, .js .tools, .js .info, .js .nav{opacity:0}
 
 @media (max-width:767px){
   .page{padding:86px 0 24px}
@@ -51,6 +74,8 @@ body{color:var(--ink)}
   .eyebrow{font-size:10px}
   .headline{font-size:19px;margin-top:12px}
   .cf{margin-top:14px}
+  .tools{gap:16px;margin-top:12px}
+  .grid{grid-template-columns:1fr;gap:40px;margin-top:32px}
 }
 </style>
 </head>
@@ -66,7 +91,14 @@ body{color:var(--ink)}
   <div class="head">
     <p class="eyebrow caps">Nos lieux à privatiser</p>
     <h1 class="headline" id="headline" aria-live="polite"></h1>
-    <button class="edit ul caps" id="edit" type="button" aria-controls="finder" aria-expanded="false">Modifier la recherche</button>
+    <div class="tools">
+      <button class="edit ul caps" id="edit" type="button" aria-controls="finder" aria-expanded="false">Modifier la recherche</button>
+      <span class="tools-sep" aria-hidden="true"></span>
+      <div class="views" role="group" aria-label="Affichage">
+        <button class="view caps" type="button" data-view="carrousel" aria-pressed="true"><svg viewBox="0 0 14 12" aria-hidden="true"><rect x="4" y="1.5" width="6" height="9"/><path d="M1 3v6M13 3v6"/></svg>Carrousel</button>
+        <button class="view caps" type="button" data-view="grille" aria-pressed="false"><svg viewBox="0 0 14 12" aria-hidden="true"><rect x="1" y="1" width="5" height="4"/><rect x="8" y="1" width="5" height="4"/><rect x="1" y="7" width="5" height="4"/><rect x="8" y="7" width="5" height="4"/></svg>Grille</button>
+      </div>
+    </div>
   </div>
 
   <div class="cf" id="cf">
@@ -92,6 +124,8 @@ body{color:var(--ink)}
     <a class="info-cta cta ul caps" data-k="cta">Découvrir le lieu</a>
   </div>
   </div>
+
+  <div class="grid" id="grid" aria-live="polite"></div>
 </main>
 
 <div class="finder is-light is-floating" id="finder" aria-hidden="true"></div>
@@ -100,14 +134,16 @@ body{color:var(--ink)}
 <script src="js/data.js?v=10"></script>
 <script src="js/menu.js?v=10"></script>
 <script src="js/finder.js?v=7"></script>
-<script src="js/coverflow.js?v=10"></script>
+<script src="js/coverflow.js?v=11"></script>
 <script>
 (() => {
 const {results, capFor, fmtOf, fmtPhrase, secOf, FORMATS, BASE, toQuery, fromQuery} = BH;
 const $ = id => document.getElementById(id);
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const state = fromQuery();
-const cf = BH.coverflow($("cf"), {wheel:"all", format:() => state.format, query:() => toQuery(state)});
+let view = new URLSearchParams(location.search).get("vue") === "grille" ? "grille" : null;
+try { view = view || localStorage.getItem("bh-vue") || "carrousel"; } catch (e) { view = view || "carrousel"; }
+const cf = BH.coverflow($("cf"), {wheel:"all", format:() => state.format, query:() => toQuery(state), enabled:() => view === "carrousel"});
 
 /* ---------- construction ---------- */
 /* le titre reformule simplement la recherche */
@@ -120,14 +156,42 @@ function renderHeadline() {
   $("headline").textContent = !touched ? `${count} à Paris et en Île-de-France`
     : `${count} pour ${f || "votre événement"}${state.guests ? ` de ${state.guests} personnes` : ""}${state.sector ? " " + WHERE[state.sector] : ""}`;
 }
+/* la grille : mêmes lieux, mêmes liens, avec la jauge du format recherché */
+function renderGrid(intro) {
+  const list = results(state), sel = state.format, fs = BH.fmtsOf(sel);
+  const capTxt = v => fs.length === 1 ? `${v[fs[0].id]} invités ${fs[0].unit}` : `jusqu’à ${capFor(v, sel)} invités`;
+  const q = toQuery(state);
+  $("grid").innerHTML = list.length ? list.map(v => `<a class="gcard" href="lieu.html?l=${v.slug}${q ? "&" + q : ""}">
+      <span class="gcard-img"><img src="assets/lieux/${v.slug}.jpg" alt="" loading="lazy"></span>
+      <span class="gcard-txt"><span class="gcard-place caps">${v.place} · ${capTxt(v)}</span><span class="gcard-name">${v.name}</span></span></a>`).join("")
+    : `<div class="grid-empty">${$("empty").firstElementChild.outerHTML.replace('id="widen"', 'data-widen')}</div>`;
+  if (!reduce) gsap.fromTo("#grid > *", {opacity:0, y:12}, {opacity:1, y:0, duration:1, ease:"expo.out", stagger:.04, delay:intro ? .3 : 0});
+}
 function build(intro) {
   const list = results(state);
   $("empty").classList.toggle("is-on", !list.length);
+  if (view === "grille") { renderGrid(intro); cf.set(list); return; }
   intro ? cf.set(list, {intro:true}) : cf.refresh(list);
 }
+/* bascule carrousel / grille : la vue choisie est gardée dans l'adresse et pour la prochaine visite */
+function setView(v, first) {
+  view = v;
+  document.documentElement.classList.toggle("is-grid", v === "grille");
+  document.querySelectorAll(".view").forEach(b => b.setAttribute("aria-pressed", b.dataset.view === v));
+  try { localStorage.setItem("bh-vue", v); } catch (e) {}
+  if (first) return;
+  history.replaceState(null, "", url());
+  scrollTo(0, 0);
+  const list = results(state);
+  if (v === "grille") renderGrid(true);
+  else { cf.set(list, {intro:true}); gsap.set(".info", {opacity:1}); }
+}
+document.querySelectorAll(".view").forEach(b => b.addEventListener("click", () => { if (b.dataset.view !== view) setView(b.dataset.view); }));
+const url = () => { const q = new URLSearchParams(toQuery(state)); if (view === "grille") q.set("vue", "grille"); return "lieux.html" + (q.toString() ? "?" + q : ""); };
+setView(view, true);
 let rebuildT;
 function rebuild() {
-  history.replaceState(null, "", "lieux.html" + (toQuery(state) ? "?" + toQuery(state) : ""));
+  history.replaceState(null, "", url());
   clearTimeout(rebuildT);
   rebuildT = setTimeout(() => build(false), 280);
 }
@@ -159,17 +223,17 @@ edit.addEventListener("click", e => { e.stopPropagation(); isOpen() ? hideFinder
 // composedPath plutôt que closest : un choix re-rendu (les secteurs) est déjà détaché du DOM au moment du clic
 document.addEventListener("click", e => { if (isOpen() && !e.composedPath().includes(finderEl)) hideFinder(); });
 addEventListener("keydown", e => { if (e.key === "Escape") hideFinder(); });
-$("widen").addEventListener("click", () => { state.sector = null; state.guests = null; finder.update(); });
+document.addEventListener("click", e => { if (e.target.closest("#widen, [data-widen]")) { state.sector = null; state.guests = null; finder.update(); } });
 renderHeadline();
 
 
 /* ---------- intro de la page ---------- */
 function start() {
   build(true);
-  if (reduce) { gsap.set([".nav", ".eyebrow", ".headline", ".edit", ".info"], {opacity:1}); return; }
+  if (reduce) { gsap.set([".nav", ".eyebrow", ".headline", ".tools", ".info"], {opacity:1}); return; }
   gsap.timeline({defaults:{ease:"expo.out"}})
     .fromTo(".nav", {opacity:0, y:-8}, {opacity:1, y:0, duration:1.2}, .2)
-    .fromTo([".eyebrow", ".headline", ".edit"], {opacity:0, y:12}, {opacity:1, y:0, duration:1.2, stagger:.08}, .35);   // la fiche du lieu est dévoilée par le carrousel
+    .fromTo([".eyebrow", ".headline", ".tools"], {opacity:0, y:12}, {opacity:1, y:0, duration:1.2, stagger:.08}, .35);   // la fiche du lieu est dévoilée par le carrousel
 }
 document.fonts.ready.then(start);
 })();
