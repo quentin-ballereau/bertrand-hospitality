@@ -23,7 +23,7 @@
 <meta name="robots" content="noindex">
 <link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/base.css?v=15">
+<link rel="stylesheet" href="css/base.css?v=17">
 <link rel="stylesheet" href="css/home.css?v=28">
 <link rel="stylesheet" href="css/pages.css?v=4">
 <link rel="stylesheet" href="css/reviews.css?v=1">
@@ -111,7 +111,7 @@ html,body{background:var(--cream)}
 .lp-reviews{margin-top:128px}
 
 /* formats : un clic préremplit le formulaire */
-.lp-fmts{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1184px;margin:0 auto}
+.lp-fmts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;max-width:1184px;margin:0 auto}
 .lp-fmt{display:flex;flex-direction:column;align-items:center;gap:20px;padding:40px 16px 36px;background:#fff;border:.5px solid transparent;transition:border-color .3s var(--ease)}
 .lp-fmt:hover,.lp-fmt[aria-pressed="true"]{border-color:var(--ink)}
 .lp-fmt svg{width:34px;height:34px;stroke:var(--ink);fill:none;stroke-width:1.1}
@@ -135,7 +135,12 @@ html,body{background:var(--cream)}
   .lp-steps{grid-template-columns:1fr}
   .lp-step,.lp-step + .lp-step{padding:40px 0 0;border-left:0}
   .lp-step + .lp-step{border-top:1px solid var(--line);margin-top:40px}
-  .lp-fmts{grid-template-columns:repeat(2,1fr)}
+  /* mobile : une ligne par format, le pictogramme à gauche, le nombre de lieux à droite ; libellés sur une ligne */
+  .lp-fmts{grid-template-columns:1fr;gap:8px}
+  .lp-fmt{flex-direction:row;gap:16px;padding:18px 20px}
+  .lp-fmt svg{width:28px;height:28px}
+  .lp-fmt small{margin-left:auto}
+  .lp-fmt .t-cta{white-space:nowrap}
 }
 @media (max-width:767px){
   .lp-top{top:20px}

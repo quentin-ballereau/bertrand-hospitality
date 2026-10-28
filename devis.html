@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/base.css?v=15">
+<link rel="stylesheet" href="css/base.css?v=17">
 <style>
 /* Demande de devis (lot 2 · 08), d'après Figma 6567-1971 : l'écran coupé en deux, la photo bord à bord à gauche, fixe pendant
    la saisie, le formulaire à droite en trois blocs numérotés, champs encadrés. Le logo, en blanc, se pose en haut de la photo, centré. Le formulaire arrive pré-rempli depuis une fiche lieu ou une recherche
@@ -71,12 +71,14 @@ html,body{background:var(--cream)}
 .fld.is-bad .err{display:block}
 
 /* formats : plusieurs choix, mêmes pictogrammes que la recherche */
-.fmts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+/* formats : deux colonnes égales, libellés toujours sur une ligne (« Soirée dansante » ne tient pas dans un quart de largeur) */
+.fmts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .fmt{display:flex;flex-direction:column;align-items:center;gap:12px;padding:18px 4px 16px;background:var(--white);border:.5px solid transparent;transition:border-color .3s var(--ease)}
 .fmt svg{width:24px;height:24px;stroke:var(--ink);fill:none;stroke-width:1.1}
-.fmt span{font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;text-align:center;line-height:1.3}
+.fmt span{font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;text-align:center;line-height:1.3;white-space:nowrap}
 .fmt:hover{border-color:var(--line)}
 .fmt[aria-pressed="true"]{border-color:var(--ink)}
+@media (max-width:359px){.fmts{grid-template-columns:1fr}.fmt{flex-direction:row;justify-content:center;padding:14px 12px}}   /* très petits écrans : un format par ligne, le pictogramme à gauche */
 
 .send{display:flex;align-items:center;justify-content:center;gap:12px;height:52px;width:100%;padding:0 24px;background:var(--taupe);color:#fff;font-family:var(--caps);font-size:14px;letter-spacing:.14em;text-transform:uppercase;transition:background .45s var(--ease)}
 .send:hover{background:var(--ink)}
@@ -130,7 +132,6 @@ html,body{background:var(--cream)}
   .t-h2{font-size:28px}
   .dv-main{padding-top:48px}
   .dv-row{grid-template-columns:1fr}
-  .fmts{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>

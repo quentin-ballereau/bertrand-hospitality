@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/base.css?v=15">
+<link rel="stylesheet" href="css/base.css?v=17">
 <link rel="stylesheet" href="css/menu.css?v=16">
 <style>
 html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
@@ -146,12 +146,14 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 @media (max-width:767px){.lb-img{max-width:100vw;max-height:calc(100svh - 140px)}.lb-nav{top:auto;bottom:12px;margin:0}.lb-prev{left:8px}.lb-next{right:8px}.lb-cap{bottom:70px;padding:0 24px}.lb-bar{left:20px;right:20px}}
 
 /* capacités */
-.fmts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+/* formats : deux colonnes égales, libellés toujours sur une ligne (« Soirée dansante » ne tient pas dans un quart de largeur) */
+.fmts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
 .fmt2{display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 4px 12px;background:var(--white);border:1px solid transparent;transition:border-color .3s}
 .fmt2 svg{width:24px;height:24px;stroke:var(--ink);fill:none;stroke-width:1.1}
-.fmt2 span{font-size:12px;text-align:center;line-height:1.3}
+.fmt2 span{font-size:12px;text-align:center;line-height:1.3;white-space:nowrap}
 .fmt2:hover{border-color:var(--line)}
 .fmt2[aria-pressed="true"]{border-color:var(--ink)}
+@media (max-width:359px){.fmts{grid-template-columns:1fr}.fmt2{flex-direction:row;justify-content:center;padding:14px 12px}}   /* très petits écrans : un format par ligne, le pictogramme à gauche */
 .guests2{display:flex;align-items:center;gap:16px;margin:22px 0 6px}
 .guests2 output{font-family:var(--serif);font-size:30px;letter-spacing:.02em;min-width:2.4ch;font-variant-numeric:tabular-nums}
 .guests2 small{font-size:12px;color:var(--muted);font-weight:300}

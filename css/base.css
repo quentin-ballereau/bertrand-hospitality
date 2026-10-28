@@ -101,10 +101,12 @@ h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,
 .pop-title{font-family:var(--serif);font-size:19px;line-height:1.1;font-weight:400;text-transform:uppercase;letter-spacing:.02em}
 .pop-hint{font-size:12px;color:var(--muted);font-weight:300}
 
-.formats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+/* formats : deux colonnes égales, libellés toujours sur une ligne (« Soirée dansante » ne tient pas dans un quart de largeur) */
+.formats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .fmt{display:flex;flex-direction:column;align-items:center;gap:14px;padding:22px 8px 18px;background:var(--white);border:1px solid transparent;transition:border-color .3s var(--ease),background .3s}
 .fmt svg{width:30px;height:30px;stroke:var(--ink);fill:none;stroke-width:1.1}
-.fmt span{font-size:12px}
+.fmt span{font-size:12px;white-space:nowrap}
+@media (max-width:359px){.formats{grid-template-columns:1fr}.fmt{flex-direction:row;justify-content:center;padding:14px 12px}}   /* très petits écrans : un format par ligne, le pictogramme à gauche */
 .fmt:hover{border-color:var(--line)}
 .fmt[aria-pressed="true"]{border-color:var(--ink)}
 
@@ -154,7 +156,6 @@ h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,
   .pop{position:fixed;left:0;right:0;bottom:0;z-index:2;max-height:80svh;overflow:auto;padding:24px 16px 28px;transform:translateY(100%)}
   .pop.is-open{transform:none}
   .pop-go{display:flex;width:100%;height:50px;margin-top:22px}
-  .formats{grid-template-columns:1fr 1fr}
   .guests{grid-template-columns:1fr}
   .stepper{justify-content:center}
   .scrim.is-on{background:rgba(29,29,27,.4)}
