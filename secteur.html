@@ -22,12 +22,12 @@ html.lenis,html.lenis body{height:auto}
 .nav{color:#fff}
 
 /* hero : la photo du quartier, le titre et la phrase posés en bas */
-/* hero (Figma 6560-900) : la photo plein écran, un voile qui descend de 40 % à 85 %, le titre et la phrase posés à 48 px du bas */
+/* hero (Figma 6560-900) : la photo plein écran, le dégradé et la taille de titre du hero de la home, le titre et la phrase posés à 48 px du bas */
 .sc-hero{position:relative;height:100svh;min-height:640px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:24px;padding:0 var(--gutter) 48px;color:#fff;text-align:center;isolation:isolate}
 .sc-hero img{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;transform:scale(1.06);transition:transform 2.4s var(--expo)}
 .is-ready .sc-hero img{transform:none}
-.sc-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(29,29,27,0) 40%,rgba(29,29,27,.5) 85%)}
-.sc-title{max-width:784px;font-family:var(--serif);font-weight:400;font-size:48px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+.sc-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(29,29,27,.8) 20%,rgba(29,29,27,0) 40%,rgba(29,29,27,0) 80%,rgba(29,29,27,.8) 100%)}   /* le dégradé du hero de la home */
+.sc-title{max-width:710px;font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
 .sc-intro{max-width:642px;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:#fff;text-box:trim-both cap alphabetic}
 
 /* deux sections photo + texte, en alternance, une hauteur d'écran */
@@ -48,7 +48,7 @@ html.lenis,html.lenis body{height:auto}
 
 @media (max-width:767px){
   .sc-hero{padding-bottom:40px}
-  .sc-title{font-size:32px}
+  .sc-title{font-size:30px}
   .sc-split{grid-template-columns:1fr;min-height:0}
   .sc-split figure{aspect-ratio:4/5}
   .sc-split--r figure{order:0}
