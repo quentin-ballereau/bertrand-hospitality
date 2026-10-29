@@ -50,8 +50,8 @@ html,body{background:var(--cream)}
 .bl-card time{color:var(--taupe)}
 
 /* la pagination : flèches et numéros de page */
-.bl-pages{display:flex;align-items:center;justify-content:center;gap:24px;padding:48px var(--gutter) 128px}
-.bl-pages ol{display:flex;align-items:center;gap:16px;margin:0;padding:0;list-style:none;font-family:var(--serif);font-size:18px;line-height:1.1;letter-spacing:.02em}
+.bl-pages{display:flex;align-items:center;justify-content:center;gap:96px;padding:96px var(--gutter) 128px}   /* de l’air autour des flèches, comme sur bbf.com */
+.bl-pages ol{display:flex;align-items:center;gap:24px;margin:0;padding:0;list-style:none;font-family:var(--serif);font-size:18px;line-height:1.1;letter-spacing:.02em}
 .bl-pages ol a,.bl-pages ol span{display:block;padding:6px 2px;color:var(--muted);transition:color .3s var(--ease)}
 .bl-pages ol a:hover,.bl-pages ol [aria-current]{color:var(--ink)}
 .bl-pages > a{display:grid;place-items:center;width:32px;height:32px;color:var(--ink);transition:color .3s var(--ease),translate .4s var(--expo)}
@@ -73,7 +73,7 @@ html,body{background:var(--cream)}
   .bl-head{padding:140px var(--gutter) 48px}
   .bl-head .t-h1{font-size:30px}
   .bl-list{grid-template-columns:1fr;gap:40px}
-  .bl-pages{padding:48px var(--gutter) 100px}
+  .bl-pages{gap:48px;padding:64px var(--gutter) 100px}
   .bl-card h2{font-size:20px}
 }
 @media (prefers-reduced-motion:reduce){.js .bl-fade{opacity:1;translate:none}}
