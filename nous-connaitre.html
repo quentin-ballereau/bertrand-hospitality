@@ -63,6 +63,15 @@ html.lenis,html.lenis body{height:auto}
 /* les chiffres : le bandeau de la home */
 .nc-figs{padding:0 var(--gutter)}
 
+/* la force d'un grand groupe (Figma 6470-4143) : les enseignes de Bertrand Hospitality seulement
+   (pas celles du reste du Groupe Bertrand), six par ligne, à l'encre et à 85 % ; largeurs reprises du Figma */
+.nc-brands{display:flex;flex-direction:column;align-items:center;gap:64px;padding:128px var(--gutter) 0}
+.nc-brands .sec-head{width:min(776px,100%)}
+.nc-brands .sec-head .t-text{max-width:none;color:var(--ink-soft)}
+.nc-logos{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:104px;width:min(1184px,100%);margin:0;padding:0;list-style:none}
+.nc-logos li{display:flex;align-items:center;justify-content:center}
+.nc-logos img{display:block;width:var(--w);max-width:80%;height:auto;opacity:.85}
+
 /* nos valeurs : quatre colonnes séparées d'un filet */
 .nc-sec{padding:160px var(--gutter) 0}
 .nc-sec .sec-head{margin-bottom:64px}
@@ -90,6 +99,7 @@ html.lenis,html.lenis body{height:auto}
   .nc-value:nth-child(3){padding-left:0;border-left:0}
   .nc-value:nth-child(n+3){margin-top:48px;border-top:1px solid var(--line)}
   .nc-team{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .nc-logos{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 @media (max-width:767px){
   .nc-hero{padding-bottom:40px}
@@ -101,6 +111,9 @@ html.lenis,html.lenis body{height:auto}
   .nc-split > div{padding:64px var(--gutter)}
   .nc-quote{padding:100px var(--gutter)}
   .nc-quote blockquote{font-size:18px}
+  .nc-brands{padding-top:100px;gap:40px}
+  .nc-logos{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:88px}
+  .nc-logos img{max-width:86%}
   .nc-sec{padding-top:100px}
   .nc-sec .sec-head{margin-bottom:40px}
   .nc-values{grid-template-columns:1fr}
@@ -149,6 +162,25 @@ html.lenis,html.lenis body{height:auto}
   </figure>
 
   <section class="figures nc-figs" aria-label="Bertrand Hospitality en chiffres" id="figures"></section>
+
+  <section class="nc-brands" aria-labelledby="gTitle">
+    <div class="sec-head nc-fade"><p class="t-cta t-eyebrow">Bertrand Hospitality, filiale du Groupe Bertrand</p><div class="sec-head-txt"><h2 class="t-h3" id="gTitle">La force d’un grand groupe</h2>
+      <p class="t-text">Bertrand Hospitality est la maison art de vivre du Groupe Bertrand, premier groupe français indépendant de restauration et d’hôtellerie. Derrière chacune de nos adresses, la solidité et l’exigence d’un grand groupe.</p></div></div>
+    <ul class="nc-logos" aria-label="Quelques maisons de Bertrand Hospitality">
+      <li class="nc-fade"><img src="assets/marques/la-coupole.png" alt="La Coupole" style="--w:120px" loading="lazy"></li>
+      <li class="nc-fade"><img src="assets/marques/angelina.png" alt="Angelina" style="--w:88px" loading="lazy"></li>
+      <li class="nc-fade"><img src="assets/marques/saint-james.png" alt="Saint James Paris" style="--w:92px" loading="lazy"></li>
+      <li class="nc-fade"><img src="assets/marques/lipp.png" alt="Brasserie Lipp" style="--w:70px" loading="lazy"></li>
+      <li class="nc-fade"><img src="assets/marques/procope.png" alt="Le Procope" style="--w:119px" loading="lazy"></li>
+      <li class="nc-fade"><img src="assets/marques/relais-christine.png" alt="Relais Christine" style="--w:94px" loading="lazy"></li>
+      <li class="nc-fade"><img src="assets/marques/bofinger.png" alt="Bofinger" style="--w:85px" loading="lazy"></li>
+      <li class="nc-fade"><img src="assets/marques/norman.png" alt="Norman hôtel" style="--w:69px" loading="lazy"></li>
+      <li class="nc-fade"><img src="assets/marques/pied-de-cochon.png" alt="Au Pied de Cochon" style="--w:128px" loading="lazy"></li>
+      <li class="nc-fade"><img src="assets/marques/grand-cafe-capucines.png" alt="Grand Café Capucines" style="--w:84px" loading="lazy"></li>
+      <li class="nc-fade"><img src="assets/marques/terminus-nord.png" alt="Terminus Nord" style="--w:128px" loading="lazy"></li>
+      <li class="nc-fade"><img src="assets/marques/vaudeville.png" alt="Le Vaudeville" style="--w:140px" loading="lazy"></li>
+    </ul>
+  </section>
 
   <section class="nc-sec" aria-labelledby="vTitle">
     <div class="sec-head nc-fade"><p class="t-cta t-eyebrow">Nos valeurs</p><div class="sec-head-txt"><h2 class="t-h2" id="vTitle">Ce qui nous anime</h2></div></div>
