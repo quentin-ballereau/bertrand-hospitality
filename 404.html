@@ -19,7 +19,7 @@
 <style>
 /* Page 404, d'après la galerie de discoverylandco.com : un mur de photos de nos maisons, sans fin, que l'on fait glisser
    dans tous les sens (souris, molette, doigt, flèches du clavier). À l'arrivée, les photos sont serrées au centre puis
-   s'écartent. Le titre reste au milieu, en différence de couleurs : sombre sur le crème, clair sur les photos. */
+   s'écartent. Le titre reste au milieu : à l'encre sur le crème, en blanc sur les photos. */
 html,body{height:100%;overflow:hidden;background:var(--cream);overscroll-behavior:none}
 .nav{position:fixed;color:var(--ink)}
 /* un bandeau crème sous l'en-tête, pour que le menu reste lisible quand les photos passent dessous */
@@ -32,35 +32,27 @@ html,body{height:100%;overflow:hidden;background:var(--cream);overscroll-behavio
 .er-tile img{display:block;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s var(--ease);-webkit-user-drag:none;pointer-events:none}
 .er-tile img.is-on{opacity:1}
 
-/* le titre, au centre, en différence : il s'inverse au passage des photos */
-.er-title{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;pointer-events:none;mix-blend-mode:difference;color:#fff;text-align:center;padding:0 var(--gutter)}
-.er-title h1{margin:0;font-family:var(--serif);font-weight:400;font-size:56px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
-.er-title sup{font-size:.36em;letter-spacing:.04em;vertical-align:top;margin-left:.2em;position:relative;top:-.15em}
-.er-title p{font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+/* le titre, au centre, au-dessus des photos : à l'encre sur le crème, en blanc là où une photo passe dessous.
+   Deux couches identiques : l'encre en dessous, le blanc au-dessus, découpé à la forme des photos (js : clip-path). */
+.er-title{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;pointer-events:none;color:var(--ink);text-align:center;padding:0 var(--gutter)}
+.er-title--w{z-index:3;color:#fff;clip-path:polygon(0 0,0 0,0 0)}
+.er-title h1{margin:0;font-family:var(--serif);font-weight:400;font-size:48px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+.er-title sup{font-size:.375em;letter-spacing:.04em;vertical-align:top;margin-left:.25em;position:relative;top:-.2em}
+.er-title p{margin:0;font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;line-height:1.3;color:var(--taupe);text-box:trim-both cap alphabetic}
+.er-title .cta{pointer-events:auto}
+.er-title--w p,.er-title--w .cta{color:#fff}
+.er-title--w .cta{pointer-events:none}
 .er-title > *{opacity:0;translate:0 16px;transition:opacity 1.2s var(--expo),translate 1.2s var(--expo)}
 .is-ready .er-title > *{opacity:1;translate:none}
-.is-ready .er-title p{transition-delay:.15s}
-
-/* en bas : ce qui est arrivé, et deux chemins pour repartir */
-.er-card{position:fixed;left:50%;bottom:32px;z-index:3;display:flex;align-items:center;gap:32px;padding:20px 28px;background:#fff;box-shadow:0 18px 40px -24px rgba(29,29,27,.4);translate:-50% 24px;opacity:0;transition:opacity 1.2s var(--expo) .4s,translate 1.2s var(--expo) .4s}
-.is-ready .er-card{translate:-50% 0;opacity:1}
-.er-card p{margin:0;max-width:300px;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink-soft)}
-.er-card nav{display:flex;align-items:center;gap:24px;flex:none}
-.er-card .t-cta{color:var(--taupe);white-space:nowrap}
-.er-card .er-home{display:inline-flex;align-items:center;gap:12px;padding:16px 22px;background:var(--taupe);color:#fff;white-space:nowrap;transition:background .3s var(--ease)}
-.er-card .er-home:hover{background:var(--ink)}
+.is-ready .er-title p{transition-delay:.12s}
+.is-ready .er-title .cta{transition-delay:.24s}
 
 @media (max-width:767px){
   .er-bar{height:72px}
-  .er-title{gap:20px}
-  .er-title h1{font-size:28px}
-  .er-card{left:var(--gutter);right:var(--gutter);bottom:var(--gutter);flex-direction:column;align-items:stretch;gap:20px;padding:20px;translate:0 24px}
-  .is-ready .er-card{translate:none}
-  .er-card p{max-width:none;text-align:center}
-  .er-card nav{flex-direction:column-reverse;gap:20px}
-  .er-card .er-home{align-self:stretch;justify-content:center}
+  .er-title{gap:24px}
+  .er-title h1{font-size:30px}
 }
-@media (prefers-reduced-motion:reduce){.er-title > *,.er-card{transition:none}}
+@media (prefers-reduced-motion:reduce){.er-title > *{transition:none}}
 </style>
 </head>
 <body class="js">
@@ -79,16 +71,10 @@ html,body{height:100%;overflow:hidden;background:var(--cream);overscroll-behavio
 
 <main>
   <div class="er-wall" id="wall" aria-hidden="true"></div>
-  <div class="er-title">
+  <div class="er-title" id="title">
     <h1>Page introuvable<sup>(404)</sup></h1>
     <p>Glissez pour explorer nos maisons</p>
-  </div>
-  <div class="er-card">
-    <p>Cette page n’existe pas ou a changé d’adresse.</p>
-    <nav aria-label="Repartir">
-      <a class="t-cta ul" href="lieux.html">Nos lieux</a>
-      <a class="er-home t-cta" href="index.html"><span>Retour à l’accueil</span><svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a>
-    </nav>
+    <a class="cta ul caps" href="index.html">Retour à l’accueil</a>
   </div>
 </main>
 
@@ -125,6 +111,17 @@ html,body{height:100%;overflow:hidden;background:var(--cream);overscroll-behavio
   let spread = reduce ? 1 : .32;   // à l'arrivée, les photos sont serrées au centre puis s'écartent
   const t0 = performance.now() + 250;
 
+  // le titre en blanc, par-dessus, visible seulement là où une photo passe sous lui
+  const ink = document.getElementById("title"), white = ink.cloneNode(true);
+  white.removeAttribute("id"); white.classList.add("er-title--w"); white.setAttribute("aria-hidden", "true");
+  white.querySelector("a").setAttribute("tabindex", "-1");
+  ink.after(white);
+  let box;   // la zone du titre, du sous-titre et du lien
+  const measure = () => {
+    const r = [...ink.children].map(c => c.getBoundingClientRect());
+    box = {l:Math.min(...r.map(q => q.left)) - 24, r:Math.max(...r.map(q => q.right)) + 24, t:Math.min(...r.map(q => q.top)) - 24, b:Math.max(...r.map(q => q.bottom)) + 24};   // avec de la marge : le texte monte encore à l'arrivée
+  };
+
   const live = new Map(), pool = [];
   const tileFor = key => {
     let t = live.get(key);
@@ -147,7 +144,7 @@ html,body{height:100%;overflow:hidden;background:var(--cream);overscroll-behavio
     const wx0 = cx - (cx + pad) / spread - x, wx1 = cx + (W - cx + pad) / spread - x;
     const wy0 = cy - (cy + pad) / spread - y - CH, wy1 = cy + (H - cy + pad) / spread - y;
     const c0 = Math.floor(wx0 / CW), c1 = Math.floor(wx1 / CW), r0 = Math.floor(wy0 / CH), r1 = Math.floor(wy1 / CH);
-    const seen = new Set();
+    const seen = new Set(), cut = [];
     for (let c = c0; c <= c1; c++) for (let r = r0; r <= r1; r++) {
       const key = c + "," + r; seen.add(key);
       const t = tileFor(key), [name, ratio] = photoAt(c, r);
@@ -156,6 +153,8 @@ html,body{height:100%;overflow:hidden;background:var(--cream);overscroll-behavio
       const sx = cx + (mx - cx) * spread - w / 2, sy = cy + (my - cy) * spread - h / 2;
       t.style.width = w + "px"; t.style.height = h + "px";
       t.style.transform = `translate3d(${sx.toFixed(1)}px,${sy.toFixed(1)}px,0)`;
+      if (box && sx < box.r && sx + w > box.l && sy < box.b && sy + h > box.t && t.firstChild.classList.contains("is-on"))
+        cut.push(`M${sx.toFixed(1)} ${sy.toFixed(1)}h${w.toFixed(1)}v${h.toFixed(1)}h${(-w).toFixed(1)}Z`);
       const img = t.firstChild, src = `assets/erreur/${name}.webp`;
       if (img.dataset.src !== src) {
         img.dataset.src = src; img.classList.remove("is-on");
@@ -163,6 +162,7 @@ html,body{height:100%;overflow:hidden;background:var(--cream);overscroll-behavio
         img.src = src; img.alt = "";
       }
     }
+    white.style.clipPath = cut.length ? `path("${cut.join("")}")` : "polygon(0 0,0 0,0 0)";
     for (const [key, t] of live) if (!seen.has(key)) { live.delete(key); t.style.transform = "translate3d(-9999px,0,0)"; pool.push(t); }
     requestAnimationFrame(render);
   };
@@ -188,7 +188,8 @@ html,body{height:100%;overflow:hidden;background:var(--cream);overscroll-behavio
     const d = {ArrowLeft:[CW, 0], ArrowRight:[-CW, 0], ArrowUp:[0, CH], ArrowDown:[0, -CH]}[e.key];
     if (d && !e.target.closest("input,textarea")) { tx += d[0]; ty += d[1]; }
   });
-  addEventListener("resize", size);
+  addEventListener("resize", () => { size(); measure(); });
+  document.fonts.ready.then(measure); measure();
 
   requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add("is-ready")));
 })();
