@@ -26,9 +26,10 @@
 <link rel="stylesheet" href="css/menu.css?v=16">
 <link rel="stylesheet" href="css/home.css?v=29">
 <style>
-/* Page Engagement RSE (lot 3 · 10), d'après Figma 6610-4845 : hero, ce qui nous guide et nos repères, puis trois engagements
-   (dans l'assiette, pour votre événement, les femmes et les hommes : titre, photo pleine largeur, liste), les questions fréquentes,
-   le rapport RSE, l'appel final ; pied de page commun au site. Engagements repris de bertrand-hospitality.com/nos-engagements, racontés du point
+/* Page Engagement RSE (lot 3 · 10), d'après Figma 6610-4845 : hero, ce qui nous guide et nos repères, trois engagements
+   (dans l'assiette, pour votre événement, les femmes et les hommes : photo d'un côté, titre et liste de l'autre), autour de la table
+   (quatre engagements numérotés), les assiettes en pleine largeur, les questions fréquentes, le rapport RSE, l'appel final ;
+   pied de page commun au site. Engagements repris de bertrand-hospitality.com/nos-engagements, racontés du point
    de vue de l'organisateur. Restent à fournir par le client : les chiffres réels, le rapport en PDF, les options proposées aux événements. */
 html,body{background:var(--cream)}
 .nav{color:#fff}
@@ -43,7 +44,7 @@ html,body{background:var(--cream)}
 .nc-intro{max-width:560px;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;text-box:trim-both cap alphabetic}
 
 /* ce qui nous guide : la phrase, puis trois repères entre deux filets (comme les chiffres de « Nous connaître ») */
-.nc-philo{display:flex;flex-direction:column;align-items:center;gap:64px;padding:128px var(--gutter) 64px}
+.nc-philo{display:flex;flex-direction:column;align-items:center;gap:64px;padding:128px var(--gutter)}
 .nc-quote{display:flex;flex-direction:column;align-items:center;gap:32px;max-width:784px;margin:0;text-align:center}
 .nc-quote blockquote{margin:0;font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
 .nc-figs{display:flex;justify-content:center;gap:48px;width:min(984px,100%);padding:32px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
@@ -52,23 +53,39 @@ html,body{background:var(--cream)}
 .nc-fig .t-cta{color:var(--taupe)}
 .nc-figs .fig-sep{flex:0 0 1px;background:var(--line)}
 
-/* les trois engagements (Figma 6610-4845) : le titre centré, une photo sur toute la largeur, puis la liste */
-.eg-sec{display:flex;flex-direction:column;align-items:center;gap:64px;padding-top:64px}
+/* les trois engagements (Figma 6610-4845) : photo d'un côté, sur une hauteur d'écran ; de l'autre, le titre centré puis la liste */
+.eg-split{display:grid;grid-template-columns:1fr 1fr;min-height:min(832px,100svh)}
+.eg-split figure{position:relative;overflow:hidden;margin:0;background:var(--cream-2)}
+.eg-split figure img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.eg-split > div{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:64px;padding:96px 48px}
+.eg-split--r figure{order:2}
 .eg-head{display:flex;flex-direction:column;align-items:center;gap:32px;width:min(584px,100%);text-align:center}
 .eg-head .t-text{max-width:410px;color:var(--ink-soft)}
+
+/* autour de la table : quatre engagements numérotés, deux par ligne, chacun sous un filet */
+.eg-res{display:flex;flex-direction:column;align-items:center;gap:64px;padding:128px var(--gutter)}
+.eg-res .sec-head-txt{width:min(584px,100%)}
+.eg-res .sec-head-txt .t-text{max-width:384px;color:var(--ink-soft)}
+.eg-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:96px 64px;width:min(1184px,100%);margin:0;padding:0;list-style:none}
+.eg-cols li{display:flex;gap:64px;padding-top:24px;border-top:1px solid var(--line)}
+.eg-cols li > span{flex:0 0 32px;font-family:var(--serif);font-size:24px;line-height:1.1;letter-spacing:.02em;color:var(--taupe);text-box:trim-both cap alphabetic}
+.eg-cols li > div{display:flex;flex-direction:column;gap:32px;min-width:0}
+.eg-cols b{font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+.eg-cols p{margin:0;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--muted);text-box:trim-both cap alphabetic}
+
+/* les assiettes, sur toute la largeur */
 .eg-band{position:relative;width:100%;height:clamp(280px,39vw,640px);margin:0;overflow:hidden;background:var(--cream-2)}
 .eg-band img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.eg-body{display:flex;flex-direction:column;align-items:center;gap:64px;padding:64px var(--gutter)}
 
 /* la liste : une ligne par engagement, en capitales, entre de fins filets.
    À l'apparition, chaque texte monte de derrière un cache et son filet se trace depuis le centre, l'un après l'autre. */
-.eg-list{width:min(784px,100%);margin:0;padding:0;list-style:none}
-.eg-list li{position:relative;padding:32px 0;text-align:center}
+.eg-list{width:min(544px,100%);margin:0;padding:0;list-style:none}
+.eg-list li{position:relative;padding:24px 0;text-align:center}
 .eg-list li:first-child{padding-top:0}
 .eg-list li:last-child{padding-bottom:0}
 .eg-list li:not(:last-child)::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line)}
 .eg-list span{display:block;overflow:hidden;padding:.3em 0;margin:-.3em 0}   /* le cache, assez haut pour les accents des capitales */
-.eg-list b{display:block;font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance}
+.eg-list b{display:block;font-family:var(--serif);font-weight:400;font-size:18px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-wrap:balance}
 .js .eg-list b{translate:0 110%;opacity:0}
 .js .eg-list li:not(:last-child)::after{scale:0 1}
 .js .eg-list.is-in b{translate:none;opacity:1;transition:translate 1.2s var(--expo),opacity .9s var(--ease);transition-delay:calc(var(--i) * .09s)}
@@ -81,7 +98,7 @@ html,body{background:var(--cream)}
 .eg-report > div{display:flex;flex-direction:column;align-items:center;gap:32px}
 
 /* questions fréquentes : la mise en page de la home (css/home.css) */
-.nc-faq{padding:64px var(--gutter)}
+.nc-faq{padding:128px var(--gutter) 64px}
 
 /* appel final : la photo de réception, comme sur « Nous connaître » */
 .nc-closing .closing-bg{background-image:url(assets/nous-connaitre/reception-1280.webp)}
@@ -91,20 +108,28 @@ html,body{background:var(--cream)}
 .js .nc-fade{opacity:0;translate:0 16px}
 .nc-fade.is-in{opacity:1;translate:0 0;transition:opacity 1.1s var(--expo),translate 1.1s var(--expo)}
 
+@media (max-width:1023px){
+  .eg-split > div{padding:80px 32px}
+  .eg-cols{grid-template-columns:1fr;gap:56px}
+}
 @media (max-width:767px){
   .nc-hero{padding-bottom:40px}
   .nc-title{font-size:30px}
-  .nc-philo{padding:100px var(--gutter) 64px;gap:48px}
+  .nc-philo{padding:100px var(--gutter);gap:48px}
   .nc-quote blockquote{font-size:18px}
   .nc-figs{flex-direction:column;gap:32px}
   .nc-fig .t-num{font-size:36px}
   .nc-figs .fig-sep{display:none}
-  .eg-sec{gap:48px}
-  .eg-head{padding:0 var(--gutter)}
-  .eg-body{gap:48px;padding:48px var(--gutter)}
-  .eg-list li{padding:24px 0}
-  .eg-list b{font-size:18px}
+  .eg-split{grid-template-columns:1fr;min-height:0}
+  .eg-split figure{aspect-ratio:4/5}
+  .eg-split--r figure{order:0}
+  .eg-split > div{gap:48px;padding:64px var(--gutter)}
+  .eg-res{padding:100px var(--gutter);gap:48px}
+  .eg-cols li{gap:24px}
+  .eg-cols b{font-size:20px}
+  .eg-cols li > div{gap:24px}
   .eg-report{gap:48px;padding:64px var(--gutter) 100px}
+  .nc-faq{padding:100px var(--gutter) 64px}
 }
 @media (prefers-reduced-motion:reduce){.js .nc-fade{opacity:1;translate:none}.nc-hero img{transform:none}.js .eg-list b{translate:none;opacity:1}.js .eg-list li::after{scale:1 1}}
 </style>
@@ -138,13 +163,13 @@ html,body{background:var(--cream)}
     <div class="nc-figs nc-fade" id="figures"></div>
   </section>
 
-  <section class="eg-sec" aria-labelledby="aTitle">
-    <div class="eg-head">
-      <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Dans l’assiette</p><h2 class="t-h2" id="aTitle">Une cuisine responsable</h2></div>
-      <p class="t-text nc-fade">Avec nos chefs et nos équipes achats, nous améliorons nos approvisionnements carte après carte.</p>
-    </div>
-    <figure class="eg-band"><img src="assets/engagement/plats-2000.webp" srcset="assets/engagement/plats-1280.webp 1280w, assets/engagement/plats-2000.webp 2000w" sizes="100vw" alt="Tomates, guacamole et tartare à partager, servis au Polpo" loading="lazy"></figure>
-    <div class="eg-body">
+  <section class="eg-split" aria-labelledby="aTitle">
+    <figure><img src="assets/engagement/assiette-1334.webp" srcset="assets/engagement/assiette-960.webp 960w, assets/engagement/assiette-1334.webp 1334w" sizes="(max-width:767px) 100vw, 50vw" alt="Une pavlova aux fraises de saison, servie au Polpo" loading="lazy"></figure>
+    <div>
+      <div class="eg-head">
+        <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Dans l’assiette</p><h2 class="t-h3" id="aTitle">Une cuisine responsable</h2></div>
+        <p class="t-text nc-fade">Avec nos chefs et nos équipes achats, nous améliorons nos approvisionnements carte après carte.</p>
+      </div>
       <ul class="eg-list">
         <li style="--i:0"><span><b>Des produits frais, au rythme des saisons</b></span></li>
         <li style="--i:1"><span><b>Des produits français et labellisés</b></span></li>
@@ -157,13 +182,13 @@ html,body{background:var(--cream)}
   </section>
 
   <!-- les options proposées aux événements sont à confirmer par le client -->
-  <section class="eg-sec" aria-labelledby="vTitle">
-    <div class="eg-head">
-      <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Pour votre événement</p><h2 class="t-h2" id="vTitle">Un événement<br>plus responsable</h2></div>
-      <p class="t-text nc-fade">Dites-le-nous dès votre demande&nbsp;: notre équipe construit avec vous un événement à votre image.</p>
-    </div>
-    <figure class="eg-band"><img src="assets/evenement/ile.webp" srcset="assets/evenement/ile-1280.webp 1280w, assets/evenement/ile.webp 1536w" sizes="100vw" alt="Un déjeuner sous la verrière de L’Île, à Issy-les-Moulineaux" loading="lazy"></figure>
-    <div class="eg-body">
+  <section class="eg-split eg-split--r" aria-labelledby="vTitle">
+    <figure><img src="assets/evenement/ile.webp" srcset="assets/evenement/ile-1280.webp 1280w, assets/evenement/ile.webp 1536w" sizes="(max-width:767px) 100vw, 50vw" alt="Un déjeuner sous la verrière de L’Île, à Issy-les-Moulineaux" loading="lazy" style="object-position:60% 50%"></figure>
+    <div>
+      <div class="eg-head">
+        <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Pour votre événement</p><h2 class="t-h3" id="vTitle">Un événement<br>plus responsable</h2></div>
+        <p class="t-text nc-fade">Dites-le-nous dès votre demande&nbsp;: notre équipe construit avec vous un événement à votre image.</p>
+      </div>
       <ul class="eg-list">
         <li style="--i:0"><span><b>Un menu végétarien ou de saison</b></span></li>
         <li style="--i:1"><span><b>Un lieu accessible en transports en commun</b></span></li>
@@ -174,13 +199,13 @@ html,body{background:var(--cream)}
     </div>
   </section>
 
-  <section class="eg-sec" aria-labelledby="hTitle">
-    <div class="eg-head">
-      <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Les femmes et les hommes</p><h2 class="t-h2" id="hTitle">L’humain au cœur<br>de nos choix</h2></div>
-      <p class="t-text nc-fade">Recevoir est avant tout un métier de service. Nous veillons sur celles et ceux qui le font vivre, chaque jour, dans nos maisons.</p>
-    </div>
-    <figure class="eg-band"><img src="assets/evenement/meida.webp" srcset="assets/evenement/meida-1280.webp 1280w, assets/evenement/meida.webp 1536w" sizes="100vw" alt="Un déjeuner baigné de soleil chez Meïda" loading="lazy"></figure>
-    <div class="eg-body">
+  <section class="eg-split" aria-labelledby="hTitle">
+    <figure><img src="assets/engagement/seine-1334.webp" srcset="assets/engagement/seine-960.webp 960w, assets/engagement/seine-1334.webp 1334w" sizes="(max-width:767px) 100vw, 50vw" alt="Deux verres levés au bord de la Seine, depuis le pont du Polpo" loading="lazy"></figure>
+    <div>
+      <div class="eg-head">
+        <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Les femmes et les hommes</p><h2 class="t-h3" id="hTitle">L’humain au cœur<br>de nos choix</h2></div>
+        <p class="t-text nc-fade">Recevoir est avant tout un métier de service. Nous veillons sur celles et ceux qui le font vivre, chaque jour, dans nos maisons.</p>
+      </div>
       <ul class="eg-list">
         <li style="--i:0"><span><b>Inclusion, diversité et égalité des chances</b></span></li>
         <li style="--i:1"><span><b>Transmission des savoir-faire et formation</b></span></li>
@@ -190,6 +215,19 @@ html,body{background:var(--cream)}
       <a class="cta ul caps nc-fade" href="nous-connaitre.html">Découvrir notre équipe</a>
     </div>
   </section>
+
+  <section class="eg-res" aria-labelledby="rTitle">
+    <div class="sec-head-txt nc-fade"><p class="t-mini t-eyebrow">Autour de la table</p><h2 class="t-h2" id="rTitle">Préserver nos ressources</h2>
+      <p class="t-text">Dans nos établissements comme au siège, nous suivons nos consommations et mesurons nos effets sur l’environnement.</p></div>
+    <ol class="eg-cols">
+      <li class="nc-fade"><span>01</span><div><b>Moins de gaspillage</b><p>Des quantités ajustées au nombre de convives, et des chefs qui cuisinent chaque produit dans son entier.</p></div></li>
+      <li class="nc-fade"><span>02</span><div><b>Des déchets triés</b><p>Verre, carton et biodéchets triés à la source, en cuisine comme en salle, puis valorisés.</p></div></li>
+      <li class="nc-fade"><span>03</span><div><b>Énergie et eau suivies</b><p>Chaque maison suit ses consommations d’électricité, de gaz et d’eau, pour mieux les réduire.</p></div></li>
+      <li class="nc-fade"><span>04</span><div><b>Une stratégie climat</b><p>Un bilan carbone qui couvre nos achats comme notre énergie, et la mesure de notre impact sur la biodiversité.</p></div></li>
+    </ol>
+  </section>
+
+  <figure class="eg-band"><img src="assets/engagement/plats-2000.webp" srcset="assets/engagement/plats-1280.webp 1280w, assets/engagement/plats-2000.webp 2000w" sizes="100vw" alt="Tomates, guacamole et tartare à partager, servis au Polpo" loading="lazy"></figure>
 
   <section class="nc-faq" aria-labelledby="faqTitle">
     <div class="faq">
