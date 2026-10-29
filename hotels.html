@@ -60,10 +60,8 @@ html,body{background:var(--cream)}
 .ht-hotel::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(29,29,27,.8) 20%,rgba(29,29,27,0) 40%,rgba(29,29,27,.4) 80%,rgba(29,29,27,.8) 100%)}
 .ht-logo{display:block;height:64px;width:auto}
 
-/* le rideau : la photo de chaque hôtel ne suit le défilement qu’à 65 % (js : translate) ; la section, elle, défile
-   normalement et la coupe, si bien que l'hôtel suivant se découvre par le bas par-dessus le précédent */
+/* les photos des hôtels glissent comme les autres photos du site (js/motion.js) */
 .ht-stack{background:var(--ink)}
-.ht-stack .ht-bg{will-change:transform}
 .ht-body{display:flex;flex-direction:column;align-items:center;gap:48px;width:min(784px,100%)}
 .ht-txt{display:flex;flex-direction:column;align-items:center;gap:24px}
 .ht-txt .t-cta{color:#fff;width:min(584px,100%);text-wrap:balance}
@@ -167,8 +165,7 @@ html,body{background:var(--cream)}
     <div class="nc-figs nc-fade" id="figures"></div>
   </section>
 
-  <!-- les quatre hôtels se suivent au défilement : chaque photo reste presque immobile pendant que sa section passe,
-       si bien que l'hôtel suivant se découvre par le bas comme un rideau (d'après bbf.com/services, à la verticale) -->
+  <!-- les quatre hôtels, un écran chacun ; leurs photos glissent légèrement comme les autres photos du site -->
   <div class="ht-stack" id="stack">
   <section class="ht-hotel" id="christine" aria-labelledby="h-christine">
     <img class="ht-bg" src="assets/hotels/relais-christine-2000.webp" srcset="assets/hotels/relais-christine-1280.webp 1280w, assets/hotels/relais-christine-2000.webp 2000w" sizes="100vw" alt="La cour pavée du Relais Christine, gardée par deux lions de pierre" loading="eager">
@@ -330,25 +327,6 @@ html,body{background:var(--cream)}
   ld.textContent = JSON.stringify({"@context":"https://schema.org", "@type":"FAQPage", mainEntity:FAQ.map(([q, a]) => ({"@type":"Question", name:q, acceptedAnswer:{"@type":"Answer", text:a}}))});
   document.head.appendChild(ld);
 
-  // le rideau : chaque photo défile un peu moins vite que sa section (à 65 % du défilement)
-  // du défilement) ; la section suivante, qui monte normalement, la recouvre comme un rideau qui se lève
-  if (!reduce) {
-    const hotels = [...document.querySelectorAll(".ht-stack .ht-hotel")].map(el => [el, el.querySelector(".ht-bg")]);
-    let busy = false;
-    const curtain = () => {
-      busy = false;
-      const h = innerHeight;
-      hotels.forEach(([el, img]) => {
-        const top = el.getBoundingClientRect().top;
-        if (top > h || top < -el.offsetHeight) return;
-        img.style.transform = `translate3d(0,${(-top * .35).toFixed(1)}px,0)`;
-      });
-    };
-    addEventListener("scroll", () => { if (!busy) { busy = true; requestAnimationFrame(curtain); } }, {passive:true});
-    addEventListener("resize", curtain);
-    curtain();
-  }
-
   // appel final : la photo glisse lentement, comme sur la home
   const cb = $("closingBg"), cs = cb.parentElement;
   if (!reduce) {
@@ -374,7 +352,7 @@ html,body{background:var(--cream)}
   });
 })();
 </script>
-<script src="js/motion.js?v=5"></script>
+<script src="js/motion.js?v=6"></script>
 <script src="js/typo.js?v=5"></script>
 </body>
 </html>

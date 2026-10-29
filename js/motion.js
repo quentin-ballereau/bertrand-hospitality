@@ -27,7 +27,7 @@
 
   /* ---------- 2. parallaxe des photos ---------- */
   // photos qui ont déjà leur mouvement, ou qui ne sont pas des photos de contenu
-  const OWN = ".hero-slide img, .hero-bg img, .lp-hero-bg img, .rv-slide img, .acard-px, .of-band img, .cf img, .stage img, .pmap img, .pm-card img, .nc-logos img, .ht-bg";
+  const OWN = ".hero-slide img, .hero-bg img, .lp-hero-bg img, .rv-slide img, .acard-px, .of-band img, .cf img, .stage img, .pmap img, .pm-card img, .nc-logos img";
   const RANGE = .05, SCALE = 1.1;
   const framed = img => {
     const box = img.parentElement; if (!box) return null;
