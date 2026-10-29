@@ -2,3 +2,13 @@
 .env*
 .gitignore
 .vercel
+# outils et notes, inutiles en ligne
+.audit
+README.md
+# photos qui ne sont plus utilisées par le site (gardées dans le dépôt)
+assets/lieux/hd
+assets/home/hero-*.jpg
+assets/home/care-main.jpg
+# carrousel de la home : on s'arrête à 2 560 px (les versions 3 200 et 3 840 pèsent 23 Mo et doublent la bande passante sur écran Retina)
+assets/home/hero/*-3200.webp
+assets/home/hero/*-3840.webp
