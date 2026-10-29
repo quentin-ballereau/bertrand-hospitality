@@ -44,6 +44,7 @@ html,body{height:100%;overflow:hidden;background:var(--cream);overscroll-behavio
 .er-title .cta{pointer-events:auto}
 .er-title--w p,.er-title--w .cta{color:#fff}
 .er-title--w .cta{pointer-events:none}
+.er-title--w .ul.is-hover::after{animation:ul-redraw .9s var(--expo)}   /* la couche blanche ne reçoit pas la souris : son trait suit celui du vrai lien */
 .er-title > *{opacity:0;translate:0 16px;transition:opacity 1.2s var(--expo),translate 1.2s var(--expo)}
 .is-ready .er-title > *{opacity:1;translate:none}
 .is-ready .er-title p{transition-delay:.12s}
@@ -119,6 +120,10 @@ html,body{height:100%;overflow:hidden;background:var(--cream);overscroll-behavio
   const ink = document.getElementById("title"), white = ink.cloneNode(true);
   white.removeAttribute("id"); white.classList.add("er-title--w"); white.setAttribute("aria-hidden", "true");
   white.querySelector("a").setAttribute("tabindex", "-1");
+  const link = ink.querySelector("a"), twin = white.querySelector("a");
+  const hover = on => twin.classList.toggle("is-hover", on);
+  link.addEventListener("pointerenter", () => hover(true)); link.addEventListener("pointerleave", () => hover(false));
+  link.addEventListener("focus", () => hover(true)); link.addEventListener("blur", () => hover(false));
   ink.after(white);
   let box;   // la zone du titre, du sous-titre et du lien
   const measure = () => {
