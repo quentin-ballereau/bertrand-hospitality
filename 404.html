@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- la page peut être servie à n'importe quelle adresse (/lieux/xyz…) : tous les liens partent de la racine -->
+<base href="/">
+<title>Page introuvable — Bertrand Hospitality</title>
+<meta name="description" content="Cette page n’existe pas ou a changé d’adresse. Promenez-vous parmi nos maisons, ou revenez à l’accueil.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/base.css?v=18">
+<link rel="stylesheet" href="css/menu.css?v=16">
+<link rel="stylesheet" href="css/home.css?v=29">
+<style>
+/* Page 404, d'après la galerie de discoverylandco.com : un mur de photos de nos maisons, sans fin, que l'on fait glisser
+   dans tous les sens (souris, molette, doigt, flèches du clavier). À l'arrivée, les photos sont serrées au centre puis
+   s'écartent. Le titre reste au milieu, en différence de couleurs : sombre sur le crème, clair sur les photos. */
+html,body{height:100%;overflow:hidden;background:var(--cream);overscroll-behavior:none}
+.nav{position:fixed;color:var(--ink)}
+/* un bandeau crème sous l'en-tête, pour que le menu reste lisible quand les photos passent dessous */
+.er-bar{position:fixed;left:0;right:0;top:0;z-index:4;height:96px;background:var(--cream);border-bottom:1px solid var(--line);pointer-events:none}
+.nav{z-index:8}
+
+.er-wall{position:fixed;inset:0;z-index:1;overflow:hidden;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.er-wall.is-dragging{cursor:grabbing}
+.er-tile{position:absolute;left:0;top:0;margin:0;background:var(--cream-2);will-change:transform;overflow:hidden}
+.er-tile img{display:block;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s var(--ease);-webkit-user-drag:none;pointer-events:none}
+.er-tile img.is-on{opacity:1}
+
+/* le titre, au centre, en différence : il s'inverse au passage des photos */
+.er-title{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;pointer-events:none;mix-blend-mode:difference;color:#fff;text-align:center;padding:0 var(--gutter)}
+.er-title h1{margin:0;font-family:var(--serif);font-weight:400;font-size:56px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+.er-title sup{font-size:.36em;letter-spacing:.04em;vertical-align:top;margin-left:.2em;position:relative;top:-.15em}
+.er-title p{font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+.er-title > *{opacity:0;translate:0 16px;transition:opacity 1.2s var(--expo),translate 1.2s var(--expo)}
+.is-ready .er-title > *{opacity:1;translate:none}
+.is-ready .er-title p{transition-delay:.15s}
+
+/* en bas : ce qui est arrivé, et deux chemins pour repartir */
+.er-card{position:fixed;left:50%;bottom:32px;z-index:3;display:flex;align-items:center;gap:32px;padding:20px 28px;background:#fff;box-shadow:0 18px 40px -24px rgba(29,29,27,.4);translate:-50% 24px;opacity:0;transition:opacity 1.2s var(--expo) .4s,translate 1.2s var(--expo) .4s}
+.is-ready .er-card{translate:-50% 0;opacity:1}
+.er-card p{margin:0;max-width:300px;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink-soft)}
+.er-card nav{display:flex;align-items:center;gap:24px;flex:none}
+.er-card .t-cta{color:var(--taupe);white-space:nowrap}
+.er-card .er-home{display:inline-flex;align-items:center;gap:12px;padding:16px 22px;background:var(--taupe);color:#fff;white-space:nowrap;transition:background .3s var(--ease)}
+.er-card .er-home:hover{background:var(--ink)}
+
+@media (max-width:767px){
+  .er-bar{height:72px}
+  .er-title{gap:20px}
+  .er-title h1{font-size:28px}
+  .er-card{left:var(--gutter);right:var(--gutter);bottom:var(--gutter);flex-direction:column;align-items:stretch;gap:20px;padding:20px;translate:0 24px}
+  .is-ready .er-card{translate:none}
+  .er-card p{max-width:none;text-align:center}
+  .er-card nav{flex-direction:column-reverse;gap:20px}
+  .er-card .er-home{align-self:stretch;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){.er-title > *,.er-card{transition:none}}
+</style>
+</head>
+<body class="js">
+<div class="er-bar" aria-hidden="true"></div>
+
+<header class="nav">
+  <button class="nav-menu caps" type="button" aria-label="Ouvrir le menu"><i class="nav-ico" aria-hidden="true"></i><span>menu</span></button>
+  <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh-dark.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
+  <div class="nav-right">
+    <div class="nav-quote">
+      <a class="nav-cta ul caps" href="devis.html"><span class="cta-long">Demander un </span>devis</a>
+      <div class="nav-quote-pop"><span class="caps">Ou appelez-nous</span><a href="tel:+33764070661">07 64 07 06 61</a></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="er-wall" id="wall" aria-hidden="true"></div>
+  <div class="er-title">
+    <h1>Page introuvable<sup>(404)</sup></h1>
+    <p>Glissez pour explorer nos maisons</p>
+  </div>
+  <div class="er-card">
+    <p>Cette page n’existe pas ou a changé d’adresse.</p>
+    <nav aria-label="Repartir">
+      <a class="t-cta ul" href="lieux.html">Nos lieux</a>
+      <a class="er-home t-cta" href="index.html"><span>Retour à l’accueil</span><svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a>
+    </nav>
+  </div>
+</main>
+
+<script src="js/data.js?v=10"></script>
+<script src="js/menu.js?v=15"></script>
+<script>
+(() => {
+  const wall = document.getElementById("wall");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // les photos (assets/erreur, 520 px de large) et leur format ; mélangées une fois pour toutes
+  const PHOTOS = [["amanie",1.5],["angelina-alma",1.5],["angelina-rivoli",1.5],["angelina-versailles",1.5],["au-pied-de-cochon",1.5],["auteuil-brasserie",1.5],["bofinger",1.5],["copenhague",1.5],["dancing-coupole",1.5],["flora-danica",1.4],["grand-cafe-capucines",1.5],["hotel-norman",1.5],["la-coupole",1.5],["la-flottille-versailles",1.5],["lalsace",1.5],["les-2-stations",1.5],["lesmarionnettes",1.5],["lile",1.5],["lipp",1.5],["lorraine",1.5],["meida",1.5],["pavillon-lile",1.5],["polpo",1.5],["procope",1.5],["public-house",1.5],["rosalie-disney-village-77",1.88],["sirwinston",1.5],["terminus-nord",1.5],["terrasse-de-madame",1.5],["vaudeville",1.5],
+    ["polpo-01",.667],["polpo-02",.667],["polpo-03",.667],["polpo-04",.667],["polpo-05",.667],["polpo-06",.667],["polpo-07",.667],["polpo-08",.667],["polpo-09",.667],["polpo-10",.667],["polpo-11",.667],["polpo-12",.667],["polpo-13",.667],["polpo-14",.667],["polpo-15",.667],["polpo-16",.667],
+    ["evt-auteuil",1.5],["evt-coupole",1.5],["evt-ile",1.5],["evt-meida",1.5],["evt-polpo",1.5],["evt-procope",1.5],["evt-public-house-bar",1.5],["evt-public-house-etage",1.5],["evt-public-house-salon",1.5],["evt-salon-dore",1.5],
+    ["assiette",.667],["seine",.667],["plats",1.5],["terrasse",1.5]];
+  let seed = 7;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = PHOTOS.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [PHOTOS[i], PHOTOS[j]] = [PHOTOS[j], PHOTOS[i]]; }
+  const N = PHOTOS.length;
+  const mod = (a, n) => ((a % n) + n) % n;
+  const photoAt = (c, r) => PHOTOS[mod(c * 7 + r * 19, N)];   // deux voisines ne montrent jamais la même photo
+
+  // la grille : une case par photo, les colonnes impaires un peu décalées, comme posées à la main
+  let CW, CH, TW, W, H;
+  const size = () => {
+    W = innerWidth; H = innerHeight;
+    const m = W < 768;
+    TW = m ? 150 : 260; CW = m ? 196 : 372; CH = m ? 200 : 300;
+  };
+  size();
+
+  // le déplacement : la cible suit la souris, la position la rejoint en douceur
+  let x = -CW / 2, y = -CH / 2, tx = x, ty = y;
+  let spread = reduce ? 1 : .32;   // à l'arrivée, les photos sont serrées au centre puis s'écartent
+  const t0 = performance.now() + 250;
+
+  const live = new Map(), pool = [];
+  const tileFor = key => {
+    let t = live.get(key);
+    if (t) return t;
+    t = pool.pop();
+    if (!t) { t = document.createElement("figure"); t.className = "er-tile"; t.appendChild(new Image()); wall.appendChild(t); }
+    live.set(key, t);
+    return t;
+  };
+
+  const render = now => {
+    if (!reduce && spread < 1) {
+      const k = Math.min(1, Math.max(0, (now - t0) / 2000));
+      spread = .32 + (1 - .32) * (1 - Math.pow(2, -10 * k));   // expo
+      if (k >= 1) spread = 1;
+    }
+    x += (tx - x) * .1; y += (ty - y) * .1;
+    const cx = W / 2, cy = H / 2, pad = 160;
+    // les cases à l'écran, en tenant compte du resserrement de l'arrivée
+    const wx0 = cx - (cx + pad) / spread - x, wx1 = cx + (W - cx + pad) / spread - x;
+    const wy0 = cy - (cy + pad) / spread - y - CH, wy1 = cy + (H - cy + pad) / spread - y;
+    const c0 = Math.floor(wx0 / CW), c1 = Math.floor(wx1 / CW), r0 = Math.floor(wy0 / CH), r1 = Math.floor(wy1 / CH);
+    const seen = new Set();
+    for (let c = c0; c <= c1; c++) for (let r = r0; r <= r1; r++) {
+      const key = c + "," + r; seen.add(key);
+      const t = tileFor(key), [name, ratio] = photoAt(c, r);
+      const w = ratio < 1 ? TW * .62 : TW, h = w / ratio;
+      const mx = c * CW + CW / 2 + x, my = r * CH + CH / 2 + y + (mod(c, 2) ? CH * .38 : 0);
+      const sx = cx + (mx - cx) * spread - w / 2, sy = cy + (my - cy) * spread - h / 2;
+      t.style.width = w + "px"; t.style.height = h + "px";
+      t.style.transform = `translate3d(${sx.toFixed(1)}px,${sy.toFixed(1)}px,0)`;
+      const img = t.firstChild, src = `assets/erreur/${name}.webp`;
+      if (img.dataset.src !== src) {
+        img.dataset.src = src; img.classList.remove("is-on");
+        img.onload = () => img.classList.add("is-on");
+        img.src = src; img.alt = "";
+      }
+    }
+    for (const [key, t] of live) if (!seen.has(key)) { live.delete(key); t.style.transform = "translate3d(-9999px,0,0)"; pool.push(t); }
+    requestAnimationFrame(render);
+  };
+  requestAnimationFrame(render);
+
+  // glisser à la souris ou au doigt, avec un peu d'élan au lâcher
+  let drag = null;
+  wall.addEventListener("pointerdown", e => {
+    drag = {px:e.clientX, py:e.clientY, vx:0, vy:0, t:performance.now()};
+    wall.setPointerCapture(e.pointerId); wall.classList.add("is-dragging");
+  });
+  wall.addEventListener("pointermove", e => {
+    if (!drag) return;
+    const dx = e.clientX - drag.px, dy = e.clientY - drag.py, now = performance.now(), dt = Math.max(1, now - drag.t);
+    tx += dx; ty += dy; drag.vx = dx / dt; drag.vy = dy / dt;
+    drag.px = e.clientX; drag.py = e.clientY; drag.t = now;
+  });
+  const end = () => { if (!drag) return; tx += drag.vx * 220; ty += drag.vy * 220; drag = null; wall.classList.remove("is-dragging"); };
+  wall.addEventListener("pointerup", end); wall.addEventListener("pointercancel", end);
+  // la molette (et le pavé tactile) déplacent le mur dans les deux sens
+  addEventListener("wheel", e => { e.preventDefault(); tx -= e.deltaX; ty -= e.deltaY; }, {passive:false});
+  addEventListener("keydown", e => {
+    const d = {ArrowLeft:[CW, 0], ArrowRight:[-CW, 0], ArrowUp:[0, CH], ArrowDown:[0, -CH]}[e.key];
+    if (d && !e.target.closest("input,textarea")) { tx += d[0]; ty += d[1]; }
+  });
+  addEventListener("resize", size);
+
+  requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add("is-ready")));
+})();
+</script>
+</body>
+</html>
