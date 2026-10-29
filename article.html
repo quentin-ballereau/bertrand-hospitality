@@ -42,11 +42,12 @@ html,body{background:var(--cream)}
 
 /* le texte : une colonne de 584 px. Un chapô, puis des parties (H2 sous un filet) découpées en sous-parties (H3),
    avec une liste, une citation et un encadré « Bon à savoir » (H4) quand le propos s'y prête */
-.ar-body{display:flex;flex-direction:column;align-items:center;gap:64px;padding:96px var(--gutter)}
+/* le filet de chaque partie à égale distance du texte d'au-dessus et de celui d'en dessous (80 px de chaque côté) */
+.ar-body{display:flex;flex-direction:column;align-items:center;gap:80px;padding:96px var(--gutter)}
 .ar-lead{width:min(584px,100%);display:flex;flex-direction:column;gap:24px}
 .ar-lead p{margin:0;font-family:var(--serif);font-size:24px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);text-box:trim-both cap alphabetic;text-wrap:balance}   /* style H4, comme la citation de « Nous connaître » */
 .ar-meta{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-family:var(--caps);color:var(--taupe)}
-.ar-part{display:flex;flex-direction:column;gap:24px;width:min(584px,100%);padding-top:40px;border-top:1px solid var(--line)}
+.ar-part{display:flex;flex-direction:column;gap:24px;width:min(584px,100%);padding-top:80px;border-top:1px solid var(--line)}
 .ar-part :is(h2,h3,h4){margin:0;font-family:var(--serif);font-weight:400;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);text-box:trim-both cap alphabetic;text-wrap:balance}
 .ar-part h2{font-size:32px;margin-bottom:8px}
 .ar-part h3{font-size:24px;margin-top:24px}
@@ -59,7 +60,7 @@ html,body{background:var(--cream)}
 .ar-part blockquote{margin:16px 0;padding:0 0 0 24px;border-left:1px solid var(--taupe);font-family:var(--serif);font-size:24px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);text-wrap:balance}
 .ar-note{display:flex;flex-direction:column;gap:16px;margin-top:16px;padding:32px;background:#fff}
 .ar-note h4{color:var(--taupe)}
-.ar-end{display:flex;flex-direction:column;align-items:flex-start;gap:32px;width:min(584px,100%);padding-top:40px;border-top:1px solid var(--line)}
+.ar-end{display:flex;flex-direction:column;align-items:flex-start;gap:32px;width:min(584px,100%);padding-top:80px;border-top:1px solid var(--line)}
 .ar-end{gap:24px}
 .ar-end h2{margin:0;font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);text-box:trim-both cap alphabetic}
 .ar-end p{margin:0 0 8px;font-size:14px;font-weight:300;line-height:1.6;letter-spacing:-.01em;color:var(--ink-soft)}
@@ -91,9 +92,10 @@ html,body{background:var(--cream)}
 @media (max-width:767px){
   .nc-hero{padding-bottom:40px}
   .ar-title{font-size:28px}
-  .ar-body{gap:48px;padding:64px var(--gutter)}
+  .ar-body{gap:56px;padding:64px var(--gutter)}
+  .ar-end{padding-top:56px}
   .ar-lead p,.ar-end h2{font-size:20px}
-  .ar-part{gap:20px;padding-top:32px}
+  .ar-part{gap:20px;padding-top:56px}
   .ar-part h2{font-size:24px}
   .ar-part h3{font-size:20px;margin-top:16px}
   .ar-part blockquote{font-size:20px}
@@ -223,7 +225,7 @@ html,body{background:var(--cream)}
   </div>
   <div class="foot-bottom t-mini">
     <span>© 2026 Bertrand Hospitality</span>
-    <nav aria-label="Liens légaux"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Cookies</a><a href="https://bertrand-hospitality.com/" target="_blank" rel="noopener">Bertrand Hospitality</a></nav>
+    <nav aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="cookies.html">Cookies</a><a href="https://bertrand-hospitality.com/" target="_blank" rel="noopener">Bertrand Hospitality</a></nav>
     <a href="https://www.digidop.com" target="_blank" rel="noopener">Site web par Digidop</a>
   </div>
 </footer>

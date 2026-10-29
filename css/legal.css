@@ -1,0 +1,62 @@
+/* Pages légales (mentions légales, confidentialité, cookies) : un même modèle.
+   Le titre, les onglets vers les trois pages, la date de mise à jour, puis le texte en une colonne : un sommaire,
+   chaque partie sous un filet (titre au style H4), paragraphes et listes au style du texte courant.
+   Les informations à fournir par le client sont signalées par .lg-todo. */
+html,body{background:var(--cream)}
+.nav{color:var(--ink)}
+
+.lg-head{display:flex;flex-direction:column;align-items:center;gap:32px;padding:192px var(--gutter) 64px;text-align:center}
+.lg-head .t-h1{margin:0;font-family:var(--serif);font-weight:400;font-size:48px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
+.lg-tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:16px 24px}
+.lg-tabs a{color:var(--taupe);transition:color .3s var(--ease)}
+.lg-tabs a[aria-current="page"]{color:var(--ink)}
+.lg-date{color:var(--muted)}
+
+/* les parties : le filet à égale distance du texte d'au-dessus et de celui d'en dessous (80 px de chaque côté) */
+.lg-body{display:flex;flex-direction:column;align-items:center;gap:80px;padding:64px var(--gutter) 160px}
+.lg-toc,.lg-part{width:min(784px,100%)}
+.lg-toc{display:flex;flex-direction:column;gap:24px;padding:32px;background:#fff}
+.lg-toc ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 32px;margin:0;padding:0;list-style:none;counter-reset:toc}
+.lg-toc li{counter-increment:toc}
+.lg-toc a{display:flex;gap:12px;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink-soft);transition:color .3s var(--ease)}
+.lg-toc a::before{content:counter(toc,decimal-leading-zero);font-family:var(--serif);color:var(--taupe)}
+.lg-toc a:hover{color:var(--ink)}
+
+.lg-part{display:flex;flex-direction:column;gap:20px;padding-top:80px;border-top:1px solid var(--line);scroll-margin-top:32px}
+.lg-part h2{margin:0 0 12px;font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);text-box:trim-both cap alphabetic;text-wrap:balance}
+.lg-part h3{margin:8px 0 0;font-family:var(--serif);font-weight:400;font-size:18px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);text-box:trim-both cap alphabetic}
+.lg-part p,.lg-part li,.lg-part dd,.lg-part dt{margin:0;font-size:14px;font-weight:300;line-height:1.6;letter-spacing:-.01em;color:var(--ink-soft)}
+.lg-part strong{font-weight:400;color:var(--ink)}
+.lg-part a{color:var(--ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.lg-part ul{margin:0;padding:0 0 0 20px}
+.lg-part li + li{margin-top:6px}
+/* les coordonnées : une ligne par information, le libellé à gauche */
+.lg-part dl{display:grid;grid-template-columns:240px 1fr;gap:10px 24px;margin:0}
+.lg-part dt{font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;line-height:1.9;color:var(--taupe)}
+/* les tableaux (cookies) */
+.lg-table{width:100%;border-collapse:collapse}
+.lg-table th,.lg-table td{padding:14px 16px 14px 0;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:14px;font-weight:300;line-height:1.5;color:var(--ink-soft)}
+.lg-table th{font-family:var(--caps);font-size:12px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--taupe)}
+/* à compléter par le client : bien visible tant que l'information manque */
+.lg-todo{padding:1px 6px;background:rgba(141,121,116,.14);color:var(--ink);font-style:normal}
+
+/* entrée en scène */
+.js .lg-fade{opacity:0;translate:0 16px}
+.lg-fade.is-in{opacity:1;translate:0 0;transition:opacity 1.1s var(--expo),translate 1.1s var(--expo)}
+
+@media (max-width:767px){
+  .lg-head{padding:140px var(--gutter) 48px;gap:24px}
+  .lg-head .t-h1{font-size:30px}
+  .lg-body{gap:56px;padding:48px var(--gutter) 100px}
+  .lg-part{padding-top:56px}
+  .lg-toc{padding:24px}
+  .lg-toc ol{grid-template-columns:1fr}
+  .lg-part h2{font-size:20px}
+  .lg-part dl{grid-template-columns:1fr;gap:4px}
+  .lg-part dd + dt{margin-top:12px}
+  .lg-table thead{display:none}
+  .lg-table tr{display:block;padding:12px 0;border-bottom:1px solid var(--line)}
+  .lg-table td{display:block;padding:4px 0;border:0}
+  .lg-table td::before{content:attr(data-th);display:block;font-family:var(--caps);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--taupe)}
+}
+@media (prefers-reduced-motion:reduce){.js .lg-fade{opacity:1;translate:none}}
