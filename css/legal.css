@@ -18,7 +18,7 @@ html,body{background:var(--cream)}
 .lg-toc{display:flex;flex-direction:column;gap:24px;padding:32px;background:#fff}
 .lg-toc ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 32px;margin:0;padding:0;list-style:none;counter-reset:toc}
 .lg-toc li{counter-increment:toc}
-.lg-toc a{display:flex;gap:12px;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink-soft);transition:color .3s var(--ease)}
+.lg-toc a{display:flex;align-items:baseline;gap:12px;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink-soft);transition:color .3s var(--ease)}
 .lg-toc a::before{content:counter(toc,decimal-leading-zero);font-family:var(--serif);color:var(--taupe)}
 .lg-toc a:hover{color:var(--ink)}
 
