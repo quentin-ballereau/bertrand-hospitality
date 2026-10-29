@@ -38,7 +38,7 @@ html,body{background:var(--cream)}
 .bl-head .t-text{color:var(--ink-soft)}
 .bl-head sup{font-size:.375em;letter-spacing:.04em;vertical-align:top;margin-left:.25em;position:relative;top:-.2em}   /* le nombre d'articles, comme le « (404) » de la page introuvable */
 
-.bl-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 16px;width:min(1184px,calc(100% - 2 * var(--gutter)));margin:0 auto;padding:64px 0 0;list-style:none}
+.bl-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 16px;width:min(1184px,calc(100% - 2 * var(--gutter)));margin:0 auto;padding:0;list-style:none}   /* 64 px sous l’introduction, comme dans le Figma (la marge du haut de page suffit) */
 .bl-card a{display:flex;flex-direction:column;gap:24px;color:inherit}
 .bl-card .bl-ph{position:relative;display:block;aspect-ratio:16/9;overflow:hidden;background:var(--cream-2)}
 .bl-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--expo)}
@@ -72,7 +72,7 @@ html,body{background:var(--cream)}
 @media (max-width:767px){
   .bl-head{padding:140px var(--gutter) 48px}
   .bl-head .t-h1{font-size:30px}
-  .bl-list{grid-template-columns:1fr;gap:40px;padding:48px 0 0}
+  .bl-list{grid-template-columns:1fr;gap:40px}
   .bl-pages{padding:48px var(--gutter) 100px}
   .bl-card h2{font-size:20px}
 }
