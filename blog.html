@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le journal : idées pour recevoir — Bertrand Hospitality</title>
+<meta name="description" content="Séminaires, dîners d’équipe, mariages et anniversaires : nos conseils et nos idées pour recevoir dans les maisons de Bertrand Hospitality, à Paris et en Île-de-France.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bertrand Hospitality">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Le journal : idées pour recevoir — Bertrand Hospitality">
+<meta property="og:description" content="Séminaires, dîners d’équipe, mariages et anniversaires : nos conseils et nos idées pour recevoir dans les maisons de Bertrand Hospitality, à Paris et en Île-de-France.">
+<meta property="og:url" content="https://bertrand-hospitality-poc.vercel.app/blog.html">
+<meta property="og:image" content="https://bertrand-hospitality-poc.vercel.app/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Bertrand Hospitality">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://bertrand-hospitality-poc.vercel.app/assets/og.png">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/base.css?v=18">
+<link rel="stylesheet" href="css/menu.css?v=16">
+<link rel="stylesheet" href="css/home.css?v=29">
+<style>
+/* Journal (lot 3 · 11), d'après le zoning Figma 6615-5710 : l'introduction et ses deux catégories (qui filtrent les articles),
+   l'article à la une sur toute la largeur, puis les articles deux par deux ; l'appel final ; pied de page commun au site.
+   Les articles sont des exemples, en attendant les contenus du client. */
+html,body{background:var(--cream)}
+.nav{color:var(--ink)}
+
+.bl-head{display:flex;flex-direction:column;align-items:center;padding:192px var(--gutter) 64px;text-align:center}
+.bl-head > div{display:flex;flex-direction:column;align-items:center;gap:32px;width:min(584px,100%)}
+.bl-head .t-h1{font-family:var(--serif);font-weight:400;font-size:48px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
+.bl-head .t-text{color:var(--ink-soft)}
+.bl-cats{display:flex;flex-wrap:wrap;justify-content:center;gap:16px 24px}
+.bl-cats button{color:var(--taupe);transition:color .3s var(--ease)}
+.bl-cats button[aria-pressed="true"]{color:var(--ink)}
+
+.bl-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 16px;width:min(1184px,calc(100% - 2 * var(--gutter)));margin:0 auto;padding:64px 0 128px;list-style:none}
+.bl-card a{display:flex;flex-direction:column;gap:24px;color:inherit}
+.bl-card .bl-ph{position:relative;display:block;aspect-ratio:16/9;overflow:hidden;background:var(--cream-2)}
+.bl-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--expo)}
+.bl-card a:hover img{transform:scale(1.04)}
+.bl-card .bl-txt{display:flex;flex-direction:column;gap:16px}
+.bl-card .t-cta{color:var(--taupe)}
+.bl-card h2{margin:0;font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
+.bl-card--une{grid-column:1/-1}
+.bl-card[hidden]{display:none}
+
+/* appel final : la photo de réception */
+.nc-closing .closing-bg{background-image:url(assets/nous-connaitre/reception-1280.webp)}
+@media (min-width:1281px){.nc-closing .closing-bg{background-image:url(assets/nous-connaitre/reception-2560.webp)}}
+
+/* entrée en scène */
+.js .bl-fade{opacity:0;translate:0 16px}
+.bl-fade.is-in{opacity:1;translate:0 0;transition:opacity 1.1s var(--expo),translate 1.1s var(--expo)}
+
+@media (max-width:767px){
+  .bl-head{padding:140px var(--gutter) 48px}
+  .bl-head .t-h1{font-size:30px}
+  .bl-list{grid-template-columns:1fr;gap:40px;padding:48px 0 100px}
+  .bl-card h2{font-size:20px}
+}
+@media (prefers-reduced-motion:reduce){.js .bl-fade{opacity:1;translate:none}}
+</style>
+</head>
+<body class="js">
+
+<header class="nav">
+  <button class="nav-menu caps" type="button" aria-label="Ouvrir le menu"><i class="nav-ico" aria-hidden="true"></i><span>menu</span></button>
+  <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh-dark.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
+  <div class="nav-right">
+    <div class="nav-quote">
+      <a class="nav-cta ul caps" href="devis.html"><span class="cta-long">Demander un </span>devis</a>
+      <div class="nav-quote-pop"><span class="caps">Ou appelez-nous</span><a href="tel:+33764070661">07 64 07 06 61</a></div>
+    </div>
+  </div>
+</header>
+<main>
+  <section class="bl-head" aria-labelledby="blTitle">
+    <div>
+      <p class="t-cta t-eyebrow bl-fade">Le journal</p>
+      <h1 class="t-h1 bl-fade" id="blTitle">Idées et inspirations pour recevoir</h1>
+      <p class="t-text bl-fade">Conseils pour organiser un séminaire, idées de soirées, histoires de nos maisons&nbsp;: tout ce qui aide à imaginer votre prochain événement, à Paris et en Île-de-France.</p>
+      <div class="bl-cats bl-fade" role="group" aria-label="Filtrer les articles">
+        <button class="t-cta ul" type="button" data-cat="pro" aria-pressed="false">Rendez-vous professionnels</button>
+        <button class="t-cta ul" type="button" data-cat="fete" aria-pressed="false">Fêtes et célébrations</button>
+      </div>
+    </div>
+  </section>
+
+  <ul class="bl-list" id="posts" aria-live="polite"></ul>
+
+  <!-- l'appel final de la home (Figma 6560-1198) : une carte crème posée sur la photo -->
+  <section class="closing nc-closing" aria-labelledby="endTitle">
+    <div class="closing-bg" id="closingBg" role="img" aria-label="Une salle de réception dressée, des tables rondes et des fleurs"></div>
+    <div class="closing-card">
+      <p class="t-cta t-eyebrow">Votre événement</p>
+      <div class="closing-head">
+        <h2 class="t-h3" id="endTitle">Parlons de votre projet</h2>
+        <p class="t-text">La date, le format, le nombre d’invités&nbsp;: nous vous proposons les lieux qui s’y prêtent, avec un seul interlocuteur du premier échange au jour J.</p>
+      </div>
+      <a class="go-end t-cta" href="devis.html"><span>Demander un devis</span><svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot-brand">
+    <a href="index.html" aria-label="Bertrand Hospitality, accueil"><img class="foot-logo" src="assets/logo-footer-ink.svg" alt="Bertrand Hospitality" width="184" height="36"></a>
+    <p class="t-text">Trente maisons parisiennes à privatiser, de la brasserie historique à la péniche sur la Seine, avec un seul interlocuteur pour toutes.</p>
+  </div>
+  <div class="foot-main">
+    <nav class="foot-links" aria-label="Pied de page">
+      <div class="foot-group">
+        <div class="foot-col"><a href="lieux.html">Nos lieux</a><a href="offres.html">Événements</a><a href="nous-connaitre.html">Nous connaître</a></div>
+        <div class="foot-col"><a href="engagement.html">Engagement RSE</a><a href="#">Hôtels</a><a href="blog.html">Journal</a></div>
+      </div>
+      <span class="foot-sep" aria-hidden="true"></span>
+      <div class="foot-group">
+        <div class="foot-col"><a href="#">FAQ</a><a href="#">Coffrets cadeaux</a><a href="#">Nous rejoindre</a></div>
+        <div class="foot-col"><a href="devis.html">Demander un devis</a><a href="#">Contact</a><a href="#">English</a></div>
+      </div>
+    </nav>
+    <nav class="foot-areas t-mini" aria-label="Nos quartiers"><a href="secteur.html?s=ouest">Champs-Élysées et Ouest</a><a href="secteur.html?s=centre">Opéra et centre</a><a href="secteur.html?s=rg">Rive gauche</a><a href="secteur.html?s=seine">Bords de Seine</a><a href="secteur.html?s=hors">Versailles et Disney Village</a></nav>
+    <p class="foot-legal">L’abus d’alcool est dangereux pour la santé, à consommer avec modération.</p>
+  </div>
+  <div class="foot-bottom t-mini">
+    <span>© 2026 Bertrand Hospitality</span>
+    <nav aria-label="Liens légaux"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Cookies</a><a href="https://bertrand-hospitality.com/" target="_blank" rel="noopener">Bertrand Hospitality</a></nav>
+    <a href="https://www.digidop.com" target="_blank" rel="noopener">Site web par Digidop</a>
+  </div>
+</footer>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="js/data.js?v=10"></script>
+<script src="js/menu.js?v=16"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // les articles (exemples en attendant les contenus du client) : le premier est à la une
+  const CATS = {pro:"Rendez-vous professionnels", fete:"Fêtes et célébrations"};
+  const POSTS = [
+    {cat:"pro",  title:"Organiser un séminaire à Paris, étape par étape", img:"assets/evenement/public-house-etage", alt:"Un salon à l’étage de Public House, dressé pour une réunion"},
+    {cat:"pro",  title:"Dîner d’équipe de fin d’année : nos idées pour marquer le coup", img:"assets/evenement/coupole", alt:"Un dîner sous la coupole Art déco de La Coupole"},
+    {cat:"fete", title:"Se marier dans un salon historique de Paris", img:"assets/evenement/salon-dore", alt:"Un salon doré dressé pour une réception"},
+    {cat:"pro",  title:"Cocktail ou dîner assis : comment choisir votre format", img:"assets/evenement/public-house-bar", alt:"Le bar de Public House pendant une soirée"},
+    {cat:"fete", title:"Un anniversaire sur la Seine, à bord du Polpo", img:"assets/evenement/polpo", alt:"Une soirée sur la terrasse du Polpo, au bord de la Seine"},
+    {cat:"pro",  title:"Afterworks d’été : nos terrasses préférées", img:"assets/evenement/meida", alt:"Un déjeuner baigné de soleil chez Meïda"},
+    {cat:"fete", title:"Le Procope, trois siècles de fêtes parisiennes", img:"assets/evenement/procope", alt:"La façade illuminée du Procope"},
+  ];
+  $("posts").innerHTML = POSTS.map((p, i) => `
+    <li class="bl-card${i ? "" : " bl-card--une"} bl-fade" data-cat="${p.cat}">
+      <a href="#">
+        <span class="bl-ph"><img src="${p.img}${i ? "-1280" : ""}.webp" srcset="${p.img}-1280.webp 1280w, ${p.img}.webp 1536w" sizes="${i ? "(max-width:767px) 100vw, 50vw" : "100vw"}" alt="${p.alt}" loading="${i ? "lazy" : "eager"}"></span>
+        <span class="bl-txt"><span class="t-cta">${CATS[p.cat]}</span><h2>${p.title}</h2></span>
+      </a>
+    </li>`).join("");
+
+  // les deux catégories filtrent les articles ; un second clic les montre tous
+  const btns = [...document.querySelectorAll(".bl-cats button")];
+  btns.forEach(b => b.addEventListener("click", () => {
+    const on = b.getAttribute("aria-pressed") !== "true";
+    btns.forEach(o => o.setAttribute("aria-pressed", o === b && on));
+    const cat = on ? b.dataset.cat : null;
+    const cards = [...$("posts").children];
+    cards.forEach(c => c.hidden = !!cat && c.dataset.cat !== cat);
+    // le premier article visible passe à la une
+    cards.forEach(c => c.classList.remove("bl-card--une"));
+    const first = cards.find(c => !c.hidden); if (first) first.classList.add("bl-card--une");
+  }));
+
+  // appel final : la photo glisse lentement, comme sur la home
+  const cb = $("closingBg"), cs = cb.parentElement;
+  if (!reduce) {
+    let ticking = false;
+    const place = () => {
+      ticking = false;
+      const r = cs.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
+      const p = (r.top + r.height / 2 - innerHeight / 2) / (innerHeight / 2 + r.height / 2);
+      cb.style.transform = `translate3d(0,${(p * -r.height * .12).toFixed(1)}px,0)`;
+    };
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(place); } }, {passive:true});
+    place();
+  }
+
+  /* entrée en scène : l'introduction dès l'arrivée, puis chaque article en fondu quand il arrive à l'écran */
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } }), {rootMargin:"0px 0px -8% 0px"});
+  document.querySelectorAll(".bl-fade").forEach((el, i) => {
+    if (el.closest(".bl-head")) { el.style.transitionDelay = `${.1 + i * .08}s`; requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("is-in"))); }
+    else { el.style.transitionDelay = el.matches(":nth-child(odd)") ? ".08s" : "0s"; io.observe(el); }
+  });
+})();
+</script>
+<script src="js/motion.js?v=3"></script>
+<script src="js/typo.js?v=5"></script>
+</body>
+</html>

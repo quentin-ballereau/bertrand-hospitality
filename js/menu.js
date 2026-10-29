@@ -13,7 +13,7 @@
     {label:"Nous connaître", href:"nous-connaitre.html", img:"assets/menu/nous-connaitre.webp"},
     {label:"Engagement RSE", href:"engagement.html", img:"assets/menu/engagement-rse.webp"},
     {label:"Hôtels", href:"#", img:"assets/menu/hotels.webp"},
-    {label:"Journal", href:"#", img:"assets/menu/journal.webp"},
+    {label:"Journal", href:"blog.html", img:"assets/menu/journal.webp"},
   ];
   // deux lignes de liens, comme dans le Figma
   const SECONDARY = [[["FAQ", "#"], ["Coffrets cadeaux", "#"]], [["Nous rejoindre", "#"], ["Bertrand Hospitality", "https://bertrand-hospitality.com/"]]];
