@@ -26,8 +26,8 @@
 <link rel="stylesheet" href="css/menu.css?v=16">
 <link rel="stylesheet" href="css/home.css?v=29">
 <style>
-/* Journal (lot 3 · 11), d'après le zoning Figma 6615-5710 : l'introduction et ses deux catégories (qui filtrent les articles),
-   l'article à la une sur toute la largeur, puis les articles deux par deux ; l'appel final ; pied de page commun au site.
+/* Journal (lot 3 · 11), d'après Figma 6615-5710 : l'introduction, l'article le plus récent sur toute la largeur, puis les
+   articles deux par deux, la pagination ; l'appel final ; pied de page commun au site.
    Les articles sont des exemples, en attendant les contenus du client. */
 html,body{background:var(--cream)}
 .nav{color:var(--ink)}
@@ -36,11 +36,8 @@ html,body{background:var(--cream)}
 .bl-head > div{display:flex;flex-direction:column;align-items:center;gap:32px;width:min(584px,100%)}
 .bl-head .t-h1{font-family:var(--serif);font-weight:400;font-size:48px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
 .bl-head .t-text{color:var(--ink-soft)}
-.bl-cats{display:flex;flex-wrap:wrap;justify-content:center;gap:16px 24px}
-.bl-cats button{color:var(--taupe);transition:color .3s var(--ease)}
-.bl-cats button[aria-pressed="true"]{color:var(--ink)}
 
-.bl-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 16px;width:min(1184px,calc(100% - 2 * var(--gutter)));margin:0 auto;padding:64px 0 128px;list-style:none}
+.bl-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 16px;width:min(1184px,calc(100% - 2 * var(--gutter)));margin:0 auto;padding:64px 0 0;list-style:none}
 .bl-card a{display:flex;flex-direction:column;gap:24px;color:inherit}
 .bl-card .bl-ph{position:relative;display:block;aspect-ratio:16/9;overflow:hidden;background:var(--cream-2)}
 .bl-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--expo)}
@@ -49,7 +46,18 @@ html,body{background:var(--cream)}
 .bl-card .t-cta{color:var(--taupe)}
 .bl-card h2{margin:0;font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
 .bl-card--une{grid-column:1/-1}
-.bl-card[hidden]{display:none}
+.bl-card time{color:var(--taupe)}
+
+/* la pagination : flèches et numéros de page */
+.bl-pages{display:flex;align-items:center;justify-content:center;gap:24px;padding:48px var(--gutter) 128px}
+.bl-pages ol{display:flex;align-items:center;gap:16px;margin:0;padding:0;list-style:none;font-family:var(--serif);font-size:18px;line-height:1.1;letter-spacing:.02em}
+.bl-pages ol a,.bl-pages ol span{display:block;padding:6px 2px;color:var(--muted);transition:color .3s var(--ease)}
+.bl-pages ol a:hover,.bl-pages ol [aria-current]{color:var(--ink)}
+.bl-pages > a{display:grid;place-items:center;width:32px;height:32px;color:var(--ink);transition:color .3s var(--ease),translate .4s var(--expo)}
+.bl-pages > a[aria-disabled="true"]{color:var(--muted);pointer-events:none}
+.bl-pages > a:first-child:hover{translate:-3px 0}
+.bl-pages > a:last-child:hover{translate:3px 0}
+.bl-pages svg{width:15px;height:8px;fill:none;stroke:currentColor}
 
 /* appel final : la photo de réception */
 .nc-closing .closing-bg{background-image:url(assets/nous-connaitre/reception-1280.webp)}
@@ -62,7 +70,8 @@ html,body{background:var(--cream)}
 @media (max-width:767px){
   .bl-head{padding:140px var(--gutter) 48px}
   .bl-head .t-h1{font-size:30px}
-  .bl-list{grid-template-columns:1fr;gap:40px;padding:48px 0 100px}
+  .bl-list{grid-template-columns:1fr;gap:40px;padding:48px 0 0}
+  .bl-pages{padding:48px var(--gutter) 100px}
   .bl-card h2{font-size:20px}
 }
 @media (prefers-reduced-motion:reduce){.js .bl-fade{opacity:1;translate:none}}
@@ -84,16 +93,24 @@ html,body{background:var(--cream)}
   <section class="bl-head" aria-labelledby="blTitle">
     <div>
       <p class="t-cta t-eyebrow bl-fade">Le journal</p>
-      <h1 class="t-h1 bl-fade" id="blTitle">Idées et inspirations pour recevoir</h1>
-      <p class="t-text bl-fade">Conseils pour organiser un séminaire, idées de soirées, histoires de nos maisons&nbsp;: tout ce qui aide à imaginer votre prochain événement, à Paris et en Île-de-France.</p>
-      <div class="bl-cats bl-fade" role="group" aria-label="Filtrer les articles">
-        <button class="t-cta ul" type="button" data-cat="pro" aria-pressed="false">Rendez-vous professionnels</button>
-        <button class="t-cta ul" type="button" data-cat="fete" aria-pressed="false">Fêtes et célébrations</button>
-      </div>
+      <h1 class="t-h1 bl-fade" id="blTitle">Tous nos articles</h1>
+      <p class="t-text bl-fade">Conseils, idées et histoires de nos maisons pour imaginer votre prochain événement.</p>
     </div>
   </section>
 
-  <ul class="bl-list" id="posts" aria-live="polite"></ul>
+  <ul class="bl-list" id="posts"></ul>
+
+  <!-- la pagination (exemple : 48 pages) -->
+  <nav class="bl-pages bl-fade" aria-label="Pages du journal">
+    <a href="#" aria-label="Page précédente" aria-disabled="true"><svg viewBox="0 0 15 8" aria-hidden="true"><path d="M15 4H1M4.5 .5 1 4l3.5 3.5"/></svg></a>
+    <ol>
+      <li><a href="blog.html" aria-current="page">1</a></li>
+      <li><a href="#">2</a></li>
+      <li><span aria-hidden="true">…</span></li>
+      <li><a href="#">48</a></li>
+    </ol>
+    <a href="#" aria-label="Page suivante"><svg viewBox="0 0 15 8" aria-hidden="true"><path d="M0 4h14M10.5 .5 14 4l-3.5 3.5"/></svg></a>
+  </nav>
 
   <!-- l'appel final de la home (Figma 6560-1198) : une carte crème posée sur la photo -->
   <section class="closing nc-closing" aria-labelledby="endTitle">
@@ -144,37 +161,24 @@ html,body{background:var(--cream)}
   const $ = id => document.getElementById(id);
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // les articles (exemples en attendant les contenus du client) : le premier est à la une
-  const CATS = {pro:"Rendez-vous professionnels", fete:"Fêtes et célébrations"};
+  // les articles (exemples en attendant les contenus du client), du plus récent au plus ancien : le premier est à la une
   const POSTS = [
-    {cat:"pro",  title:"Organiser un séminaire à Paris, étape par étape", img:"assets/evenement/public-house-etage", alt:"Un salon à l’étage de Public House, dressé pour une réunion"},
-    {cat:"pro",  title:"Dîner d’équipe de fin d’année : nos idées pour marquer le coup", img:"assets/evenement/coupole", alt:"Un dîner sous la coupole Art déco de La Coupole"},
-    {cat:"fete", title:"Se marier dans un salon historique de Paris", img:"assets/evenement/salon-dore", alt:"Un salon doré dressé pour une réception"},
-    {cat:"pro",  title:"Cocktail ou dîner assis : comment choisir votre format", img:"assets/evenement/public-house-bar", alt:"Le bar de Public House pendant une soirée"},
-    {cat:"fete", title:"Un anniversaire sur la Seine, à bord du Polpo", img:"assets/evenement/polpo", alt:"Une soirée sur la terrasse du Polpo, au bord de la Seine"},
-    {cat:"pro",  title:"Afterworks d’été : nos terrasses préférées", img:"assets/evenement/meida", alt:"Un déjeuner baigné de soleil chez Meïda"},
-    {cat:"fete", title:"Le Procope, trois siècles de fêtes parisiennes", img:"assets/evenement/procope", alt:"La façade illuminée du Procope"},
+    {date:"2026-10-22", title:"Organiser un séminaire à Paris, étape par étape", img:"assets/evenement/public-house-etage", alt:"Un salon à l’étage de Public House, dressé pour une réunion"},
+    {date:"2026-10-08", title:"Dîner d’équipe de fin d’année : nos idées pour marquer le coup", img:"assets/evenement/coupole", alt:"Un dîner sous la coupole Art déco de La Coupole"},
+    {date:"2026-09-24", title:"Se marier dans un salon historique de Paris", img:"assets/evenement/salon-dore", alt:"Un salon doré dressé pour une réception"},
+    {date:"2026-09-10", title:"Cocktail ou dîner assis : comment choisir votre format", img:"assets/evenement/public-house-bar", alt:"Le bar de Public House pendant une soirée"},
+    {date:"2026-08-27", title:"Un anniversaire sur la Seine, à bord du Polpo", img:"assets/evenement/polpo", alt:"Une soirée sur la terrasse du Polpo, au bord de la Seine"},
+    {date:"2026-07-09", title:"Afterworks d’été : nos terrasses préférées", img:"assets/evenement/meida", alt:"Un déjeuner baigné de soleil chez Meïda"},
+    {date:"2026-06-18", title:"Le Procope, trois siècles de fêtes parisiennes", img:"assets/evenement/procope", alt:"La façade illuminée du Procope"},
   ];
+  const day = d => new Date(d + "T12:00:00").toLocaleDateString("fr-FR", {day:"numeric", month:"long", year:"numeric"});
   $("posts").innerHTML = POSTS.map((p, i) => `
-    <li class="bl-card${i ? "" : " bl-card--une"} bl-fade" data-cat="${p.cat}">
+    <li class="bl-card${i ? "" : " bl-card--une"} bl-fade">
       <a href="#">
         <span class="bl-ph"><img src="${p.img}${i ? "-1280" : ""}.webp" srcset="${p.img}-1280.webp 1280w, ${p.img}.webp 1536w" sizes="${i ? "(max-width:767px) 100vw, 50vw" : "100vw"}" alt="${p.alt}" loading="${i ? "lazy" : "eager"}"></span>
-        <span class="bl-txt"><span class="t-cta">${CATS[p.cat]}</span><h2>${p.title}</h2></span>
+        <span class="bl-txt"><time class="t-cta" datetime="${p.date}">${day(p.date)}</time><h2>${p.title}</h2></span>
       </a>
     </li>`).join("");
-
-  // les deux catégories filtrent les articles ; un second clic les montre tous
-  const btns = [...document.querySelectorAll(".bl-cats button")];
-  btns.forEach(b => b.addEventListener("click", () => {
-    const on = b.getAttribute("aria-pressed") !== "true";
-    btns.forEach(o => o.setAttribute("aria-pressed", o === b && on));
-    const cat = on ? b.dataset.cat : null;
-    const cards = [...$("posts").children];
-    cards.forEach(c => c.hidden = !!cat && c.dataset.cat !== cat);
-    // le premier article visible passe à la une
-    cards.forEach(c => c.classList.remove("bl-card--une"));
-    const first = cards.find(c => !c.hidden); if (first) first.classList.add("bl-card--une");
-  }));
 
   // appel final : la photo glisse lentement, comme sur la home
   const cb = $("closingBg"), cs = cb.parentElement;
