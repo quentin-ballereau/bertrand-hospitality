@@ -36,6 +36,7 @@ html,body{background:var(--cream)}
 .bl-head > div{display:flex;flex-direction:column;align-items:center;gap:32px;width:min(584px,100%)}
 .bl-head .t-h1{font-family:var(--serif);font-weight:400;font-size:48px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
 .bl-head .t-text{color:var(--ink-soft)}
+.bl-head sup{font-size:.375em;letter-spacing:.04em;vertical-align:top;margin-left:.25em;position:relative;top:-.2em}   /* le nombre d'articles, comme le « (404) » de la page introuvable */
 
 .bl-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 16px;width:min(1184px,calc(100% - 2 * var(--gutter)));margin:0 auto;padding:64px 0 0;list-style:none}
 .bl-card a{display:flex;flex-direction:column;gap:24px;color:inherit}
@@ -94,7 +95,7 @@ html,body{background:var(--cream)}
   <section class="bl-head" aria-labelledby="blTitle">
     <div>
       <p class="t-cta t-eyebrow bl-fade">Le journal</p>
-      <h1 class="t-h1 bl-fade" id="blTitle">Tous nos articles</h1>
+      <h1 class="t-h1 bl-fade" id="blTitle">Tous nos articles<sup id="blCount"></sup></h1>
       <p class="t-text bl-fade">Conseils, idées et histoires de nos maisons pour imaginer votre prochain événement.</p>
     </div>
   </section>
@@ -155,6 +156,7 @@ html,body{background:var(--cream)}
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const {POSTS, day} = window.JOURNAL;   // js/journal.js
+  document.getElementById("blCount").textContent = `(${POSTS.length})`;
   // la pagination : l'article le plus récent à la une puis six articles en page 1, six articles par page ensuite.
   // La page est dans l'adresse (?page=2) : on peut la partager, et les boutons Précédent / Suivant du navigateur fonctionnent.
   const FIRST = 7, PER = 6;
