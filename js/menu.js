@@ -10,7 +10,7 @@
   const ITEMS = [
     {label:"Nos lieux", href:"lieux.html", img:"assets/menu/nos-lieux.webp"},
     {label:"Événements", href:"offres.html", img:"assets/menu/evenements.webp"},
-    {label:"Nous connaître", href:"#", img:"assets/menu/nous-connaitre.webp"},
+    {label:"Nous connaître", href:"nous-connaitre.html", img:"assets/menu/nous-connaitre.webp"},
     {label:"Engagement RSE", href:"#", img:"assets/menu/engagement-rse.webp"},
     {label:"Hôtels", href:"#", img:"assets/menu/hotels.webp"},
     {label:"Journal", href:"#", img:"assets/menu/journal.webp"},
