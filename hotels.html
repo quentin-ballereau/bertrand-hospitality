@@ -286,8 +286,8 @@ html,body{background:var(--cream)}
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const {VENUES, SECTORS} = BH;
 
-  // les chiffres (groupe-bertrand.com) : 48 + 50 + 37 + 58 chambres et suites
-  $("figures").innerHTML = [[4, "hôtels cinq étoiles"], [3, "Relais & Châteaux"], [193, "chambres et suites"], [1, "seul interlocuteur"]]
+  // les chiffres (groupe-bertrand.com) : 48 + 50 + 37 + 58 chambres et suites ; spas Guerlain du Saint James et du Relais Christine
+  $("figures").innerHTML = [[4, "hôtels cinq étoiles"], [3, "Relais & Châteaux"], [193, "chambres et suites"], [2, "spas Guerlain"]]
     .map(([v, l]) => `<div class="nc-fig"><span class="t-num">${v}</span><span class="t-cta">${l}</span></div>`).join('<span class="fig-sep" aria-hidden="true"></span>');
 
   // les maisons voisines, par quartier : les hôtels du quartier, puis nos maisons à quelques minutes (données du site)
