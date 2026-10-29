@@ -43,8 +43,9 @@
 .mnu-quote svg{transition:transform .4s var(--ease)}
 .mnu-quote:hover svg{transform:translateX(4px)}
 .mnu-tel{display:flex;align-items:center;justify-content:center;gap:16px}
-.mnu-tel .caps{font-size:12px;color:var(--taupe)}
-.mnu-tel a{font-family:var(--serif);font-size:18px;letter-spacing:.02em;line-height:1;text-box:trim-both cap alphabetic}
+/* « Ou appelez-nous » au style du texte courant, le numéro en lien secondaire (comme « Vous préférez en parler ? » du devis) */
+.mnu-tel span{font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink);text-box:trim-both cap alphabetic}
+.mnu-tel a{font-size:14px;color:var(--taupe)}
 
 /* photo de la rubrique survolée : tout le reste de l'écran, à droite du panneau */
 .mnu-media{position:absolute;top:0;bottom:0;right:0;left:var(--mnu-w);overflow:hidden;pointer-events:none}

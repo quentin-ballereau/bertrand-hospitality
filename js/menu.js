@@ -35,7 +35,7 @@
         <div class="mnu-foot">
           ${SECONDARY.map(row => `<p class="mnu-sec caps">${row.map(link).join("")}</p>`).join("")}
           <a class="mnu-quote caps" href="devis.html">Demander un devis${ARROW}</a>
-          <p class="mnu-tel"><span class="caps">Ou appelez-nous</span><a href="tel:+33764070661">07 64 07 06 61</a></p>
+          <p class="mnu-tel"><span>Ou appelez-nous</span><a class="ul caps" href="tel:+33764070661">07 64 07 06 61</a></p>
         </div>
       </div>
     </aside>

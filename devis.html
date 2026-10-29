@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/base.css?v=18">
+<link rel="stylesheet" href="css/base.css?v=19">
 <style>
 /* Demande de devis (lot 2 · 08), d'après Figma 6567-1971 : l'écran coupé en deux, la photo bord à bord à gauche, fixe pendant
    la saisie, le formulaire à droite en trois blocs numérotés, champs encadrés. Le logo, en blanc, se pose en haut de la photo, centré. Le formulaire arrive pré-rempli depuis une fiche lieu ou une recherche
@@ -67,6 +67,9 @@ html,body{background:var(--cream)}
 .fld input[type="date"]:not(:valid){color:var(--muted)}
 .fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--ink);box-shadow:inset 0 0 0 .5px var(--ink)}
 .fld.is-bad input,.fld.is-bad select,.fld.is-bad textarea{border-color:#a0453a;box-shadow:inset 0 0 0 .5px #a0453a}
+/* « facultatif » : discret, au style du texte courant, pour que le libellé tienne sur une ligne */
+.fld .opt{margin-left:6px;font-family:var(--sans);font-size:12px;font-weight:300;letter-spacing:0;text-transform:none;color:var(--muted)}
+.fld > label,.fld > .lbl{white-space:nowrap}   /* un libellé sur une seule ligne : les cadres côte à côte restent alignés */
 .err{display:none;font-size:12px;font-weight:300;line-height:1.3;color:#a0453a;margin-top:-6px}
 .fld.is-bad .err{display:block}
 
@@ -174,13 +177,13 @@ html,body{background:var(--cream)}
           <div class="fld"><label for="email">E-mail</label><input id="email" name="email" type="email" autocomplete="email" required><span class="err">Indiquez une adresse e-mail valide.</span></div>
           <div class="fld"><label for="tel">Téléphone</label><input id="tel" name="tel" type="tel" autocomplete="tel" required><span class="err">Indiquez un numéro de téléphone.</span></div>
         </div>
-        <div class="fld"><label for="societe">Société (facultatif)</label><input id="societe" name="societe" autocomplete="organization"></div>
+        <div class="fld"><label for="societe">Société <span class="opt">facultatif</span></label><input id="societe" name="societe" autocomplete="organization"></div>
       </section>
 
       <section class="dv-block" aria-labelledby="b3">
         <h2 class="t-h5" id="b3">03. Votre projet</h2>
         <div class="fld">
-          <label for="message">Message (facultatif)</label>
+          <label for="message">Message <span class="opt">facultatif</span></label>
           <textarea id="message" name="message"></textarea>
         </div>
         <label class="chk" id="rgpdChk"><input type="checkbox" name="rgpd" id="rgpd" required><span>J’accepte que ces informations soient utilisées par Bertrand Hospitality pour traiter ma demande. <a href="confidentialite.html" target="_blank">Politique de confidentialité</a><span class="err">Cochez cette case pour envoyer votre demande.</span></span></label>
