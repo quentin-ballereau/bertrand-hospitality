@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nos engagements : recevoir de façon responsable — Bertrand Hospitality</title>
+<meta name="description" content="Produits de saison, lutte contre le gaspillage, suivi de nos consommations, attention à nos équipes : ce que nos engagements changent pour votre événement.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bertrand Hospitality">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Nos engagements : recevoir de façon responsable — Bertrand Hospitality">
+<meta property="og:description" content="Produits de saison, lutte contre le gaspillage, suivi de nos consommations, attention à nos équipes : ce que nos engagements changent pour votre événement.">
+<meta property="og:url" content="https://bertrand-hospitality-poc.vercel.app/engagement.html">
+<meta property="og:image" content="https://bertrand-hospitality-poc.vercel.app/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Bertrand Hospitality">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://bertrand-hospitality-poc.vercel.app/assets/og.png">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/base.css?v=18">
+<link rel="stylesheet" href="css/menu.css?v=16">
+<link rel="stylesheet" href="css/home.css?v=29">
+<style>
+/* Page Engagement RSE (lot 3 · 10), sur la base de « Nous connaître » : hero, ce qui nous guide et nos repères, dans l'assiette,
+   autour de la table (les ressources), pour votre événement, les femmes et les hommes, le rapport RSE, les questions fréquentes,
+   l'appel final ; pied de page commun au site. Engagements repris de bertrand-hospitality.com/nos-engagements, racontés du point
+   de vue de l'organisateur. Restent à fournir par le client : les chiffres réels, le rapport en PDF, les options proposées aux événements. */
+html,body{background:var(--cream)}
+.nav{color:#fff}
+
+/* hero : la photo plein écran, le dégradé de la home, le titre posé à 48 px du bas */
+.nc-hero{position:relative;height:100svh;min-height:640px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:24px;padding:0 var(--gutter) 48px;color:#fff;text-align:center;isolation:isolate}
+.nc-hero img{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;transform:scale(1.06);transition:transform 2.4s var(--expo)}
+.is-ready .nc-hero img{transform:none}
+.nc-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(29,29,27,.8) 20%,rgba(29,29,27,0) 40%,rgba(29,29,27,0) 80%,rgba(29,29,27,.8) 100%)}
+.nc-hero .t-mini{color:rgba(255,255,255,.85)}
+.nc-title{max-width:640px;font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+.nc-intro{max-width:560px;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;text-box:trim-both cap alphabetic}
+
+/* ce qui nous guide : la phrase, puis trois repères entre deux filets (comme les chiffres de « Nous connaître ») */
+.nc-philo{display:flex;flex-direction:column;align-items:center;gap:64px;padding:128px var(--gutter)}
+.nc-quote{display:flex;flex-direction:column;align-items:center;gap:32px;max-width:784px;margin:0;text-align:center}
+.nc-quote blockquote{margin:0;font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
+.nc-figs{display:flex;justify-content:center;gap:48px;width:min(984px,100%);padding:32px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.nc-fig{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
+.nc-fig .t-num{font-size:48px}
+.nc-fig .t-cta{color:var(--taupe)}
+.nc-figs .fig-sep{flex:0 0 1px;background:var(--line)}
+
+/* photo d'un côté, texte de l'autre, sur une hauteur d'écran */
+.nc-split{display:grid;grid-template-columns:1fr 1fr;min-height:100svh}
+.nc-split figure{position:relative;overflow:hidden;margin:0;background:var(--cream-2)}
+.nc-split figure img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.nc-split > div{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;padding:96px 48px;text-align:center}
+.nc-split .sec-head-txt{max-width:544px}
+.nc-split .t-text{max-width:544px;color:var(--ink-soft)}
+.nc-split--r figure{order:2}
+/* les engagements d'une section : une ligne chacun, entre de fins filets */
+.eg-list{width:min(440px,100%);margin:0;padding:0;list-style:none;border-bottom:1px solid var(--line)}
+.eg-list li{padding:16px 0;border-top:1px solid var(--line);font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink)}
+
+/* autour de la table : quatre engagements numérotés, côte à côte */
+.eg-res{display:flex;flex-direction:column;align-items:center;gap:64px;padding:128px var(--gutter)}
+.eg-res .sec-head{width:min(776px,100%)}
+.eg-res .sec-head .t-text{max-width:none;color:var(--ink-soft)}
+.eg-cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:min(1184px,100%);margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}
+.eg-cols li{display:flex;flex-direction:column;gap:20px;padding:32px 24px 0}
+.eg-cols li + li{border-left:1px solid var(--line)}
+.eg-cols .t-mini{color:var(--taupe)}
+.eg-cols b{font-family:var(--serif);font-weight:400;font-size:18px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+.eg-cols p{margin:0;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink-soft)}
+
+/* le rapport RSE : une bande sobre */
+.eg-report{display:flex;flex-direction:column;align-items:center;gap:32px;margin:0 var(--gutter);padding:96px 0 128px;border-top:1px solid var(--line);text-align:center}
+.eg-report .sec-head-txt{max-width:560px}
+.eg-report .t-text{max-width:480px;color:var(--ink-soft)}
+
+/* questions fréquentes : la mise en page de la home (css/home.css) */
+.nc-faq{padding:128px var(--gutter)}
+
+/* appel final : une table de jour sous la verrière */
+.eg-closing .closing-bg{background-image:url(assets/engagement/table-1280.webp)}
+@media (min-width:1281px){.eg-closing .closing-bg{background-image:url(assets/engagement/table-1920.webp)}}
+
+/* entrée en scène */
+.js .nc-fade{opacity:0;translate:0 16px}
+.nc-fade.is-in{opacity:1;translate:0 0;transition:opacity 1.1s var(--expo),translate 1.1s var(--expo)}
+
+@media (max-width:1023px){
+  .eg-cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .eg-cols li{padding-bottom:32px}
+  .eg-cols li:nth-child(3){border-left:0}
+  .eg-cols li:nth-child(n+3){border-top:1px solid var(--line)}
+}
+@media (max-width:767px){
+  .nc-hero{padding-bottom:40px}
+  .nc-title{font-size:30px}
+  .nc-philo{padding:100px var(--gutter);gap:48px}
+  .nc-quote blockquote{font-size:18px}
+  .nc-figs{flex-direction:column;gap:32px}
+  .nc-fig .t-num{font-size:36px}
+  .nc-figs .fig-sep{display:none}
+  .nc-split{grid-template-columns:1fr;min-height:0}
+  .nc-split figure{aspect-ratio:4/5}
+  .nc-split--r figure{order:0}
+  .nc-split > div{padding:64px var(--gutter)}
+  .eg-res{padding:100px var(--gutter);gap:40px}
+  .eg-cols{grid-template-columns:1fr}
+  .eg-cols li{padding:28px 0}
+  .eg-cols li + li{border-left:0;border-top:1px solid var(--line)}
+  .eg-report{padding:72px 0 100px}
+  .nc-faq{padding:100px var(--gutter)}
+}
+@media (prefers-reduced-motion:reduce){.js .nc-fade{opacity:1;translate:none}.nc-hero img{transform:none}}
+</style>
+</head>
+<body class="js">
+
+<header class="nav">
+  <button class="nav-menu caps" type="button" aria-label="Ouvrir le menu"><i class="nav-ico" aria-hidden="true"></i><span>menu</span></button>
+  <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
+  <div class="nav-right">
+    <div class="nav-quote">
+      <a class="nav-cta ul caps" href="devis.html"><span class="cta-long">Demander un </span>devis</a>
+      <div class="nav-quote-pop"><span class="caps">Ou appelez-nous</span><a href="tel:+33764070661">07 64 07 06 61</a></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="nc-hero" aria-labelledby="egTitle">
+    <img src="assets/engagement/terrasse-1920.webp" srcset="assets/engagement/terrasse-1280.webp 1280w, assets/engagement/terrasse-1920.webp 1920w" sizes="100vw" alt="Le kiosque de la Terrasse de Madame sous les arbres du jardin du Luxembourg" fetchpriority="high">
+    <p class="t-mini nc-fade">Nos engagements</p>
+    <h1 class="nc-title nc-fade" id="egTitle">Recevoir de façon responsable</h1>
+    <p class="nc-intro nc-fade">Une cuisine plus durable, des ressources préservées, des équipes respectées&nbsp;: ce qui guide nos maisons au quotidien, et ce que cela change pour votre événement.</p>
+  </section>
+
+  <section class="nc-philo" aria-label="Ce qui nous guide">
+    <figure class="nc-quote">
+      <p class="t-cta t-eyebrow nc-fade">Une hospitalité positive</p>
+      <blockquote class="nc-fade">Bien recevoir, c’est aussi choisir ce que l’on sert, ce que l’on consomme et la façon dont on travaille ensemble.</blockquote>
+    </figure>
+    <div class="nc-figs nc-fade" id="figures"></div>
+  </section>
+
+  <section class="nc-split" aria-labelledby="aTitle">
+    <figure><img src="assets/engagement/assiette-1334.webp" srcset="assets/engagement/assiette-960.webp 960w, assets/engagement/assiette-1334.webp 1334w" sizes="(max-width:767px) 100vw, 50vw" alt="Une pavlova aux fraises de saison, servie au Polpo" loading="lazy" style="object-position:50% 60%"></figure>
+    <div>
+      <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Dans l’assiette</p><h2 class="t-h2" id="aTitle">Une cuisine responsable</h2></div>
+      <p class="t-text nc-fade">Avec nos chefs et nos équipes achats, nous améliorons nos approvisionnements carte après carte.</p>
+      <ul class="eg-list nc-fade">
+        <li>Des produits frais, au rythme des saisons</li>
+        <li>Des produits français et labellisés</li>
+        <li>Au moins un plat végétarien sur chaque carte</li>
+        <li>Une pêche plus durable</li>
+        <li>Davantage de bien-être animal</li>
+        <li>Vers zéro huile de palme</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="eg-res" aria-labelledby="rTitle">
+    <div class="sec-head nc-fade"><p class="t-cta t-eyebrow">Autour de la table</p><div class="sec-head-txt"><h2 class="t-h2" id="rTitle">Préserver nos ressources</h2>
+      <p class="t-text">Dans nos établissements comme au siège, nous suivons nos consommations et mesurons nos effets sur l’environnement.</p></div></div>
+    <ol class="eg-cols">
+      <li class="nc-fade"><span class="t-mini">01</span><b>Moins de gaspillage</b><p>Des quantités ajustées et une cuisine qui valorise chaque produit.</p></li>
+      <li class="nc-fade"><span class="t-mini">02</span><b>Des déchets triés</b><p>Le tri et la valorisation des déchets, biodéchets compris.</p></li>
+      <li class="nc-fade"><span class="t-mini">03</span><b>Énergie et eau suivies</b><p>Nos consommations mesurées pour mieux les réduire.</p></li>
+      <li class="nc-fade"><span class="t-mini">04</span><b>Une stratégie climat</b><p>Un bilan carbone et la mesure de notre impact sur la biodiversité.</p></li>
+    </ol>
+  </section>
+
+  <!-- les options proposées aux événements sont à confirmer par le client -->
+  <section class="nc-split nc-split--r" aria-labelledby="vTitle">
+    <figure><img src="assets/evenement/ile.webp" srcset="assets/evenement/ile-1280.webp 1280w, assets/evenement/ile.webp 1536w" sizes="(max-width:767px) 100vw, 50vw" alt="Un déjeuner sous la verrière de L’Île, à Issy-les-Moulineaux" loading="lazy" style="object-position:72% 50%"></figure>
+    <div>
+      <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Pour votre événement</p><h2 class="t-h2" id="vTitle">Un événement plus responsable</h2></div>
+      <p class="t-text nc-fade">Dites-le-nous dès votre demande&nbsp;: notre équipe construit avec vous un événement à votre image.</p>
+      <ul class="eg-list nc-fade">
+        <li>Un menu végétarien ou de saison</li>
+        <li>Un lieu accessible en transports en commun</li>
+        <li>Des quantités ajustées au nombre d’invités</li>
+        <li>Une décoration de saison, sans superflu</li>
+      </ul>
+      <a class="cta ul caps nc-fade" href="devis.html">Demander un devis</a>
+    </div>
+  </section>
+
+  <section class="nc-split" aria-labelledby="hTitle">
+    <figure><img src="assets/evenement/meida.webp" srcset="assets/evenement/meida-1280.webp 1280w, assets/evenement/meida.webp 1536w" sizes="(max-width:767px) 100vw, 50vw" alt="Un déjeuner baigné de soleil chez Meïda" loading="lazy"></figure>
+    <div>
+      <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Les femmes et les hommes</p><h2 class="t-h2" id="hTitle">L’humain au cœur de nos choix</h2></div>
+      <p class="t-text nc-fade">Recevoir est avant tout un métier de service. Nous veillons sur celles et ceux qui le font vivre, chaque jour, dans nos maisons.</p>
+      <ul class="eg-list nc-fade">
+        <li>Inclusion, diversité et égalité des chances</li>
+        <li>Transmission des savoir-faire et formation</li>
+        <li>Sécurité et bien-être au travail</li>
+        <li>Des actions pour les communautés locales</li>
+      </ul>
+      <a class="cta ul caps nc-fade" href="nous-connaitre.html">Rencontrer notre équipe</a>
+    </div>
+  </section>
+
+  <section class="nc-faq" aria-labelledby="faqTitle">
+    <div class="faq">
+      <div class="faq-head">
+        <p class="t-cta t-eyebrow nc-fade">Questions fréquentes</p>
+        <h2 class="t-h2 nc-fade" id="faqTitle">Vos questions sur nos engagements</h2>
+      </div>
+      <div class="faq-list nc-fade" id="faqList"></div>
+    </div>
+  </section>
+
+  <!-- le rapport RSE : lien à remplacer par le PDF fourni par le client -->
+  <section class="eg-report" aria-labelledby="pTitle">
+    <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Rapport RSE</p><h2 class="t-h3" id="pTitle">Nos actions et nos résultats, en détail</h2></div>
+    <p class="t-text nc-fade">Chaque année, notre rapport fait le point sur nos engagements, nos indicateurs et nos prochaines étapes.</p>
+    <a class="cta ul caps nc-fade" href="#">Télécharger le rapport (PDF)</a>
+  </section>
+
+  <section class="closing eg-closing" aria-labelledby="endTitle">
+    <div class="closing-bg" id="closingBg" role="img" aria-label="Un déjeuner sous la verrière du Polpo, entre les plantes"></div>
+    <div class="closing-card">
+      <p class="t-cta t-eyebrow">Votre événement</p>
+      <div class="closing-head">
+        <h2 class="t-h3" id="endTitle">Parlons de votre projet</h2>
+        <p class="t-text">La date, le format, le nombre d’invités, vos attentes&nbsp;: nous vous proposons les lieux qui s’y prêtent, avec un seul interlocuteur du premier échange au jour J.</p>
+      </div>
+      <a class="go-end t-cta" href="devis.html"><span>Demander un devis</span><svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot-brand">
+    <a href="index.html" aria-label="Bertrand Hospitality, accueil"><img class="foot-logo" src="assets/logo-footer-ink.svg" alt="Bertrand Hospitality" width="184" height="36"></a>
+    <p class="t-text">Trente maisons parisiennes à privatiser, de la brasserie historique à la péniche sur la Seine, avec un seul interlocuteur pour toutes.</p>
+  </div>
+  <div class="foot-main">
+    <nav class="foot-links" aria-label="Pied de page">
+      <div class="foot-group">
+        <div class="foot-col"><a href="lieux.html">Nos lieux</a><a href="offres.html">Événements</a><a href="nous-connaitre.html">Nous connaître</a></div>
+        <div class="foot-col"><a href="engagement.html">Engagement RSE</a><a href="#">Hôtels</a><a href="#">Journal</a></div>
+      </div>
+      <span class="foot-sep" aria-hidden="true"></span>
+      <div class="foot-group">
+        <div class="foot-col"><a href="#">FAQ</a><a href="#">Coffrets cadeaux</a><a href="#">Nous rejoindre</a></div>
+        <div class="foot-col"><a href="devis.html">Demander un devis</a><a href="#">Contact</a><a href="#">English</a></div>
+      </div>
+    </nav>
+    <nav class="foot-areas t-mini" aria-label="Nos quartiers"><a href="secteur.html?s=ouest">Champs-Élysées et Ouest</a><a href="secteur.html?s=centre">Opéra et centre</a><a href="secteur.html?s=rg">Rive gauche</a><a href="secteur.html?s=seine">Bords de Seine</a><a href="secteur.html?s=hors">Versailles et Disney Village</a></nav>
+    <p class="foot-legal">L’abus d’alcool est dangereux pour la santé, à consommer avec modération.</p>
+  </div>
+  <div class="foot-bottom t-mini">
+    <span>© 2026 Bertrand Hospitality</span>
+    <nav aria-label="Liens légaux"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Cookies</a><a href="https://bertrand-hospitality.com/" target="_blank" rel="noopener">Bertrand Hospitality</a></nav>
+    <a href="https://www.digidop.com" target="_blank" rel="noopener">Site web par Digidop</a>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="js/data.js?v=10"></script>
+<script src="js/menu.js?v=15"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // trois repères tirés des engagements publiés ; à remplacer par les chiffres réels du client (biodéchets, part végétarienne, index égalité)
+  $("figures").innerHTML = [[1, "plat végétarien au moins sur chaque carte"], [6, "indicateurs environnementaux suivis"], ["2 600", "collaborateurs"]]
+    .map(([v, l]) => `<div class="nc-fig"><span class="t-num">${v}</span><span class="t-cta">${l}</span></div>`).join('<span class="fig-sep" aria-hidden="true"></span>');
+
+  // questions fréquentes propres à cette page, la première ouverte
+  const FAQ = [
+    ["Pouvez-vous proposer un menu entièrement végétarien\u00a0?", "Oui. Chacune de nos cartes compte au moins un plat végétarien, et nos chefs composent volontiers un menu végétarien complet pour votre événement."],
+    ["D’où viennent vos produits\u00a0?", "Nous privilégions les produits frais de saison, français et labellisés, et améliorons nos approvisionnements avec nos chefs et nos équipes achats."],
+    ["Que faites-vous pour limiter le gaspillage\u00a0?", "Nous ajustons les quantités au nombre d’invités, trions et valorisons nos déchets, biodéchets compris, et suivons ces indicateurs dans chaque établissement."],
+    ["Vos lieux sont-ils accessibles en transports en commun\u00a0?", "La plupart de nos maisons sont au cœur de Paris, à quelques minutes du métro ou du RER : notre équipe vous indique les accès de chaque lieu proposé."],
+    ["Où consulter vos résultats\u00a0?", "Dans notre rapport RSE, qui détaille chaque année nos actions, nos indicateurs et nos prochaines étapes."],
+  ];
+  $("faqList").innerHTML = FAQ.map(([q, a], i) => `
+    <div class="faq-item${i ? "" : " is-open"}">
+      <button class="faq-q" type="button" aria-expanded="${!i}" aria-controls="faq${i}"><span class="t-cta">${q}</span><i aria-hidden="true"><svg class="ic-x" viewBox="0 0 12 12"><path d="M1.5 1.5l9 9M10.5 1.5l-9 9"/></svg><svg class="ic-m" viewBox="0 0 12 12"><path d="M0 6h12"/></svg></i></button>
+      <div class="faq-a" id="faq${i}" role="region"${i ? "" : ' style="height:auto"'}><p class="t-text">${a}</p></div>
+    </div>`).join("");
+  $("faqList").addEventListener("click", e => {
+    const b = e.target.closest(".faq-q"); if (!b) return;
+    const item = b.parentElement, open = !item.classList.contains("is-open");
+    // une seule question ouverte à la fois : on referme celle qui l'était
+    if (open) $("faqList").querySelectorAll(".faq-item.is-open").forEach(o => {
+      o.classList.remove("is-open"); o.querySelector(".faq-q").setAttribute("aria-expanded", false);
+      gsap.to(o.querySelector(".faq-a"), {height:0, duration:.6, ease:"expo.out"});
+    });
+    item.classList.toggle("is-open", open); b.setAttribute("aria-expanded", open);
+    gsap.to(item.querySelector(".faq-a"), {height:open ? "auto" : 0, duration:.7, ease:"expo.out"});
+  });
+  // les mêmes questions en données structurées, pour Google et les IA
+  const ld = document.createElement("script"); ld.type = "application/ld+json";
+  ld.textContent = JSON.stringify({"@context":"https://schema.org", "@type":"FAQPage", mainEntity:FAQ.map(([q, a]) => ({"@type":"Question", name:q, acceptedAnswer:{"@type":"Answer", text:a}}))});
+  document.head.appendChild(ld);
+
+  // appel final : la photo glisse lentement, comme sur la home
+  const cb = $("closingBg"), cs = cb.parentElement;
+  if (!reduce) {
+    let ticking = false;
+    const place = () => {
+      ticking = false;
+      const r = cs.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
+      const p = (r.top + r.height / 2 - innerHeight / 2) / (innerHeight / 2 + r.height / 2);
+      cb.style.transform = `translate3d(0,${(p * -r.height * .12).toFixed(1)}px,0)`;
+    };
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(place); } }, {passive:true});
+    place();
+  }
+
+  /* entrée en scène : le hero d'abord, puis chaque élément en fondu quand il arrive à l'écran */
+  requestAnimationFrame(() => document.body.classList.add("is-ready"));
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } }), {rootMargin:"0px 0px -8% 0px"});
+  document.querySelectorAll(".nc-fade").forEach((el, i) => {
+    const sib = [...el.parentElement.children].filter(c => c.classList.contains("nc-fade")).indexOf(el);
+    el.style.transitionDelay = el.closest(".nc-hero") ? `${.3 + i * .1}s` : `${Math.max(sib, 0) * .08}s`;
+    io.observe(el);
+  });
+})();
+</script>
+<script src="js/motion.js?v=2"></script>
+<script src="js/typo.js?v=5"></script>
+</body>
+</html>
