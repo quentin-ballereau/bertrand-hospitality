@@ -395,12 +395,20 @@ const venues = document.getElementById("venues");
 document.getElementById("vTitle").textContent = `${BH.VENUES.length === 30 ? "Trente" : BH.VENUES.length} adresses à privatiser`;
 const homeCf = BH.coverflow(document.getElementById("cf"), {wheel:"x"});   // la molette verticale continue de faire défiler la page
 // même principe que les autres sections : vérifié au défilement, déclenché quand le haut de la section passe aux deux tiers de l'écran
+/* carrousel des lieux : de l'adresse la plus connue à la moins connue (ordre propre à la home ;
+   les autres pages gardent l'ordre de BH.VENUES). Un lieu absent de la liste se range à la fin. */
+const FAME = ["la-coupole", "lipp", "procope", "angelina-rivoli", "au-pied-de-cochon", "bofinger", "vaudeville", "terminus-nord",
+  "grand-cafe-capucines", "dancing-coupole", "flora-danica", "copenhague", "angelina-alma", "lorraine", "lalsace", "polpo",
+  "lile", "pavillon-lile", "sirwinston", "public-house", "auteuil-brasserie", "hotel-norman", "meida", "lesmarionnettes",
+  "terrasse-de-madame", "les-2-stations", "amanie", "la-flottille-versailles", "angelina-versailles", "rosalie-disney-village-77"];
+const rank = v => { const i = FAME.indexOf(v.slug); return i < 0 ? FAME.length : i; };
+const VENUES_FAME = [...BH.VENUES].sort((a, b) => rank(a) - rank(b));
 let venuesOn = false;
 function startVenues() {
   if (venuesOn || venues.getBoundingClientRect().top > innerHeight * .66) return;
   venuesOn = true;
   removeEventListener("scroll", startVenues);
-  homeCf.set(BH.VENUES, {intro:true});
+  homeCf.set(VENUES_FAME, {intro:true});
   gsap.to(".venues .v-head > *", {opacity:1, y:0, duration:1.2, ease:"expo.out", stagger:.08});
 }
 addEventListener("scroll", startVenues, {passive:true});
