@@ -62,7 +62,7 @@
   addEventListener("resize", tick);
 
   /* ---------- 3. apparition des contenus ---------- */
-  const OWN_RV = ".rv, .ev-fade, .of-fade, .nc-fade, .lp-rv, .lp-in, .mo-rv";
+  const OWN_RV = ".rv, .ev-fade, .of-fade, .nc-fade, .lp-rv, .lp-in, .bl-fade, .ar-fade, .mo-rv";
   const SKIP = ".hero, .sc-hero, .nc-hero, .lp-hero, .cf, .pmap, .pop, .faq-a, [hidden]";
   const BLOCKS = [".sec-head", ".pg-head", ".qa-head", ".faq-head > *", ".faq-list", ".closing-card", ".figs-row", ".vcard", ".gcard", ".fcard", ".fm-card",
     ".lp-step", ".lp-fmt", ".care-txt > *", ".hotels-txt > *", ".dv-head", ".dv-block", ".dv-send", ".vl-filter", ".tools", ".empty",
