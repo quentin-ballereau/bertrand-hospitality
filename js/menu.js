@@ -16,7 +16,7 @@
     {label:"Journal", href:"blog.html", img:"assets/menu/journal.webp"},
   ];
   // deux lignes de liens, comme dans le Figma
-  const SECONDARY = [[["FAQ", "#"], ["Coffrets cadeaux", "#"]], [["Nous rejoindre", "#"], ["Bertrand Hospitality", "https://bertrand-hospitality.com/"]]];
+  const SECONDARY = [[["FAQ", "faq.html"], ["Coffrets cadeaux", "#"]], [["Nous rejoindre", "#"], ["Bertrand Hospitality", "https://bertrand-hospitality.com/"]]];
   const EASE = {smooth:"cubic-bezier(.5,0,0,1)", accelerate:"cubic-bezier(1,0,1,1)", out:"cubic-bezier(.17,.17,.25,1)", in:"cubic-bezier(.17,0,.83,.83)"};
   const link = ([l, h]) => `<a class="ul" href="${h}"${/^http/.test(h) ? ' target="_blank" rel="noopener"' : ""}>${l}</a>`;
 

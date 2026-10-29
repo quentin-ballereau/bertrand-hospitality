@@ -102,7 +102,7 @@ html.lenis,html.lenis body{height:auto}
       </div>
       <span class="foot-sep" aria-hidden="true"></span>
       <div class="foot-group">
-        <div class="foot-col"><a href="#">FAQ</a><a href="#">Coffrets cadeaux</a><a href="#">Nous rejoindre</a></div>
+        <div class="foot-col"><a href="faq.html">FAQ</a><a href="#">Coffrets cadeaux</a><a href="#">Nous rejoindre</a></div>
         <div class="foot-col"><a href="devis.html">Demander un devis</a><a href="#">Contact</a><a href="#">English</a></div>
       </div>
     </nav>
@@ -119,7 +119,7 @@ html.lenis,html.lenis body{height:auto}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="js/data.js?v=10"></script>
-<script src="js/menu.js?v=16"></script>
+<script src="js/menu.js?v=17"></script>
 <script src="js/offres-data.js?v=2"></script>
 <script src="js/secteurs-data.js?v=3"></script>
 <script src="js/paris-map.js?v=14"></script>
@@ -175,7 +175,7 @@ html.lenis,html.lenis body{height:auto}
   </section>
 
   <section class="qa" aria-labelledby="qTitle">
-    <div class="qa-head of-fade"><p class="t-cta t-eyebrow">Questions fréquentes</p><div><h2 class="t-h2" id="qTitle">Organiser votre événement</h2><a class="cta ul caps" href="index.html#faq">Toutes les questions</a></div></div>
+    <div class="qa-head of-fade"><p class="t-cta t-eyebrow">Questions fréquentes</p><div><h2 class="t-h2" id="qTitle">Organiser votre événement</h2><a class="cta ul caps" href="faq.html">Toutes les questions</a></div></div>
     <div class="faq-list of-fade" id="faqList">${FAQ.map(([q, a], i) => `
       <div class="faq-item${i ? "" : " is-open"}">
         <button class="faq-q" type="button" aria-expanded="${!i}" aria-controls="faq${i}"><span class="t-cta">${q}</span><i aria-hidden="true"><svg class="ic-x" viewBox="0 0 12 12"><path d="M1.5 1.5l9 9M10.5 1.5l-9 9"/></svg><svg class="ic-m" viewBox="0 0 12 12"><path d="M0 6h12"/></svg></i></button>

@@ -26,9 +26,9 @@
 <link rel="stylesheet" href="css/menu.css?v=16">
 <link rel="stylesheet" href="css/home.css?v=29">
 <style>
-/* Article du journal (lot 3 · 12), d'après le zoning Figma 6615-6014 : hero avec la date et le titre, le texte en une colonne
-   (chaque partie sous un filet, titres H2 à H4), des photos pleine largeur entre les parties, d'autres articles, l'appel
-   final ; pied de page commun au site. Le texte est un exemple (organiser un séminaire), en attendant les contenus du client. */
+/* Article du journal (lot 3 · 12), dans le style du zoning Figma 6615-6014 : hero avec la date et le titre, puis l'article
+   (chapô, parties numérotées sous un filet, sous-parties, liste, citation, encadré, conclusion et appel à demander un devis),
+   des photos pleine largeur entre les parties, d'autres articles, l'appel final ; pied de page commun au site. Le texte est un exemple (organiser un séminaire), en attendant les contenus du client. */
 html,body{background:var(--cream)}
 .nav{color:#fff}
 
@@ -40,15 +40,27 @@ html,body{background:var(--cream)}
 .nc-hero time{color:#fff}
 .ar-title{max-width:784px;margin:0;font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
 
-/* le texte : une colonne de 584 px, chaque partie sous un filet */
-.ar-body{display:flex;flex-direction:column;align-items:center;gap:48px;padding:64px var(--gutter)}
-.ar-part{display:flex;flex-direction:column;gap:32px;width:min(584px,100%);padding-top:32px;border-top:1px solid var(--line)}
+/* le texte : une colonne de 584 px. Un chapô, puis des parties (H2 sous un filet) découpées en sous-parties (H3),
+   avec une liste, une citation et un encadré « Bon à savoir » (H4) quand le propos s'y prête */
+.ar-body{display:flex;flex-direction:column;align-items:center;gap:64px;padding:96px var(--gutter)}
+.ar-lead{width:min(584px,100%);display:flex;flex-direction:column;gap:24px}
+.ar-lead p{margin:0;font-family:var(--serif);font-size:24px;line-height:1.3;letter-spacing:.01em;color:var(--ink);text-wrap:pretty}
+.ar-meta{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-family:var(--caps);color:var(--taupe)}
+.ar-part{display:flex;flex-direction:column;gap:24px;width:min(584px,100%);padding-top:40px;border-top:1px solid var(--line)}
 .ar-part :is(h2,h3,h4){margin:0;font-family:var(--serif);font-weight:400;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);text-box:trim-both cap alphabetic;text-wrap:balance}
-.ar-part h2{font-size:32px}
-.ar-part h3{font-size:24px}
+.ar-part h2{font-size:32px;margin-bottom:8px}
+.ar-part h3{font-size:24px;margin-top:24px}
 .ar-part h4{font-size:18px}
-.ar-part p{margin:0;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink-soft)}
-.ar-part p + p{margin-top:-16px}
+.ar-part p,.ar-part li{margin:0;font-size:14px;font-weight:300;line-height:1.6;letter-spacing:-.01em;color:var(--ink-soft)}
+.ar-part strong{font-weight:400;color:var(--ink)}
+.ar-part ul{margin:0;padding:0;list-style:none;border-bottom:1px solid var(--line)}
+.ar-part li{position:relative;padding:14px 0 14px 28px;border-top:1px solid var(--line)}
+.ar-part li::before{content:"";position:absolute;left:0;top:23px;width:14px;height:1px;background:var(--taupe)}
+.ar-part blockquote{margin:16px 0;padding:0 0 0 24px;border-left:1px solid var(--taupe);font-family:var(--serif);font-size:24px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);text-wrap:balance}
+.ar-note{display:flex;flex-direction:column;gap:16px;margin-top:16px;padding:32px;background:#fff}
+.ar-note h4{color:var(--taupe)}
+.ar-end{display:flex;flex-direction:column;align-items:flex-start;gap:32px;width:min(584px,100%);padding-top:40px;border-top:1px solid var(--line)}
+.ar-end p{margin:0;font-family:var(--serif);font-size:24px;line-height:1.3;color:var(--ink);text-wrap:pretty}
 
 /* les photos entre les parties, sur toute la largeur du contenu */
 .ar-pic{width:min(1184px,calc(100% - 2 * var(--gutter)));aspect-ratio:16/9;margin:0 auto;overflow:hidden;background:var(--cream-2)}
@@ -77,11 +89,13 @@ html,body{background:var(--cream)}
 @media (max-width:767px){
   .nc-hero{padding-bottom:40px}
   .ar-title{font-size:28px}
-  .ar-body{gap:40px;padding:48px var(--gutter)}
-  .ar-part{gap:24px;padding-top:24px}
+  .ar-body{gap:48px;padding:64px var(--gutter)}
+  .ar-lead p,.ar-end p{font-size:20px}
+  .ar-part{gap:20px;padding-top:32px}
   .ar-part h2{font-size:24px}
-  .ar-part h3{font-size:20px}
-  .ar-part p + p{margin-top:-8px}
+  .ar-part h3{font-size:20px;margin-top:16px}
+  .ar-part blockquote{font-size:20px}
+  .ar-note{padding:24px}
   .ar-more{padding:48px var(--gutter) 100px}
   .bl-list{grid-template-columns:1fr;gap:40px}
   .bl-card h3{font-size:20px}
@@ -111,50 +125,57 @@ html,body{background:var(--cream)}
 
   <article>
   <div class="ar-body">
+    <div class="ar-lead ar-fade">
+      <span class="ar-meta">Rendez-vous professionnels · 6 min de lecture</span>
+      <p>Un séminaire réussi ne tient pas au hasard&nbsp;: un objectif clair, un lieu qui donne envie de venir, un programme qui respire. Voici notre méthode, éprouvée dans nos maisons parisiennes, du premier échange au jour&nbsp;J.</p>
+    </div>
+
     <section class="ar-part ar-fade">
-      <h2>Commencer par l’objectif</h2>
-      <p>Avant de chercher une date ou un lieu, posez la question qui guidera tous les choix&nbsp;: à quoi ce séminaire doit-il servir&nbsp;? Lancer une nouvelle stratégie, réunir une équipe qui se voit peu, récompenser une belle année ou simplement prendre du recul ensemble. L’objectif fixe le ton, la durée, le budget, et jusqu’à la façon de disposer la salle.</p>
-      <p>Écrivez-le en une phrase et partagez-la avec les intervenants&nbsp;: elle évitera bien des hésitations au moment de bâtir le programme.</p>
-    </section>
-    <section class="ar-part ar-fade">
+      <h2>1. Définir l’objectif et le format</h2>
+      <p>Avant de chercher une date ou un lieu, posez la question qui guidera tous les choix&nbsp;: <strong>à quoi ce séminaire doit-il servir&nbsp;?</strong> Lancer une stratégie, réunir une équipe qui se voit peu, récompenser une belle année ou prendre du recul ensemble. L’objectif fixe le ton, la durée, le budget, et jusqu’à la disposition de la salle.</p>
       <h3>Une journée, ou deux&nbsp;?</h3>
-      <p>Une journée suffit pour une réunion de travail ou un point d’étape&nbsp;: matinée en plénière, ateliers l’après-midi, et un verre pour conclure. Deux jours laissent le temps de souffler, de mélanger les équipes et de prolonger par un dîner. Au-delà, pensez à alterner les temps de travail et les temps libres&nbsp;: l’attention baisse vite dans une salle fermée.</p>
-    </section>
-    <section class="ar-part ar-fade">
-      <h4>Le bon nombre de participants</h4>
-      <p>Le nombre d’invités décide du lieu plus que tout le reste. Un comité de direction de dix personnes se sent bien dans un salon privé, autour d’une seule table&nbsp;; une convention de deux cents personnes demande une salle en théâtre, des espaces pour les ateliers et un vestiaire. Comptez large au départ, et confirmez le chiffre une à deux semaines avant le jour J.</p>
+      <p>Une journée suffit pour une réunion de travail ou un point d’étape&nbsp;: plénière le matin, ateliers l’après-midi, un verre pour conclure. Deux jours laissent le temps de souffler, de mélanger les équipes et de prolonger par un dîner.</p>
+      <h3>Le bon nombre de participants</h3>
+      <p>C’est lui qui décide du lieu, plus que tout le reste. Un comité de direction de dix personnes se sent bien autour d’une seule table, dans un salon privé&nbsp;; une convention de deux cents personnes demande une salle en théâtre, des espaces pour les ateliers et un vestiaire.</p>
+      <div class="ar-note">
+        <h4>Bon à savoir</h4>
+        <p>Comptez large au départ, puis confirmez le nombre d’invités une à deux semaines avant le jour&nbsp;J&nbsp;: votre devis s’ajuste sans difficulté.</p>
+      </div>
     </section>
   </div>
   <figure class="ar-pic ar-fade"><img src="assets/evenement/public-house-salon-1280.webp" srcset="assets/evenement/public-house-salon-1280.webp 1280w, assets/evenement/public-house-salon.webp 1536w" sizes="(max-width:1280px) 100vw, 1184px" alt="Un salon de Public House, dressé pour une réception" loading="lazy"></figure>
   <div class="ar-body">
     <section class="ar-part ar-fade">
-      <h2>Choisir le lieu</h2>
-      <p>Un séminaire réussi tient souvent à un lieu qui change du bureau&nbsp;: une brasserie historique pour la mémoire des lieux, une verrière pour la lumière du jour, une barge sur la Seine pour l’effet de surprise. Visitez si vous le pouvez, aux heures où vous serez là&nbsp;: la lumière, le bruit et la circulation ne sont pas les mêmes à 9&nbsp;heures et à 18&nbsp;heures.</p>
-      <p>Notre équipe vous propose les maisons qui s’y prêtent et organise les visites, avec un seul interlocuteur pour toutes.</p>
-    </section>
-    <section class="ar-part ar-fade">
-      <h3>Penser à l’accès</h3>
-      <p>Vos invités viennent de partout&nbsp;: choisissez une adresse simple à rejoindre en transports en commun, et précisez dans l’invitation la station la plus proche, le parking s’il y en a un et l’heure d’accueil. Pour un séminaire hors de Paris, un car au départ d’un point de rendez-vous évite bien des retards.</p>
-    </section>
-    <section class="ar-part ar-fade">
-      <h4>Les espaces et le matériel</h4>
-      <p>Listez ce dont vous avez besoin&nbsp;: salle plénière, salles d’ateliers, espace pour les pauses, écran, micros, connexion. Demandez la disposition possible pour votre nombre d’invités (en théâtre, en classe, en îlots) et réservez un temps d’installation et de répétition avant l’arrivée des participants.</p>
+      <h2>2. Choisir le lieu</h2>
+      <p>Un séminaire marque souvent par un lieu qui change du bureau&nbsp;: une brasserie historique pour la mémoire des murs, une verrière pour la lumière du jour, une barge sur la Seine pour l’effet de surprise.</p>
+      <blockquote>Visitez le lieu à l’heure où vous y serez&nbsp;: la lumière et l’ambiance ne sont pas les mêmes à 9&nbsp;heures et à 18&nbsp;heures.</blockquote>
+      <h3>Les points à vérifier</h3>
+      <ul>
+        <li><strong>L’accès</strong>&nbsp;: une station de métro ou de RER à quelques minutes, un parking si besoin.</li>
+        <li><strong>Les espaces</strong>&nbsp;: une salle plénière, des salles d’ateliers, un espace pour les pauses.</li>
+        <li><strong>Le matériel</strong>&nbsp;: écran, sonorisation, micros et connexion.</li>
+        <li><strong>La disposition</strong>&nbsp;: en théâtre, en classe ou en îlots, selon votre nombre d’invités.</li>
+        <li><strong>Le temps d’installation</strong>&nbsp;: une heure avant l’arrivée des participants, pour répéter.</li>
+      </ul>
+      <h3>Un seul interlocuteur</h3>
+      <p>Plutôt que de contacter chaque établissement, confiez votre projet à notre équipe&nbsp;: elle vous propose les maisons qui s’y prêtent, organise les visites et vous suit jusqu’au jour&nbsp;J.</p>
     </section>
   </div>
   <figure class="ar-pic ar-fade"><img src="assets/evenement/ile-1280.webp" srcset="assets/evenement/ile-1280.webp 1280w, assets/evenement/ile.webp 1536w" sizes="(max-width:1280px) 100vw, 1184px" alt="Un déjeuner sous la verrière de L’Île, à Issy-les-Moulineaux" loading="lazy"></figure>
   <div class="ar-body">
     <section class="ar-part ar-fade">
-      <h2>Construire le programme</h2>
-      <p>Un bon programme alterne les formats&nbsp;: une plénière courte pour lancer la journée, des ateliers en petits groupes, des temps d’échange plus libres. Gardez les sujets les plus exigeants pour le matin et prévoyez une marge de quinze minutes entre chaque séquence&nbsp;: elle sera toujours utilisée.</p>
-    </section>
-    <section class="ar-part ar-fade">
+      <h2>3. Construire le programme</h2>
+      <p>Un bon programme alterne les formats&nbsp;: une plénière courte pour lancer la journée, des ateliers en petits groupes, des temps d’échange plus libres. Gardez les sujets exigeants pour le matin et prévoyez quinze minutes de marge entre chaque séquence&nbsp;: elles serviront toujours.</p>
       <h3>Les pauses et les repas</h3>
-      <p>Ce sont souvent les moments dont on se souvient. Un petit-déjeuner d’accueil met tout le monde à l’aise&nbsp;; un déjeuner léger, assis ou en buffet, évite le coup de fatigue de l’après-midi. Prévenez-nous des régimes particuliers et des allergies dès l’inscription&nbsp;: nos chefs adaptent les menus, avec toujours une proposition végétarienne.</p>
+      <p>Ce sont souvent les moments dont on se souvient. Un petit-déjeuner d’accueil met chacun à l’aise&nbsp;; un déjeuner léger, assis ou en buffet, évite le coup de fatigue de l’après-midi. Signalez les allergies et les régimes particuliers dès l’inscription&nbsp;: nos chefs adaptent les menus, avec toujours une proposition végétarienne.</p>
+      <h3>Prolonger par une soirée</h3>
+      <p>Un dîner ou un cocktail en fin de journée transforme un séminaire en souvenir commun. Il peut se tenir sur place, ou dans une autre de nos maisons à quelques minutes à pied.</p>
     </section>
-    <section class="ar-part ar-fade">
-      <h4>Prolonger par une soirée</h4>
-      <p>Un dîner ou un cocktail en fin de journée transforme un séminaire en souvenir commun. Il peut se tenir sur place ou dans une autre de nos maisons, à quelques minutes à pied. Dites-nous l’ambiance que vous imaginez&nbsp;: nous vous proposons le lieu, le menu et le déroulé, jusqu’au dernier verre.</p>
-    </section>
+
+    <div class="ar-end ar-fade">
+      <p>Une date, un nombre d’invités, une idée du format&nbsp;: c’est assez pour commencer. Nous vous proposons les lieux qui s’y prêtent sous 24&nbsp;heures.</p>
+      <a class="go-end t-cta" href="devis.html"><span>Demander un devis</span><svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a>
+    </div>
   </div>
   </article>
 
@@ -190,7 +211,7 @@ html,body{background:var(--cream)}
       </div>
       <span class="foot-sep" aria-hidden="true"></span>
       <div class="foot-group">
-        <div class="foot-col"><a href="#">FAQ</a><a href="#">Coffrets cadeaux</a><a href="#">Nous rejoindre</a></div>
+        <div class="foot-col"><a href="faq.html">FAQ</a><a href="#">Coffrets cadeaux</a><a href="#">Nous rejoindre</a></div>
         <div class="foot-col"><a href="devis.html">Demander un devis</a><a href="#">Contact</a><a href="#">English</a></div>
       </div>
     </nav>
@@ -206,7 +227,7 @@ html,body{background:var(--cream)}
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="js/data.js?v=10"></script>
-<script src="js/menu.js?v=16"></script>
+<script src="js/menu.js?v=17"></script>
 <script src="js/journal.js?v=1"></script>
 <script>
 (() => {
