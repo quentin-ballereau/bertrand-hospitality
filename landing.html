@@ -23,7 +23,7 @@
 <meta name="robots" content="noindex">
 <link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/base.css?v=17">
+<link rel="stylesheet" href="css/base.css?v=18">
 <link rel="stylesheet" href="css/home.css?v=28">
 <link rel="stylesheet" href="css/pages.css?v=4">
 <link rel="stylesheet" href="css/reviews.css?v=1">
@@ -321,7 +321,6 @@ html,body{background:var(--cream)}
   /* ---------- parallaxe, comme sur le reste du site ---------- */
   if (!reduce) {
     const heroImg = $("heroImg"), hero = heroImg.closest(".lp-hero");
-    const cards = [...document.querySelectorAll(".vcard-img img")];
     const closingBg = document.querySelector(".closing-bg"), closing = closingBg.parentElement;
     const reviews = $("reviews");
     // de −1 à 1 pendant la traversée de l'écran
@@ -331,8 +330,7 @@ html,body{background:var(--cream)}
       ticking = false;
       // la photo du hero descend moins vite que la page
       if (scrollY < hero.offsetHeight) heroImg.style.translate = `0 ${(scrollY * .3).toFixed(1)}px`;
-      // les photos des lieux glissent de ±24 px dans leur cadre
-      for (const im of cards) { const p = progress(im.parentElement); if (p) im.style.translate = `0 ${(p[0] * -24).toFixed(1)}px`; }
+      // les photos des lieux : parallaxe commune (js/motion.js)
       // les avis et l'appel final : la photo glisse lentement
       const pr = progress(reviews); if (pr) reviews.querySelectorAll(".rv-slide img").forEach(im => im.style.translate = `0 ${(pr[0] * -pr[1].height * .07).toFixed(1)}px`);
       const pc = progress(closing); if (pc) closingBg.style.transform = `translate3d(0,${(pc[0] * -pc[1].height * .12).toFixed(1)}px,0)`;
@@ -392,6 +390,8 @@ html,body{background:var(--cream)}
   new IntersectionObserver(es => $("sticky").classList.toggle("is-on", !es[0].isIntersecting && es[0].boundingClientRect.top < 0)).observe(form);
 })();
 </script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="js/motion.js?v=2"></script>
 <script src="js/typo.js?v=5"></script>
 </body>
 </html>

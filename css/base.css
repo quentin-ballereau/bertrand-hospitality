@@ -160,3 +160,9 @@ h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,
   .stepper{justify-content:center}
   .scrim.is-on{background:rgba(29,29,27,.4)}
 }
+
+/* défilement doux (Lenis, js/motion.js), commun à toutes les pages */
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+.lenis.lenis-stopped{overflow:hidden}

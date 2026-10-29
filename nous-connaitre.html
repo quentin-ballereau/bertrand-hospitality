@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/base.css?v=17">
+<link rel="stylesheet" href="css/base.css?v=18">
 <link rel="stylesheet" href="css/menu.css?v=16">
 <link rel="stylesheet" href="css/home.css?v=29">
 <style>
@@ -80,8 +80,9 @@ html.lenis,html.lenis body{height:auto}
 .nc-team-sec .sec-head .t-text{max-width:416px;color:var(--ink-soft)}
 .nc-team{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;width:min(1184px,100%);margin:0;padding:0;list-style:none}
 .nc-team li{display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
-.nc-team img{width:100%;aspect-ratio:82/110;object-fit:cover;display:block;background:var(--cream-2)}
-.nc-team span{display:flex;flex-direction:column;align-items:center;gap:16px}
+.nc-team .nc-ph{display:block;width:100%;aspect-ratio:82/110;overflow:hidden;background:var(--cream-2)}   /* le cadre du portrait (la photo y glisse, js/motion.js) */
+.nc-team img{width:100%;height:100%;object-fit:cover;display:block}
+.nc-team li > span:not(.nc-ph){display:flex;flex-direction:column;align-items:center;gap:16px}
 .nc-team b{font-family:var(--serif);font-weight:400;font-size:18px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
 .nc-team .t-mini{color:var(--taupe)}
 
@@ -185,11 +186,11 @@ html.lenis,html.lenis body{height:auto}
     <div class="sec-head nc-fade"><p class="t-cta t-eyebrow">L’équipe événementielle</p><div class="sec-head-txt"><h2 class="t-h2" id="tTitle">Un seul interlocuteur pour toutes nos maisons</h2>
       <p class="t-text">Plutôt que de contacter chaque établissement, confiez votre projet à notre équipe. Elle connaît chaque salon, chaque terrasse, et vous oriente vers l’adresse juste.</p></div></div>
     <ul class="nc-team">
-      <li class="nc-fade"><img src="assets/home/team-rudy.jpg" alt="" width="240" height="320" loading="lazy"><span><b>Rudy Coinon</b><span class="t-mini">Directeur commercial adjoint</span></span></li>
-      <li class="nc-fade"><img src="assets/home/team-karine.jpg" alt="" width="240" height="320" loading="lazy"><span><b>Karine Anglada</b><span class="t-mini">Responsable commerciale du Procope</span></span></li>
-      <li class="nc-fade"><img src="assets/home/team-olivier.jpg" alt="" width="240" height="320" loading="lazy"><span><b>Olivier Coulibaly</b><span class="t-mini">Responsable commercial</span></span></li>
-      <li class="nc-fade"><img src="assets/home/team-charlotte.jpg" alt="" width="240" height="320" loading="lazy"><span><b>Charlotte Antoni</b><span class="t-mini">Cheffe de projet</span></span></li>
-      <li class="nc-fade"><img src="assets/home/team-vincent.jpg" alt="" width="240" height="320" loading="lazy"><span><b>Vincent Fresneau</b><span class="t-mini">Responsable commercial de L’Île</span></span></li>
+      <li class="nc-fade"><span class="nc-ph"><img src="assets/home/team-rudy.jpg" alt="" width="240" height="320" loading="lazy"></span><span><b>Rudy Coinon</b><span class="t-mini">Directeur commercial adjoint</span></span></li>
+      <li class="nc-fade"><span class="nc-ph"><img src="assets/home/team-karine.jpg" alt="" width="240" height="320" loading="lazy"></span><span><b>Karine Anglada</b><span class="t-mini">Responsable commerciale du Procope</span></span></li>
+      <li class="nc-fade"><span class="nc-ph"><img src="assets/home/team-olivier.jpg" alt="" width="240" height="320" loading="lazy"></span><span><b>Olivier Coulibaly</b><span class="t-mini">Responsable commercial</span></span></li>
+      <li class="nc-fade"><span class="nc-ph"><img src="assets/home/team-charlotte.jpg" alt="" width="240" height="320" loading="lazy"></span><span><b>Charlotte Antoni</b><span class="t-mini">Cheffe de projet</span></span></li>
+      <li class="nc-fade"><span class="nc-ph"><img src="assets/home/team-vincent.jpg" alt="" width="240" height="320" loading="lazy"></span><span><b>Vincent Fresneau</b><span class="t-mini">Responsable commercial de L’Île</span></span></li>
     </ul>
   </section>
 
@@ -255,21 +256,6 @@ html.lenis,html.lenis body{height:auto}
 </footer>
 
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-<script>
-/* défilement doux, réglé comme amritpalace.com : chaque geste s'étire sur 1,2 s et se pose en douceur (courbe exponentielle) ;
-   les animations liées au défilement suivent ce défilement lissé, d'où leur fluidité */
-if (!matchMedia("(prefers-reduced-motion: reduce)").matches && window.Lenis) {
-  window.__lenis = new Lenis({duration:1.2, easing:t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel:true, wheelMultiplier:1, touchMultiplier:2});
-  const raf = t => { window.__lenis.raf(t); requestAnimationFrame(raf); };
-  requestAnimationFrame(raf);
-  // liens internes (#pro, #lieux…) : glissés eux aussi
-  document.addEventListener("click", e => {
-    const a = e.target.closest('a[href^="#"]'); if (!a || a.getAttribute("href").length < 2) return;
-    const t = document.querySelector(a.getAttribute("href")); if (!t) return;
-    e.preventDefault(); window.__lenis.scrollTo(t, {offset:-24});
-  });
-}
-</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="js/data.js?v=10"></script>
 <script src="js/menu.js?v=14"></script>
@@ -337,6 +323,7 @@ if (!matchMedia("(prefers-reduced-motion: reduce)").matches && window.Lenis) {
   });
 })();
 </script>
+<script src="js/motion.js?v=2"></script>
 <script src="js/typo.js?v=5"></script>
 </body>
 </html>

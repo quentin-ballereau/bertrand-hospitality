@@ -23,7 +23,7 @@
 <link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" href="assets/home/hero/coupole-1536.webp" imagesrcset="assets/home/hero/coupole-1280.webp 1280w, assets/home/hero/coupole-1536.webp 1536w" imagesizes="100vw" fetchpriority="high">
-<link rel="stylesheet" href="css/base.css?v=17">
+<link rel="stylesheet" href="css/base.css?v=18">
 <link rel="stylesheet" href="css/menu.css?v=16">
 <link rel="stylesheet" href="css/coverflow.css?v=10">
 <link rel="stylesheet" href="css/home.css?v=29">
@@ -359,14 +359,7 @@ setTimeout(start, 3200);   // filet de sécurité si une ressource tarde
   document.addEventListener("visibilitychange", schedule);
 })();
 
-/* ----- défilement doux (Lenis), léger : la page glisse un peu après la molette, sans inertie appuyée.
-   Il tourne sur l'horloge de GSAP pour rester synchronisé avec les animations ----- */
-if (!matchMedia("(prefers-reduced-motion: reduce)").matches && window.Lenis) {
-  const lenis = new Lenis({lerp:0.12, wheelMultiplier:1, smoothWheel:true});
-  window.__lenis = lenis;   // le menu met le défilement en pause quand il est ouvert
-  gsap.ticker.add(t => lenis.raf(t * 1000));
-  gsap.ticker.lagSmoothing(0);
-}
+/* ----- défilement doux (Lenis) : js/motion.js, commun à tout le site ----- */
 
 /* ----- parallax : au défilement, la photo descend plus lentement que la page (30 %).
    On anime « translate » et non « transform », déjà utilisé par le zoom d'arrivée ----- */
@@ -578,6 +571,7 @@ addEventListener("pageshow", e => { if (e.persisted) document.getElementById("le
   }
 })();
 </script>
+<script src="js/motion.js?v=2"></script>
 <script src="js/typo.js?v=5"></script>
 </body>
 </html>
