@@ -100,15 +100,6 @@ html,body{background:var(--cream)}
 .chk.is-bad .err{display:block;margin-top:8px}
 .chk a{text-decoration:underline;text-underline-offset:3px}
 
-/* état « merci » (en production : /demande-de-devis/merci/) */
-.dv-done{display:none;flex-direction:column;gap:32px}
-.is-sent .dv-form,.is-sent .dv-main > .dv-head{display:none}
-.is-sent .dv-done{display:flex}
-.dv-recap{display:flex;flex-direction:column;gap:16px;padding:32px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.dv-recap p{display:flex;justify-content:space-between;gap:24px;font-size:14px;font-weight:300;color:var(--ink-soft)}
-.dv-recap b{font-weight:400;color:var(--ink);text-align:right}
-.dv-links{display:flex;gap:32px;flex-wrap:wrap}
-.dv-links .ul{font-size:14px;color:var(--taupe)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* pied de page réduit à sa dernière ligne */
@@ -197,13 +188,6 @@ html,body{background:var(--cream)}
         <div class="dv-alt"><p class="t-text">Vous préférez en parler&nbsp;?</p><a class="ul caps" href="tel:+33764070661">07 64 07 06 61</a></div>
       </section>
     </form>
-
-    <div class="dv-done" id="done" tabindex="-1" aria-live="polite">
-      <div class="dv-head"><div><p class="t-cta t-eyebrow">Demande envoyée</p><h1 class="t-h2" id="doneTitle">Merci</h1></div>
-        <p class="t-text">Votre demande est bien partie. Notre équipe événementielle vous répond sous 24&nbsp;heures ouvrées, par e-mail ou par téléphone, avec les lieux et les formules qui s’y prêtent.</p></div>
-      <div class="dv-recap" id="recap"></div>
-      <div class="dv-links"><a class="ul caps" href="lieux.html">Découvrir d’autres lieux</a><a class="ul caps" href="index.html">Retour à l’accueil</a></div>
-    </div>
   </div>
 </main>
 
@@ -274,22 +258,12 @@ html,body{background:var(--cream)}
     const bad = Object.keys(rules).filter(id => !check(id));
     const rgpd = $("rgpd").checked; $("rgpdChk").classList.toggle("is-bad", !rgpd);
     if (bad.length || !rgpd) { (bad.length ? $(bad[0]) : $("rgpd")).focus(); return; }
-    // POC : pas d'envoi réel. En production : Make → BookingShake, puis /demande-de-devis/merci/
+    // POC : pas d'envoi réel. En production : Make → BookingShake, puis la page de remerciement
     const btn = e.submitter || document.querySelector(".send");
     btn.disabled = true;
-    setTimeout(() => {
-      const v = VENUES.find(x => x.slug === $("lieu").value);
-      const fs = [...$("fmts").querySelectorAll('[aria-pressed="true"]')].map(b => FORMATS.find(f => f.id === b.dataset.f).label);
-      const d = $("date").value ? new Date($("date").value + "T12:00").toLocaleDateString("fr-FR", {day:"numeric", month:"long", year:"numeric"}) : "À définir";
-      const row = (k, val) => `<p><span>${k}</span><b>${val}</b></p>`;
-      $("doneTitle").textContent = `Merci, ${$("prenom").value.trim()}`;
-      $("recap").innerHTML = row("Lieu", v ? v.name : "À nous de vous conseiller") + row("Format", fs.join(", ") || "À définir")
-        + row("Invités", $("invites").value) + row("Date", d);
-      document.body.classList.add("is-sent");
-      history.replaceState(null, "", "devis.html?envoye=1");
-      scrollTo({top:0});
-      $("done").focus({preventScroll:true});
-    }, 500);
+    // le prénom suit dans la session de l'onglet (jamais dans l'adresse), pour dire « Merci, Claire » sur la page suivante
+    try { sessionStorage.setItem("bh-prenom", $("prenom").value.trim()); } catch (err) {}
+    setTimeout(() => { location.href = "merci.html?demande=devis"; }, 400);
   });
 })();
 </script>

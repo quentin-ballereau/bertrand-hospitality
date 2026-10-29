@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Merci — Bertrand Hospitality</title>
+<meta name="description" content="Votre demande a bien été envoyée à l’équipe événementielle de Bertrand Hospitality.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bertrand Hospitality">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Merci — Bertrand Hospitality">
+<meta property="og:description" content="Votre demande a bien été envoyée à l’équipe événementielle de Bertrand Hospitality.">
+<meta property="og:url" content="https://bertrand-hospitality-poc.vercel.app/merci.html">
+<meta property="og:image" content="https://bertrand-hospitality-poc.vercel.app/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Bertrand Hospitality">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://bertrand-hospitality-poc.vercel.app/assets/og.png">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/base.css?v=18">
+<link rel="stylesheet" href="css/menu.css?v=16">
+<link rel="stylesheet" href="css/home.css?v=29">
+<style>
+/* Page de remerciement (Figma 6616-6963), en deux versions selon le formulaire envoyé : merci.html?demande=devis (par défaut)
+   et merci.html?demande=contact. Une page d'une hauteur d'écran : le message au centre, un bouton, la ligne légale en bas. */
+html,body{height:100%;background:var(--cream)}
+body{display:flex;flex-direction:column;min-height:100svh}
+.nav{color:var(--ink)}
+.mc{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;padding:160px var(--gutter) 96px;text-align:center}
+.mc-head{display:flex;flex-direction:column;align-items:center;gap:24px;width:min(584px,100%)}
+.mc h1{margin:0;font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
+.mc .t-text{max-width:440px;color:var(--ink-soft)}
+.mc .t-text a{color:var(--ink);white-space:nowrap}
+.mc-foot{border-top:1px solid var(--line);padding:24px var(--gutter)}
+.mc-foot .foot-bottom{margin:0;padding:0;border:0}
+
+/* entrée en scène */
+.js .mc > *{opacity:0;translate:0 16px}
+.is-ready .mc > *{opacity:1;translate:none;transition:opacity 1.1s var(--expo),translate 1.1s var(--expo)}
+.is-ready .mc > :nth-child(2){transition-delay:.1s}
+.is-ready .mc > :nth-child(3){transition-delay:.2s}
+@media (max-width:767px){
+  .mc{padding:120px var(--gutter) 64px;gap:24px}
+  .mc h1{font-size:30px}
+}
+@media (prefers-reduced-motion:reduce){.js .mc > *{opacity:1;translate:none}}
+</style>
+</head>
+<body class="js">
+
+<header class="nav">
+  <button class="nav-menu caps" type="button" aria-label="Ouvrir le menu"><i class="nav-ico" aria-hidden="true"></i><span>menu</span></button>
+  <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh-dark.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
+  <div class="nav-right">
+    <div class="nav-quote">
+      <a class="nav-cta ul caps" href="devis.html"><span class="cta-long">Demander un </span>devis</a>
+      <div class="nav-quote-pop"><span class="caps">Ou appelez-nous</span><a href="tel:+33764070661">07 64 07 06 61</a></div>
+    </div>
+  </div>
+</header>
+
+<main class="mc" aria-labelledby="mcTitle">
+  <div class="mc-head">
+    <p class="t-cta t-eyebrow" id="mcEyebrow">Demande de devis envoyée</p>
+    <h1 id="mcTitle">Merci pour votre demande</h1>
+  </div>
+  <p class="t-text" id="mcText">Notre équipe étudie votre projet et vous répond sous 24&nbsp;heures ouvrées, avec les lieux qui s’y prêtent. Une question d’ici là&nbsp;? Appelez-nous au <a href="tel:+33764070661">07&nbsp;64&nbsp;07&nbsp;06&nbsp;61</a>.</p>
+  <a class="go-end t-cta" href="index.html"><span>Retour à l’accueil</span><svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a>
+</main>
+
+<footer class="mc-foot">
+  <div class="foot-bottom t-mini">
+    <span>© 2026 Bertrand Hospitality</span>
+    <nav aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="cookies.html">Cookies</a><a href="https://bertrand-hospitality.com/" target="_blank" rel="noopener">Bertrand Hospitality</a></nav>
+    <a href="https://www.digidop.com" target="_blank" rel="noopener">Site web par Digidop</a>
+  </div>
+</footer>
+
+<script src="js/data.js?v=10"></script>
+<script src="js/menu.js?v=18"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  // la version : après une demande de devis (par défaut) ou un message envoyé depuis la page contact
+  const contact = new URLSearchParams(location.search).get("demande") === "contact";
+  // le prénom, laissé par le formulaire dans la session de l'onglet (jamais dans l'adresse)
+  let prenom = "";
+  try { prenom = sessionStorage.getItem("bh-prenom") || ""; } catch (e) {}
+  const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;"}[c]));
+  if (contact) {
+    $("mcEyebrow").textContent = "Message envoyé";
+    $("mcTitle").textContent = prenom ? `Merci, ${prenom}` : "Merci pour votre message";
+    $("mcText").innerHTML = "Votre message est bien arrivé. Un membre de notre équipe vous répond sous 24&nbsp;heures ouvrées, par e-mail ou par téléphone.";
+    document.title = "Message envoyé — Bertrand Hospitality";
+  } else {
+    if (prenom) $("mcTitle").innerHTML = `Merci, ${esc(prenom)}`;
+    document.title = "Demande envoyée — Bertrand Hospitality";
+  }
+  requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add("is-ready")));
+})();
+</script>
+</body>
+</html>
