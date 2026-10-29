@@ -215,8 +215,11 @@ html.lenis,html.lenis body{height:auto}
   });
 
   /* entrée en scène : la photo recule doucement, puis les éléments apparaissent en fondu à l'écran */
+  // le haut de page (titre, sous-titre) apparaît dès l'arrivée, sans attendre le défilement : le sous-titre, posé tout en bas
+  // de l'écran, échappait sinon à la marge de déclenchement (deux images d'attente pour que le fondu se joue)
+  const hero = el => requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("is-in")));
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } }), {rootMargin:"0px 0px -8% 0px"});
-  document.querySelectorAll(".of-fade").forEach((el, i) => { if (el.closest(".of-hero")) el.style.transitionDelay = `${.15 + i * .08}s`; io.observe(el); });
+  document.querySelectorAll(".of-fade").forEach((el, i) => { if (el.closest(".of-hero")) { el.style.transitionDelay = `${.15 + i * .08}s`; hero(el); } else io.observe(el); });
 
   /* la photo glisse un peu moins vite que la page : elle fait le lien entre le titre et les lieux */
   const band = document.querySelector(".of-band"), bimg = band.querySelector("img");
@@ -224,7 +227,7 @@ html.lenis,html.lenis body{height:auto}
   if (!matchMedia("(prefers-reduced-motion: reduce)").matches) { addEventListener("scroll", drift, {passive:true}); drift(); }
 })();
 </script>
-<script src="js/motion.js?v=2"></script>
+<script src="js/motion.js?v=3"></script>
 <script src="js/typo.js?v=5"></script>
 </body>
 </html>

@@ -79,6 +79,8 @@
     if (el.closest(OWN_RV) || el.querySelector(OWN_RV) || el.closest(SKIP) || el.closest(OUT)) return;
     const pos = getComputedStyle(el).position; if (pos === "fixed" || pos === "sticky") return;
     el.classList.add("mo-rv"); show.observe(el);
+    // déjà à l'écran à l'arrivée (tout en bas, sous la marge de déclenchement) : il apparaît sans attendre le défilement
+    if (el.getBoundingClientRect().top < innerHeight) requestAnimationFrame(() => requestAnimationFrame(() => { el.classList.add("is-in"); show.unobserve(el); }));
   });
 
   /* contenus rendus plus tard (grilles filtrées, cartes) : on les reprend à chaque changement */

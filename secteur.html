@@ -228,11 +228,14 @@ html.lenis,html.lenis body{height:auto}
 
   /* entrée en scène */
   requestAnimationFrame(() => document.body.classList.add("is-ready"));
+  // le haut de page (titre, sous-titre) apparaît dès l'arrivée, sans attendre le défilement : le sous-titre, posé tout en bas
+  // de l'écran, échappait sinon à la marge de déclenchement (deux images d'attente pour que le fondu se joue)
+  const hero = el => requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("is-in")));
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } }), {rootMargin:"0px 0px -8% 0px"});
-  document.querySelectorAll(".of-fade").forEach((el, i) => { if (el.closest(".sc-hero")) el.style.transitionDelay = `${.3 + i * .1}s`; io.observe(el); });
+  document.querySelectorAll(".of-fade").forEach((el, i) => { if (el.closest(".sc-hero")) { el.style.transitionDelay = `${.3 + i * .1}s`; hero(el); } else io.observe(el); });
 })();
 </script>
-<script src="js/motion.js?v=2"></script>
+<script src="js/motion.js?v=3"></script>
 <script src="js/typo.js?v=5"></script>
 </body>
 </html>

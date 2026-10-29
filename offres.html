@@ -205,8 +205,11 @@ html.lenis,html.lenis body{height:auto}
   }
 
   /* entrée en scène : chaque élément apparaît en fondu quand il arrive à l'écran */
+  // le haut de page (titre, sous-titre) apparaît dès l'arrivée, sans attendre le défilement : le sous-titre, posé tout en bas
+  // de l'écran, échappait sinon à la marge de déclenchement (deux images d'attente pour que le fondu se joue)
+  const hero = el => requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("is-in")));
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } }), {rootMargin:"0px 0px -8% 0px"});
-  document.querySelectorAll(".ev-fade").forEach((el, i) => { el.style.transitionDelay = el.closest(".ev-head") ? `${.1 + i * .08}s` : "0s"; io.observe(el); });
+  document.querySelectorAll(".ev-fade").forEach((el, i) => { el.style.transitionDelay = el.closest(".ev-head") ? `${.1 + i * .08}s` : "0s"; el.closest(".ev-head") ? hero(el) : io.observe(el); });
 
   // appel final : la photo glisse lentement, comme sur la home
   const cb = document.getElementById("closingBg"), cs = cb.parentElement;
@@ -225,7 +228,7 @@ html.lenis,html.lenis body{height:auto}
   }
 })();
 </script>
-<script src="js/motion.js?v=2"></script>
+<script src="js/motion.js?v=3"></script>
 <script src="js/typo.js?v=5"></script>
 </body>
 </html>
