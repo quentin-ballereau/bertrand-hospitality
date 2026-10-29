@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nos hôtels : accueillir vos invités à Paris — Bertrand Hospitality</title>
+<meta name="description" content="Quatre hôtels cinq étoiles à Paris, dont trois Relais & Châteaux, pour accueillir les invités de votre séminaire, de votre mariage ou de votre soirée, à deux pas de nos maisons.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bertrand Hospitality">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Nos hôtels : accueillir vos invités à Paris — Bertrand Hospitality">
+<meta property="og:description" content="Quatre hôtels cinq étoiles à Paris, dont trois Relais & Châteaux, pour accueillir les invités de votre séminaire, de votre mariage ou de votre soirée, à deux pas de nos maisons.">
+<meta property="og:url" content="https://bertrand-hospitality-poc.vercel.app/hotels.html">
+<meta property="og:image" content="https://bertrand-hospitality-poc.vercel.app/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Bertrand Hospitality">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://bertrand-hospitality-poc.vercel.app/assets/og.png">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/base.css?v=19">
+<link rel="stylesheet" href="css/menu.css?v=17">
+<link rel="stylesheet" href="css/home.css?v=29">
+<style>
+/* Nos hôtels (lot 3 · 13) : à quoi servent nos quatre hôtels quand on organise un événement. Hero, repères, les quatre hôtels
+   (photo d'un côté, texte de l'autre, comme la page Engagement), ce qu'ils apportent à un événement, les maisons voisines,
+   les questions fréquentes, l'appel final ; pied de page commun au site. Hôtels et chiffres : groupe-bertrand.com.
+   Photos à fournir pour le Saint James, le Relais Christine et le Balzac : en attendant, leur logo sur un panneau crème. */
+html,body{background:var(--cream)}
+.nav{color:#fff}
+
+/* hero : la photo plein écran, le dégradé de la home, le titre posé à 48 px du bas */
+.nc-hero{position:relative;height:100svh;min-height:640px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:24px;padding:0 var(--gutter) 48px;color:#fff;text-align:center;isolation:isolate}
+.nc-hero img{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;transform:scale(1.06);transition:transform 2.4s var(--expo)}
+.is-ready .nc-hero img{transform:none}
+.nc-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(29,29,27,.8) 20%,rgba(29,29,27,0) 40%,rgba(29,29,27,0) 80%,rgba(29,29,27,.8) 100%)}
+.nc-hero .t-mini{color:rgba(255,255,255,.85)}
+.nc-title{max-width:640px;font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+.nc-intro{max-width:560px;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;text-box:trim-both cap alphabetic}
+
+/* ce qui nous guide : la phrase, puis trois repères entre deux filets (comme les chiffres de « Nous connaître ») */
+.nc-philo{display:flex;flex-direction:column;align-items:center;gap:64px;padding:128px var(--gutter)}
+.nc-quote{display:flex;flex-direction:column;align-items:center;gap:32px;max-width:784px;margin:0;text-align:center}
+.nc-quote blockquote{margin:0;font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
+.nc-figs{display:flex;justify-content:center;gap:48px;width:min(984px,100%);padding:32px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.nc-fig{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
+.nc-fig .t-num{font-size:48px}
+.nc-fig .t-cta{color:var(--taupe)}
+.nc-figs .fig-sep{flex:0 0 1px;background:var(--line)}
+
+/* les trois engagements (Figma 6610-4845) : photo d'un côté, sur une hauteur d'écran ; de l'autre, le titre centré puis la liste */
+.eg-split{display:grid;grid-template-columns:1fr 1fr;min-height:min(832px,100svh)}
+.eg-split figure{position:relative;overflow:hidden;margin:0;background:var(--cream-2)}
+.eg-split figure img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.eg-split > div{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:48px;padding:96px 48px}
+.eg-split--r figure{order:2}
+.eg-head{display:flex;flex-direction:column;align-items:center;gap:32px;width:min(584px,100%);text-align:center}
+.eg-head .t-text{max-width:410px;color:var(--ink-soft)}
+
+.eg-split > *{min-width:0}
+.eg-split .t-eyebrow{white-space:normal;text-wrap:balance}   /* « Saint-Germain-des-Prés · Relais & Châteaux » peut passer sur deux lignes */
+/* un hôtel : son quartier et son label, le nom, le texte, quelques repères, deux liens */
+.ht-facts{display:flex;justify-content:center;gap:32px;width:min(440px,100%);margin:0;padding:24px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ht-facts div{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.ht-facts dt{order:2;font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--taupe);text-box:trim-both cap alphabetic}
+.ht-facts dd{margin:0;font-family:var(--serif);font-size:24px;line-height:1;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);text-box:trim-both cap alphabetic}
+.ht-links{display:flex;flex-wrap:wrap;justify-content:center;gap:16px 32px}
+/* en attendant les photos : le logo de l'hôtel sur un panneau crème */
+.ht-logo{display:grid;place-items:center;background:var(--cream-2)}
+.ht-logo img{position:static!important;width:auto!important;height:auto!important;max-width:min(240px,50%);opacity:.85}
+.ht-logo span{font-family:var(--serif);font-size:40px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+
+/* pour votre événement : trois cas, numérotés, deux par ligne comme « Autour de la table » */
+.ht-uses{display:flex;flex-direction:column;align-items:center;gap:64px;padding:128px var(--gutter)}
+.ht-uses .sec-head-txt{width:min(584px,100%);text-align:center}
+.ht-uses .sec-head-txt .t-text{max-width:440px;margin:0 auto;color:var(--ink-soft)}
+.ht-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:64px;width:min(1184px,100%);margin:0;padding:0;list-style:none}
+.ht-cols li{display:flex;flex-direction:column;gap:24px;padding-top:24px;border-top:1px solid var(--line)}
+.ht-cols li > span{font-family:var(--serif);font-size:24px;line-height:1.1;color:var(--taupe);text-box:trim-both cap alphabetic}
+.ht-cols b{font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+.ht-cols p{margin:0;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--muted);text-box:trim-both cap alphabetic}
+.ht-cols a{align-self:flex-start;margin-top:8px}
+
+/* à deux pas de nos maisons : chaque hôtel, son quartier, les maisons voisines */
+.ht-near{display:flex;flex-direction:column;align-items:center;gap:48px;padding:0 var(--gutter) 128px}
+.ht-near .sec-head-txt{text-align:center}
+.ht-near ul{width:min(784px,100%);margin:0;padding:0;list-style:none;border-bottom:1px solid var(--line)}
+.ht-near li{display:grid;grid-template-columns:220px 1fr;gap:24px;padding:24px 0;border-top:1px solid var(--line)}
+.ht-near b{font-family:var(--serif);font-weight:400;font-size:18px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);text-box:trim-both cap alphabetic}
+.ht-near p{margin:0;font-size:14px;font-weight:300;line-height:1.5;letter-spacing:-.02em;color:var(--ink-soft)}
+.ht-near p strong{font-weight:400;color:var(--ink)}
+.ht-near p a{color:var(--ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+
+/* questions fréquentes : la mise en page de la home (css/home.css) */
+.nc-faq{padding:0 var(--gutter) 128px}
+
+/* appel final : la photo de réception */
+.nc-closing .closing-bg{background-image:url(assets/nous-connaitre/reception-1280.webp)}
+@media (min-width:1281px){.nc-closing .closing-bg{background-image:url(assets/nous-connaitre/reception-2560.webp)}}
+
+/* entrée en scène */
+.js .nc-fade{opacity:0;translate:0 16px}
+.nc-fade.is-in{opacity:1;translate:0 0;transition:opacity 1.1s var(--expo),translate 1.1s var(--expo)}
+
+@media (max-width:1023px){
+  .eg-split > div{padding:80px 32px}
+  .ht-cols{grid-template-columns:1fr;gap:48px}
+}
+@media (max-width:767px){
+  .nc-hero{padding-bottom:40px}
+  .nc-title{font-size:30px}
+  .nc-philo{padding:100px var(--gutter);gap:48px}
+  .nc-quote blockquote{font-size:24px}
+  .nc-figs{flex-wrap:wrap;gap:32px 0}
+  .nc-fig{flex:0 0 50%}
+  .nc-fig .t-num{font-size:36px}
+  .nc-figs .fig-sep{display:none}
+  .eg-split{grid-template-columns:1fr;min-height:0}
+  .eg-split figure{aspect-ratio:4/3}
+  .eg-split--r figure{order:0}
+  .eg-split > div{gap:32px;padding:56px var(--gutter)}
+  .ht-logo span{font-size:28px}
+  .ht-facts{gap:20px}
+  .ht-uses{padding:100px var(--gutter);gap:48px}
+  .ht-near{padding:0 var(--gutter) 100px}
+  .ht-near li{grid-template-columns:1fr;gap:12px}
+  .nc-faq{padding:0 var(--gutter) 100px}
+}
+@media (prefers-reduced-motion:reduce){.js .nc-fade{opacity:1;translate:none}.nc-hero img{transform:none}}
+</style>
+</head>
+<body class="js">
+
+<header class="nav">
+  <button class="nav-menu caps" type="button" aria-label="Ouvrir le menu"><i class="nav-ico" aria-hidden="true"></i><span>menu</span></button>
+  <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
+  <div class="nav-right">
+    <div class="nav-quote">
+      <a class="nav-cta ul caps" href="devis.html"><span class="cta-long">Demander un </span>devis</a>
+      <div class="nav-quote-pop"><span>Ou appelez-nous</span><a class="ul caps" href="tel:+33764070661">07 64 07 06 61</a></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="nc-hero" aria-labelledby="htTitle">
+    <img src="assets/hotels/norman-1920.webp" srcset="assets/hotels/norman-1280.webp 1280w, assets/hotels/norman-1920.webp 1920w, assets/hotels/norman-2560.webp 2560w" sizes="100vw" alt="Le restaurant de l’hôtel Norman, près des Champs-Élysées" fetchpriority="high">
+    <p class="t-mini nc-fade">Nos hôtels</p>
+    <h1 class="nc-title nc-fade" id="htTitle">Prolonger l’événement</h1>
+    <p class="nc-intro nc-fade">Quatre hôtels cinq étoiles au cœur de Paris, pour accueillir vos invités le temps d’une nuit, d’un séminaire ou d’un mariage.</p>
+  </section>
+
+  <section class="nc-philo" aria-label="Nos hôtels en quelques chiffres">
+    <figure class="nc-quote">
+      <p class="t-cta t-eyebrow nc-fade">Recevoir jusqu’au lendemain</p>
+      <blockquote class="nc-fade">Un dîner dans l’une de nos maisons, une nuit à quelques pas&nbsp;: vos invités n’ont plus qu’à profiter.</blockquote>
+    </figure>
+    <div class="nc-figs nc-fade" id="figures"></div>
+  </section>
+
+  <section class="eg-split" id="christine" aria-labelledby="h-christine">
+    <figure class="ht-logo"><img src="assets/marques/relais-christine.png" alt="" loading="lazy"></figure>
+    <div>
+      <div class="eg-head">
+        <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Saint-Germain-des-Prés · Relais & Châteaux</p><h2 class="t-h2" id="h-christine">Relais Christine</h2></div>
+        <p class="t-text nc-fade">Un hôtel particulier caché derrière sa cour pavée, en plein Saint-Germain-des-Prés&nbsp;: le calme d’une maison, à quelques pas de la Seine et des brasseries de la Rive gauche.</p>
+      </div>
+      <dl class="ht-facts nc-fade"><div><dt>Chambres</dt><dd>48</dd></div><div><dt>Étoiles</dt><dd>5</dd></div><div><dt>Spa</dt><dd>Guerlain</dd></div></dl>
+      <div class="ht-links nc-fade"><a class="cta ul caps" href="devis.html?src=hotel-christine">Organiser un séjour</a><a class="cta ul caps" href="https://www.relais-christine.com/fr/" target="_blank" rel="noopener">Le site de l’hôtel</a></div>
+    </div>
+  </section>
+
+  <section class="eg-split eg-split--r" id="saint-james" aria-labelledby="h-saint-james">
+    <figure class="ht-logo"><img src="assets/marques/saint-james.png" alt="" loading="lazy"></figure>
+    <div>
+      <div class="eg-head">
+        <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Paris 16e · Relais & Châteaux</p><h2 class="t-h2" id="h-saint-james">Saint James Paris</h2></div>
+        <p class="t-text nc-fade">Un château au cœur de Paris, entouré de son jardin&nbsp;: salons, bibliothèque-bar et terrasse pour recevoir en petit comité, à deux pas de l’Étoile.</p>
+      </div>
+      <dl class="ht-facts nc-fade"><div><dt>Chambres</dt><dd>50</dd></div><div><dt>Étoiles</dt><dd>5</dd></div><div><dt>Spa</dt><dd>Guerlain</dd></div></dl>
+      <div class="ht-links nc-fade"><a class="cta ul caps" href="devis.html?src=hotel-saint-james">Organiser un séjour</a><a class="cta ul caps" href="https://www.saint-james-paris.com/fr/" target="_blank" rel="noopener">Le site de l’hôtel</a></div>
+    </div>
+  </section>
+
+  <section class="eg-split" id="norman" aria-labelledby="h-norman">
+    <figure><img src="assets/hotels/norman-1920.webp" srcset="assets/hotels/norman-1280.webp 1280w, assets/hotels/norman-1920.webp 1920w" sizes="(max-width:767px) 100vw, 50vw" alt="Le restaurant de l’hôtel Norman" loading="lazy"></figure>
+    <div>
+      <div class="eg-head">
+        <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Champs-Élysées · Small Luxury Hotels</p><h2 class="t-h2" id="h-norman">Norman</h2></div>
+        <p class="t-text nc-fade">Un hôtel intime à deux pas des Champs-Élysées, où la cheffe Thiou signe une table thaïe et son patio, à privatiser pour vos dîners.</p>
+      </div>
+      <dl class="ht-facts nc-fade"><div><dt>Chambres</dt><dd>37</dd></div><div><dt>Étoiles</dt><dd>5</dd></div><div><dt>Restaurant</dt><dd>Thiou</dd></div></dl>
+      <div class="ht-links nc-fade"><a class="cta ul caps" href="devis.html?src=hotel-norman">Organiser un séjour</a><a class="cta ul caps" href="https://www.hotelnorman.com/fr/" target="_blank" rel="noopener">Le site de l’hôtel</a></div>
+    </div>
+  </section>
+
+  <section class="eg-split eg-split--r" id="balzac" aria-labelledby="h-balzac">
+    <figure class="ht-logo" aria-hidden="true"><span>Balzac</span></figure>
+    <div>
+      <div class="eg-head">
+        <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Champs-Élysées · Relais & Châteaux</p><h2 class="t-h2" id="h-balzac">Balzac</h2></div>
+        <p class="t-text nc-fade">Une adresse élégante dans une rue calme du 8e arrondissement, à quelques minutes de l’Arc de Triomphe et de nos maisons des Champs-Élysées.</p>
+      </div>
+      <dl class="ht-facts nc-fade"><div><dt>Chambres</dt><dd>58</dd></div><div><dt>Étoiles</dt><dd>5</dd></div></dl>
+      <div class="ht-links nc-fade"><a class="cta ul caps" href="devis.html?src=hotel-balzac">Organiser un séjour</a><a class="cta ul caps" href="https://www.hotelbalzac.paris/" target="_blank" rel="noopener">Le site de l’hôtel</a></div>
+    </div>
+  </section>
+
+  <section class="ht-uses" aria-labelledby="uTitle">
+    <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Pour votre événement</p><h2 class="t-h2" id="uTitle">Un événement, puis une nuit</h2>
+      <p class="t-text">Dites-nous combien de chambres il vous faut&nbsp;: nous organisons l’événement et l’hébergement dans une seule demande.</p></div>
+    <ol class="ht-cols">
+      <li class="nc-fade"><span>01</span><b>Un séminaire sur deux jours</b><p>Une journée de travail dans l’une de nos maisons, un dîner, puis la nuit à l’hôtel&nbsp;: le lendemain, vos équipes reprennent sans traverser Paris.</p><a class="cta ul caps" href="offre.html?f=reunion">Les séminaires</a></li>
+      <li class="nc-fade"><span>02</span><b>Un mariage</b><p>Des chambres pour vos proches, une suite pour les mariés et un salon pour les préparatifs, à quelques minutes du lieu de réception.</p><a class="cta ul caps" href="landing.html?c=mariage">Les mariages</a></li>
+      <li class="nc-fade"><span>03</span><b>Des invités venus de loin</b><p>Clients, partenaires ou famille&nbsp;: logez-les au plus près de votre événement, dans le quartier qui vous convient.</p><a class="cta ul caps" href="devis.html?src=hotels">Demander un devis</a></li>
+    </ol>
+  </section>
+
+  <section class="ht-near" aria-labelledby="nTitle">
+    <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">À deux pas de nos maisons</p><h2 class="t-h2" id="nTitle">Le bon hôtel, au bon endroit</h2></div>
+    <ul class="nc-fade" id="near"></ul>
+  </section>
+
+  <section class="nc-faq" aria-labelledby="faqTitle">
+    <div class="faq">
+      <div class="faq-head">
+        <p class="t-cta t-eyebrow nc-fade">Questions fréquentes</p>
+        <h2 class="t-h2 nc-fade" id="faqTitle">Hébergement et événements</h2>
+        <a class="t-cta hlink ul nc-fade" href="faq.html" style="align-self:flex-start">Toutes les questions</a>
+      </div>
+      <div class="faq-list nc-fade" id="faqList"></div>
+    </div>
+  </section>
+
+  <!-- l'appel final de la home (Figma 6560-1198) : une carte crème posée sur la photo -->
+  <section class="closing nc-closing" aria-labelledby="endTitle">
+    <div class="closing-bg" id="closingBg" role="img" aria-label="Une salle de réception dressée, des tables rondes et des fleurs"></div>
+    <div class="closing-card">
+      <p class="t-cta t-eyebrow">Votre événement</p>
+      <div class="closing-head">
+        <h2 class="t-h3" id="endTitle">Un événement, des invités à loger</h2>
+        <p class="t-text">Décrivez-nous votre événement et le nombre de chambres&nbsp;: une seule demande suffit, notre équipe s’occupe du reste.</p>
+      </div>
+      <a class="go-end t-cta" href="devis.html"><span>Demander un devis</span><svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot-brand">
+    <a href="index.html" aria-label="Bertrand Hospitality, accueil"><img class="foot-logo" src="assets/logo-footer-ink.svg" alt="Bertrand Hospitality" width="184" height="36"></a>
+    <p class="t-text">Trente maisons parisiennes à privatiser, de la brasserie historique à la péniche sur la Seine, avec un seul interlocuteur pour toutes.</p>
+  </div>
+  <div class="foot-main">
+    <nav class="foot-links" aria-label="Pied de page">
+      <div class="foot-group">
+        <div class="foot-col"><a href="lieux.html">Nos lieux</a><a href="offres.html">Événements</a><a href="nous-connaitre.html">Nous connaître</a></div>
+        <div class="foot-col"><a href="engagement.html">Engagement RSE</a><a href="hotels.html">Hôtels</a><a href="blog.html">Journal</a></div>
+      </div>
+      <span class="foot-sep" aria-hidden="true"></span>
+      <div class="foot-group">
+        <div class="foot-col"><a href="faq.html">FAQ</a><a href="https://groupebertrand.bonkdo.com/fr/destinations/" target="_blank" rel="noopener">Coffrets cadeaux</a><a href="https://recrutement.bertrand-hospitality.com/fr" target="_blank" rel="noopener">Nous rejoindre</a></div>
+        <div class="foot-col"><a href="devis.html">Demander un devis</a><a href="contact.html">Contact</a><a href="#">English</a></div>
+      </div>
+    </nav>
+    <nav class="foot-areas t-mini" aria-label="Nos quartiers"><a href="secteur.html?s=ouest">Champs-Élysées et Ouest</a><a href="secteur.html?s=centre">Opéra et centre</a><a href="secteur.html?s=rg">Rive gauche</a><a href="secteur.html?s=seine">Bords de Seine</a><a href="secteur.html?s=hors">Versailles et Disney Village</a></nav>
+    <p class="foot-legal">L’abus d’alcool est dangereux pour la santé, à consommer avec modération.</p>
+  </div>
+  <div class="foot-bottom t-mini">
+    <span>© 2026 Bertrand Hospitality</span>
+    <nav aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="cookies.html">Cookies</a><a href="https://bertrand-hospitality.com/" target="_blank" rel="noopener">Bertrand Hospitality</a></nav>
+    <a href="https://www.digidop.com" target="_blank" rel="noopener">Site web par Digidop</a>
+  </div>
+</footer>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="js/data.js?v=10"></script>
+<script src="js/menu.js?v=20"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const {VENUES, SECTORS} = BH;
+
+  // les chiffres (groupe-bertrand.com) : 48 + 50 + 37 + 58 chambres et suites
+  $("figures").innerHTML = [[4, "hôtels cinq étoiles"], [3, "Relais & Châteaux"], [193, "chambres et suites"], [1, "seul interlocuteur"]]
+    .map(([v, l]) => `<div class="nc-fig"><span class="t-num">${v}</span><span class="t-cta">${l}</span></div>`).join('<span class="fig-sep" aria-hidden="true"></span>');
+
+  // les maisons voisines, par quartier : les hôtels du quartier, puis nos maisons à quelques minutes (données du site)
+  const NEAR = [["rg", "Relais Christine"], ["ouest", "Saint James Paris, Norman et Balzac"]];
+  $("near").innerHTML = NEAR.map(([s, hotels]) => {
+    const sec = SECTORS.find(x => x.id === s);
+    const vs = VENUES.filter(v => v.s === s && !/norman/.test(v.slug)).slice(0, 6);
+    return `<li><b>${sec.name}</b><p><strong>${hotels}</strong>, à quelques minutes de ${vs.map(v => `<a href="lieu.html?l=${v.slug}">${v.name}</a>`).join(", ")}. <a href="secteur.html?s=${s}">Tout le quartier</a></p></li>`;
+  }).join("");
+
+  // questions fréquentes propres à cette page ; les conditions restent générales, en attendant celles du client
+  const FAQ = [
+    ["Pouvez-vous réserver des chambres pour mes invités ?", "Oui. Indiquez le nombre de chambres et les dates dans votre demande de devis : notre équipe vous propose l’hôtel le plus proche de votre événement, selon les disponibilités."],
+    ["Peut-on organiser un événement dans l’un de vos hôtels ?", "Pour les petits comités, oui : salons, bars, jardin ou restaurant selon l’hôtel. Pour un plus grand nombre d’invités, nos trente maisons prennent le relais, à quelques minutes à pied."],
+    ["Peut-on réunir l’événement et l’hébergement dans un même devis ?", "C’est tout l’intérêt : une seule demande, un seul interlocuteur, du dîner jusqu’au petit-déjeuner du lendemain."],
+    ["Proposez-vous des conditions pour les groupes ?", "Elles dépendent de l’hôtel, des dates et du nombre de chambres : elles vous sont précisées dans votre devis."],
+  ];
+  $("faqList").innerHTML = FAQ.map(([q, a], i) => `
+    <div class="faq-item${i ? "" : " is-open"}">
+      <button class="faq-q" type="button" aria-expanded="${!i}" aria-controls="faq${i}"><span class="t-cta">${q.replace(" ?", "\u00a0?")}</span><i aria-hidden="true"><svg class="ic-x" viewBox="0 0 12 12"><path d="M1.5 1.5l9 9M10.5 1.5l-9 9"/></svg><svg class="ic-m" viewBox="0 0 12 12"><path d="M0 6h12"/></svg></i></button>
+      <div class="faq-a" id="faq${i}" role="region"${i ? "" : ' style="height:auto"'}><p class="t-text">${a}</p></div>
+    </div>`).join("");
+  $("faqList").addEventListener("click", e => {
+    const b = e.target.closest(".faq-q"); if (!b) return;
+    const item = b.parentElement, open = !item.classList.contains("is-open");
+    if (open) $("faqList").querySelectorAll(".faq-item.is-open").forEach(o => {
+      o.classList.remove("is-open"); o.querySelector(".faq-q").setAttribute("aria-expanded", false);
+      gsap.to(o.querySelector(".faq-a"), {height:0, duration:.6, ease:"expo.out"});
+    });
+    item.classList.toggle("is-open", open); b.setAttribute("aria-expanded", open);
+    gsap.to(item.querySelector(".faq-a"), {height:open ? "auto" : 0, duration:.7, ease:"expo.out"});
+  });
+  const ld = document.createElement("script"); ld.type = "application/ld+json";
+  ld.textContent = JSON.stringify({"@context":"https://schema.org", "@type":"FAQPage", mainEntity:FAQ.map(([q, a]) => ({"@type":"Question", name:q, acceptedAnswer:{"@type":"Answer", text:a}}))});
+  document.head.appendChild(ld);
+
+  // appel final : la photo glisse lentement, comme sur la home
+  const cb = $("closingBg"), cs = cb.parentElement;
+  if (!reduce) {
+    let ticking = false;
+    const place = () => {
+      ticking = false;
+      const r = cs.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
+      const p = (r.top + r.height / 2 - innerHeight / 2) / (innerHeight / 2 + r.height / 2);
+      cb.style.transform = `translate3d(0,${(p * -r.height * .12).toFixed(1)}px,0)`;
+    };
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(place); } }, {passive:true});
+    place();
+  }
+
+  /* entrée en scène : le hero dès l'arrivée, puis chaque élément en fondu quand il arrive à l'écran */
+  requestAnimationFrame(() => document.body.classList.add("is-ready"));
+  const hero = el => requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("is-in")));
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } }), {rootMargin:"0px 0px -8% 0px"});
+  document.querySelectorAll(".nc-fade").forEach((el, i) => {
+    const sib = [...el.parentElement.children].filter(c => c.classList.contains("nc-fade")).indexOf(el);
+    el.style.transitionDelay = el.closest(".nc-hero") ? `${.3 + i * .1}s` : `${Math.max(sib, 0) * .08}s`;
+    el.closest(".nc-hero") ? hero(el) : io.observe(el);
+  });
+})();
+</script>
+<script src="js/motion.js?v=4"></script>
+<script src="js/typo.js?v=5"></script>
+</body>
+</html>
