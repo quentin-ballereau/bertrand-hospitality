@@ -54,7 +54,8 @@ html,body{background:var(--cream)}
 .bl-pages ol a,.bl-pages ol span{display:block;padding:6px 2px;color:var(--muted);transition:color .3s var(--ease)}
 .bl-pages ol a:hover,.bl-pages ol [aria-current]{color:var(--ink)}
 .bl-pages > a{display:grid;place-items:center;width:32px;height:32px;color:var(--ink);transition:color .3s var(--ease),translate .4s var(--expo)}
-.bl-pages > a[aria-disabled="true"]{color:var(--muted);pointer-events:none}
+.bl-pages > a[aria-disabled="true"]{color:var(--line);pointer-events:none}
+.bl-pages[hidden]{display:none}
 .bl-pages > a:first-child:hover{translate:-3px 0}
 .bl-pages > a:last-child:hover{translate:3px 0}
 .bl-pages svg{width:15px;height:8px;fill:none;stroke:currentColor}
@@ -100,17 +101,8 @@ html,body{background:var(--cream)}
 
   <ul class="bl-list" id="posts"></ul>
 
-  <!-- la pagination (exemple : 48 pages) -->
-  <nav class="bl-pages bl-fade" aria-label="Pages du journal">
-    <a href="#" aria-label="Page précédente" aria-disabled="true"><svg viewBox="0 0 15 8" aria-hidden="true"><path d="M15 4H1M4.5 .5 1 4l3.5 3.5"/></svg></a>
-    <ol>
-      <li><a href="blog.html" aria-current="page">1</a></li>
-      <li><a href="#">2</a></li>
-      <li><span aria-hidden="true">…</span></li>
-      <li><a href="#">48</a></li>
-    </ol>
-    <a href="#" aria-label="Page suivante"><svg viewBox="0 0 15 8" aria-hidden="true"><path d="M0 4h14M10.5 .5 14 4l-3.5 3.5"/></svg></a>
-  </nav>
+  <!-- la pagination, remplie par le script : flèches et numéros, avec « … » quand il y a beaucoup de pages -->
+  <nav class="bl-pages bl-fade" id="pages" aria-label="Pages du journal"></nav>
 
   <!-- l'appel final de la home (Figma 6560-1198) : une carte crème posée sur la photo -->
   <section class="closing nc-closing" aria-labelledby="endTitle">
@@ -170,15 +162,70 @@ html,body{background:var(--cream)}
     {date:"2026-08-27", title:"Un anniversaire sur la Seine, à bord du Polpo", img:"assets/evenement/polpo", alt:"Une soirée sur la terrasse du Polpo, au bord de la Seine"},
     {date:"2026-07-09", title:"Afterworks d’été : nos terrasses préférées", img:"assets/evenement/meida", alt:"Un déjeuner baigné de soleil chez Meïda"},
     {date:"2026-06-18", title:"Le Procope, trois siècles de fêtes parisiennes", img:"assets/evenement/procope", alt:"La façade illuminée du Procope"},
+    {date:"2026-06-04", title:"Cinq idées de team building gourmand", jpg:"assets/lieux/bofinger.jpg", alt:"La salle de Bofinger"},
+    {date:"2026-05-21", title:"Recevoir à Versailles, à deux pas du château", jpg:"assets/lieux/angelina-versailles.jpg", alt:"Le salon d’Angelina à Versailles"},
+    {date:"2026-05-07", title:"Le brunch d’entreprise, un format qui rassemble", jpg:"assets/lieux/angelina-rivoli.jpg", alt:"Le salon de thé Angelina, rue de Rivoli"},
+    {date:"2026-04-23", title:"Une conférence de presse dans un lieu de caractère", jpg:"assets/lieux/vaudeville.jpg", alt:"La salle du Vaudeville"},
+    {date:"2026-04-09", title:"Fiançailles : réunir ses proches dans une brasserie parisienne", jpg:"assets/lieux/lipp.jpg", alt:"La salle de la Brasserie Lipp"},
+    {date:"2026-03-26", title:"Lancement de produit : faire du lieu un décor", jpg:"assets/lieux/public-house.jpg", alt:"La salle de Public House"},
+    {date:"2026-03-12", title:"Baptêmes et communions : nos salons pour les fêtes de famille", jpg:"assets/lieux/pavillon-lile.jpg", alt:"Le Pavillon de L’Île"},
+    {date:"2026-02-26", title:"Les terrasses à privatiser dès le printemps", jpg:"assets/lieux/terrasse-de-madame.jpg", alt:"La Terrasse de Madame, au jardin du Luxembourg"},
+    {date:"2026-02-12", title:"Saint-Valentin : un dîner à deux dans nos maisons", jpg:"assets/lieux/la-coupole.jpg", alt:"La salle de La Coupole"},
+    {date:"2026-01-29", title:"Vœux d’entreprise : réussir la cérémonie de début d’année", jpg:"assets/lieux/grand-cafe-capucines.jpg", alt:"Le Grand Café Capucines"},
+    {date:"2026-01-15", title:"Un séminaire au Disney Village, à deux pas des parcs", jpg:"assets/lieux/rosalie-disney-village-77.jpg", alt:"Rosalie, au Disney Village"},
+    {date:"2025-12-18", title:"Réveillon du Nouvel An : privatiser une brasserie", jpg:"assets/lieux/terminus-nord.jpg", alt:"La salle du Terminus Nord"},
   ];
   const day = d => new Date(d + "T12:00:00").toLocaleDateString("fr-FR", {day:"numeric", month:"long", year:"numeric"});
-  $("posts").innerHTML = POSTS.map((p, i) => `
-    <li class="bl-card${i ? "" : " bl-card--une"} bl-fade">
+  // la pagination : l'article le plus récent à la une puis six articles en page 1, six articles par page ensuite.
+  // La page est dans l'adresse (?page=2) : on peut la partager, et les boutons Précédent / Suivant du navigateur fonctionnent.
+  const FIRST = 7, PER = 6;
+  const pages = 1 + Math.ceil(Math.max(0, POSTS.length - FIRST) / PER);
+  const pageFrom = () => Math.min(pages, Math.max(1, parseInt(new URLSearchParams(location.search).get("page"), 10) || 1));
+  const href = n => n > 1 ? `blog.html?page=${n}` : "blog.html";
+  const card = (p, une) => `
+    <li class="bl-card${une ? " bl-card--une" : ""} bl-fade">
       <a href="#">
-        <span class="bl-ph"><img src="${p.img}${i ? "-1280" : ""}.webp" srcset="${p.img}-1280.webp 1280w, ${p.img}.webp 1536w" sizes="${i ? "(max-width:767px) 100vw, 50vw" : "100vw"}" alt="${p.alt}" loading="${i ? "lazy" : "eager"}"></span>
+        <span class="bl-ph">${p.img
+          ? `<img src="${p.img}${une ? "" : "-1280"}.webp" srcset="${p.img}-1280.webp 1280w, ${p.img}.webp 1536w" sizes="${une ? "100vw" : "(max-width:767px) 100vw, 50vw"}" alt="${p.alt}" loading="${une ? "eager" : "lazy"}">`
+          : `<img src="${p.jpg}" alt="${p.alt}" loading="lazy">`}</span>
         <span class="bl-txt"><time class="t-cta" datetime="${p.date}">${day(p.date)}</time><h2>${p.title}</h2></span>
       </a>
-    </li>`).join("");
+    </li>`;
+  // les numéros : tous s'il y en a peu, sinon la première, la dernière et les voisines de la page en cours, séparées par « … »
+  const numbers = cur => {
+    if (pages <= 5) return [...Array(pages)].map((_, i) => i + 1);
+    const keep = new Set([1, pages, cur - 1, cur, cur + 1].filter(n => n >= 1 && n <= pages)), out = [];
+    [...keep].sort((a, b) => a - b).forEach((n, i, all) => { if (i && n - all[i - 1] > 1) out.push("…"); out.push(n); });
+    return out;
+  };
+  const arrow = (n, label, d) => n < 1 || n > pages
+    ? `<a aria-label="${label}" aria-disabled="true"><svg viewBox="0 0 15 8" aria-hidden="true"><path d="${d}"/></svg></a>`
+    : `<a href="${href(n)}" data-page="${n}" aria-label="${label}"><svg viewBox="0 0 15 8" aria-hidden="true"><path d="${d}"/></svg></a>`;
+  const render = cur => {
+    const list = cur === 1 ? POSTS.slice(0, FIRST) : POSTS.slice(FIRST + (cur - 2) * PER, FIRST + (cur - 1) * PER);
+    $("posts").innerHTML = list.map((p, i) => card(p, cur === 1 && !i)).join("");
+    $("pages").hidden = pages < 2;
+    $("pages").innerHTML = arrow(cur - 1, "Page précédente", "M15 4H1M4.5 .5 1 4l3.5 3.5")
+      + `<ol>${numbers(cur).map(n => n === "…" ? `<li><span aria-hidden="true">…</span></li>`
+          : `<li><a href="${href(n)}" data-page="${n}"${n === cur ? ' aria-current="page"' : ""} aria-label="Page ${n}">${n}</a></li>`).join("")}</ol>`
+      + arrow(cur + 1, "Page suivante", "M0 4h14M10.5 .5 14 4l-3.5 3.5");
+    document.title = (cur > 1 ? `Page ${cur} · ` : "") + "Le journal : idées pour recevoir — Bertrand Hospitality";
+  };
+  let current = pageFrom();
+  render(current);
+  const go = (n, push) => {
+    if (n === current) return;
+    current = n; if (push) history.pushState({page:n}, "", href(n));
+    render(n); reveal();
+    // retour en haut de la liste, en douceur
+    const top = $("posts").getBoundingClientRect().top + scrollY - 140;
+    window.__lenis ? window.__lenis.scrollTo(top, {duration:1}) : scrollTo({top, behavior:reduce ? "auto" : "smooth"});
+  };
+  $("pages").addEventListener("click", e => {
+    const a = e.target.closest("a[data-page]"); if (!a) return;
+    e.preventDefault(); go(+a.dataset.page, true);
+  });
+  addEventListener("popstate", () => go(pageFrom(), false));
 
   // appel final : la photo glisse lentement, comme sur la home
   const cb = $("closingBg"), cs = cb.parentElement;
@@ -194,12 +241,18 @@ html,body{background:var(--cream)}
     place();
   }
 
-  /* entrée en scène : l'introduction dès l'arrivée, puis chaque article en fondu quand il arrive à l'écran */
+  /* entrée en scène : l'introduction dès l'arrivée, puis chaque article en fondu quand il arrive à l'écran
+     (à chaque changement de page, les nouveaux articles apparaissent de la même façon) */
+  function reveal() {
+    const later = fn => requestAnimationFrame(() => requestAnimationFrame(fn));
+    document.querySelectorAll(".bl-fade:not(.is-in)").forEach((el, i) => {
+      if (el.closest(".bl-head")) { el.style.transitionDelay = `${.1 + i * .08}s`; later(() => el.classList.add("is-in")); }
+      else if (el.getBoundingClientRect().top < innerHeight) { el.style.transitionDelay = el.matches(":nth-child(even)") ? ".08s" : "0s"; later(() => el.classList.add("is-in")); }
+      else { el.style.transitionDelay = el.matches(":nth-child(even)") ? ".08s" : "0s"; io.observe(el); }
+    });
+  }
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } }), {rootMargin:"0px 0px -8% 0px"});
-  document.querySelectorAll(".bl-fade").forEach((el, i) => {
-    if (el.closest(".bl-head")) { el.style.transitionDelay = `${.1 + i * .08}s`; requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("is-in"))); }
-    else { el.style.transitionDelay = el.matches(":nth-child(odd)") ? ".08s" : "0s"; io.observe(el); }
-  });
+  reveal();
 })();
 </script>
 <script src="js/motion.js?v=3"></script>
