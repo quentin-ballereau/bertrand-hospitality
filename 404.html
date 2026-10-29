@@ -29,8 +29,8 @@ html,body{height:100%;overflow:hidden;background:var(--cream);overscroll-behavio
 .er-wall{position:fixed;inset:0;z-index:1;overflow:hidden;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
 .er-wall.is-dragging{cursor:grabbing}
 .er-tile{position:absolute;left:0;top:0;margin:0;background:var(--cream-2);will-change:transform;overflow:hidden}
-.er-tile img{display:block;width:100%;height:100%;object-fit:cover;opacity:0;scale:1.08;transition:opacity 1.2s var(--ease),scale 2.4s var(--expo);-webkit-user-drag:none;pointer-events:none}
-.er-tile img.is-on{opacity:1;scale:1}
+.er-tile img{display:block;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s var(--ease);-webkit-user-drag:none;pointer-events:none}
+.er-tile img.is-on{opacity:1}
 /* un voile noir très léger, pour que le texte blanc se lise un peu mieux sans changer les photos */
 .er-tile::after{content:"";position:absolute;inset:0;background:rgba(29,29,27,.12);pointer-events:none}
 
@@ -110,10 +110,10 @@ html,body{height:100%;overflow:hidden;background:var(--cream);overscroll-behavio
 
   // le déplacement : la cible suit la souris, la position la rejoint en douceur
   let x = -CW / 2, y = -CH / 2, tx = x, ty = y;
-  // à l'arrivée, tout le mur glisse doucement jusqu'à sa place, chaque photo à sa propre vitesse, comme posée sur l'eau
+  // à l'arrivée, tout le mur glisse un peu, d'un seul bloc, pour montrer qu'il bouge
   let intro = reduce ? 0 : 1;   // de 1 (début) à 0 (en place)
-  const t0 = performance.now() + 150, DX = 160, DY = 110;
-  const depth = (c, r) => .55 + mod(c * 37 + r * 61, 10) / 10;   // de 0,55 à 1,45 selon la photo
+  let t0 = Infinity;   // le glissé démarre une fois les premières photos chargées, pour ne pas mêler chargement et mouvement
+  const DX = 90, DY = 60, DUR = 2200;
 
   // le titre en blanc, par-dessus, visible seulement là où une photo passe sous lui
   const ink = document.getElementById("title"), white = ink.cloneNode(true);
@@ -138,26 +138,22 @@ html,body{height:100%;overflow:hidden;background:var(--cream);overscroll-behavio
 
   const render = now => {
     if (intro > 0) {
-      const k = Math.min(1, Math.max(0, (now - t0) / 2800));
-      intro = 1 - (1 - Math.pow(2, -10 * k));   // expo
-      if (k >= 1) intro = 0;
+      const k = Math.min(1, Math.max(0, (now - t0) / DUR));
+      intro = Math.pow(1 - k, 3);   // ralentit en douceur jusqu'à l'arrêt
     }
     x += (tx - x) * .1; y += (ty - y) * .1;
-    const pad = 160;
-    // les cases à l'écran, en tenant compte du resserrement de l'arrivée
-    const ex = DX * 1.5 * intro, ey = DY * 1.5 * intro;   // les photos qui arrivent de hors champ
-    const wx0 = -pad - x - ex, wx1 = W + pad - x;
-    const wy0 = -pad - y - CH - ey, wy1 = H + pad - y;
+    const X = x + DX * intro, Y = y + DY * intro, pad = 160;
+    // les cases à l'écran
+    const wx0 = -pad - X, wx1 = W + pad - X;
+    const wy0 = -pad - Y - CH, wy1 = H + pad - Y;
     const c0 = Math.floor(wx0 / CW), c1 = Math.floor(wx1 / CW), r0 = Math.floor(wy0 / CH), r1 = Math.floor(wy1 / CH);
     const seen = new Set(), cut = [];
     for (let c = c0; c <= c1; c++) for (let r = r0; r <= r1; r++) {
       const key = c + "," + r; seen.add(key);
       const t = tileFor(key), [name, ratio] = photoAt(c, r);
       const w = ratio < 1 ? TW * .62 : TW, h = w / ratio;
-      const mx = c * CW + CW / 2 + x, my = r * CH + CH / 2 + y + (mod(c, 2) ? CH * .38 : 0);
-      const d = intro ? depth(c, r) * intro : 0;
-      const sx = mx + DX * d - w / 2, sy = my + DY * d - h / 2;
-      t.style.width = w + "px"; t.style.height = h + "px";
+      const sx = c * CW + CW / 2 + X - w / 2, sy = r * CH + CH / 2 + Y + (mod(c, 2) ? CH * .38 : 0) - h / 2;
+      if (t._w !== w) { t._w = w; t.style.width = w + "px"; t.style.height = h + "px"; }   // la taille ne change qu'au recyclage : pas de recalcul à chaque image
       t.style.transform = `translate3d(${sx.toFixed(1)}px,${sy.toFixed(1)}px,0)`;
       if (box && sx < box.r && sx + w > box.l && sy < box.b && sy + h > box.t && t.firstChild.classList.contains("is-on"))
         cut.push(`M${sx.toFixed(1)} ${sy.toFixed(1)}h${w.toFixed(1)}v${h.toFixed(1)}h${(-w).toFixed(1)}Z`);
@@ -172,7 +168,12 @@ html,body{height:100%;overflow:hidden;background:var(--cream);overscroll-behavio
     for (const [key, t] of live) if (!seen.has(key)) { live.delete(key); t.style.transform = "translate3d(-9999px,0,0)"; pool.push(t); }
     requestAnimationFrame(render);
   };
-  requestAnimationFrame(render);
+  requestAnimationFrame(now => {
+    render(now);
+    // les photos de départ sont posées : on attend qu'elles soient chargées (1,2 s au plus) pour lancer le glissé
+    const first = [...wall.querySelectorAll("img")].map(i => i.decode().catch(() => {}));
+    Promise.race([Promise.all(first), new Promise(r => setTimeout(r, 1200))]).then(() => { t0 = performance.now(); });
+  });
 
   // glisser à la souris ou au doigt, avec un peu d'élan au lâcher
   let drag = null;
