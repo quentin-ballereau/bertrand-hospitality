@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nous contacter — Bertrand Hospitality</title>
+<meta name="description" content="Une question, une demande particulière, la presse ou un partenariat : écrivez à l’équipe de Bertrand Hospitality, elle vous répond sous 24 heures ouvrées.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bertrand Hospitality">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Nous contacter — Bertrand Hospitality">
+<meta property="og:description" content="Une question, une demande particulière, la presse ou un partenariat : écrivez à l’équipe de Bertrand Hospitality, elle vous répond sous 24 heures ouvrées.">
+<meta property="og:url" content="https://bertrand-hospitality-poc.vercel.app/contact.html">
+<meta property="og:image" content="https://bertrand-hospitality-poc.vercel.app/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Bertrand Hospitality">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://bertrand-hospitality-poc.vercel.app/assets/og.png">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/base.css?v=18">
+<style>
+/* Contact : la page de demande de devis (devis.html), même structure et même style, pour les demandes qui ne sont pas un devis.
+   L'objet choisi aiguille la demande : un événement à organiser renvoie vers la demande de devis, le recrutement et les
+   coffrets cadeaux vers leurs plateformes ; les autres objets (suivi, presse, facturation…) passent par ce formulaire.
+   Pré-remplissage possible : contact.html?objet=presse. En production, l'envoi part vers une boîte dédiée (pas BookingShake),
+   puis la page de remerciement, version contact (merci.html?demande=contact). */
+html,body{background:var(--cream)}
+.dv-logo{position:fixed;top:32px;left:25%;transform:translateX(-50%);z-index:8;display:block}   /* pas de menu sur cette page : seul le logo, en blanc, centré en haut de la photo, ramène à l’accueil ; il reste avec la photo, fixe */
+.dv-logo img{display:block;width:164px;height:32px}
+
+.t-h2{font-family:var(--serif);font-weight:400;font-size:40px;letter-spacing:.02em;text-transform:uppercase;line-height:1.1;text-box:trim-both cap alphabetic}
+.t-h5{font-family:var(--serif);font-weight:400;font-size:18px;letter-spacing:.02em;text-transform:uppercase;line-height:1.1;text-box:trim-both cap alphabetic}
+.t-cta,.t-mini{font-family:var(--caps);font-weight:400;text-transform:uppercase;letter-spacing:.14em;line-height:1.3;text-box:trim-both cap alphabetic}
+.t-cta{font-size:14px}
+.t-mini{font-size:12px}
+.t-text{font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink-soft);text-box:trim-both cap alphabetic}
+.t-eyebrow{color:var(--taupe)}
+
+/* la page : deux moitiés, la photo sur toute la hauteur de l'écran, le formulaire (100 px de marges, 440 px de large au plus) */
+.dv{display:grid;grid-template-columns:1fr 1fr;align-items:start}
+.dv > *{min-width:0}   /* la liste des objets ne doit pas élargir la colonne */
+.dv-aside{position:sticky;top:0;height:100svh}
+.dv-photo{position:absolute;inset:0;overflow:hidden;background:var(--ink)}
+.dv-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;transition:opacity .8s var(--ease)}
+.dv-photo::after{content:"";position:absolute;inset:0 0 auto;height:160px;background:linear-gradient(180deg,rgba(29,29,27,.45),rgba(29,29,27,0))}   /* le logo reste lisible */
+.dv-main{display:flex;flex-direction:column;gap:48px;width:min(100%,640px);padding:96px 100px 100px}
+
+/* en-tête */
+.dv-head{display:flex;flex-direction:column;gap:32px}
+.dv-head > div{display:flex;flex-direction:column;gap:24px}
+
+/* blocs : un filet, le titre numéroté, puis les champs, 32 px entre chaque */
+.dv-form{display:flex;flex-direction:column;gap:48px}
+.dv-block{display:flex;flex-direction:column;gap:32px;padding-top:32px;border-top:1px solid var(--line)}
+.dv-row{display:grid;grid-template-columns:1fr 1fr;gap:32px 16px}
+
+.fld{position:relative;display:flex;flex-direction:column;gap:16px}
+.fld > label,.fld > .lbl{font-family:var(--caps);font-size:14px;letter-spacing:.14em;line-height:1.3;text-transform:uppercase;color:var(--taupe);text-box:trim-both cap alphabetic}
+.fld input,.fld select,.fld textarea{width:100%;height:40px;font:300 14px/1.4 var(--sans);letter-spacing:-.02em;color:var(--ink);background:transparent;border:.5px solid var(--taupe);border-radius:0;padding:10px 12px;outline:none;transition:border-color .3s var(--ease),box-shadow .3s var(--ease);-webkit-appearance:none;appearance:none}
+.fld textarea{height:auto;min-height:138px;resize:none;overflow:hidden}   /* grandit avec le texte (script), sans poignée */
+.fld select{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14'%3E%3Cpath d='M2 5l5 5 5-5' fill='none' stroke='%238A8480' stroke-width='1.2'/%3E%3C/svg%3E") right 12px center no-repeat;padding-right:36px;cursor:pointer}
+.fld select:invalid,.fld select.is-empty{color:var(--muted)}
+.fld input::placeholder,.fld textarea::placeholder{color:var(--muted)}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--ink);box-shadow:inset 0 0 0 .5px var(--ink)}
+.fld.is-bad input,.fld.is-bad select,.fld.is-bad textarea{border-color:#a0453a;box-shadow:inset 0 0 0 .5px #a0453a}
+.err{display:none;font-size:12px;font-weight:300;line-height:1.3;color:#a0453a;margin-top:-6px}
+.fld.is-bad .err{display:block}
+
+.send{display:flex;align-items:center;justify-content:center;gap:12px;height:52px;width:100%;padding:0 24px;background:var(--taupe);color:#fff;font-family:var(--caps);font-size:14px;letter-spacing:.14em;text-transform:uppercase;transition:background .45s var(--ease)}
+.send:hover{background:var(--ink)}
+.send svg{transition:transform .4s var(--ease)}
+.send:hover svg{transform:translateX(4px)}
+.send[disabled]{opacity:.6;cursor:wait}
+.dv-alt{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.dv-alt .t-text{color:var(--ink)}
+.dv-alt .ul{font-size:14px;color:var(--taupe)}
+/* consentement : case dessinée de 14 px, centrée sur la hauteur des capitales de la première ligne */
+.chk{display:flex;gap:12px;align-items:flex-start;font-size:12px;font-weight:300;line-height:1.4;color:var(--ink-soft);cursor:pointer}
+.chk > span{text-box:trim-both cap alphabetic}
+.chk input{flex:0 0 14px;width:14px;height:14px;margin:calc((1cap - 14px) / 2) 0 0;-webkit-appearance:none;appearance:none;border:.5px solid var(--taupe);border-radius:0;background:transparent;cursor:pointer;display:grid;place-content:center;transition:background .25s var(--ease),border-color .25s var(--ease)}
+.chk input::after{content:"";width:7px;height:4px;border-left:1px solid #fff;border-bottom:1px solid #fff;transform:translateY(-1px) rotate(-45deg);opacity:0;transition:opacity .2s}
+.chk input:checked{background:var(--taupe)}
+.chk input:checked::after{opacity:1}
+.chk input:focus-visible{outline:1px solid var(--ink);outline-offset:3px}
+.chk.is-bad input{border-color:#a0453a}
+.chk.is-bad .err{display:block;margin-top:8px}
+.chk a{text-decoration:underline;text-underline-offset:3px}
+
+/* l'aiguillage : quand l'objet relève d'une autre page, une note la propose et le reste du formulaire s'efface */
+.ct-note{display:none;flex-direction:column;align-items:flex-start;gap:24px;padding:32px;background:var(--white)}
+.ct-note.is-on{display:flex}
+.ct-note .t-text{color:var(--ink-soft)}
+.ct-note .go{display:inline-flex;align-items:center;gap:12px;padding:16px 22px;background:var(--taupe);color:#fff;font-family:var(--caps);font-size:14px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;transition:background .45s var(--ease)}
+.ct-note .go:hover{background:var(--ink)}
+.dv-block[hidden]{display:none}
+
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* pied de page réduit à sa dernière ligne */
+.dv-foot{position:relative;z-index:1;display:flex;justify-content:space-between;gap:16px 24px;padding:24px var(--gutter) 23px;border-top:.5px solid var(--line);background:var(--cream);color:var(--muted)}
+.dv-foot nav{display:flex;flex-wrap:wrap;gap:12px 24px}
+.dv-foot a{transition:color .35s var(--ease)}
+.dv-foot a:hover{color:var(--ink)}
+
+@media (max-width:1023px){
+  .dv{grid-template-columns:1fr}
+  .dv-aside{position:relative;height:46svh;min-height:320px}
+  .dv-main{width:min(100%,648px);padding:64px var(--gutter) 80px}
+  .dv-logo{position:absolute;left:50%}   /* la photo passe au-dessus du formulaire et défile : le logo part avec elle */
+  .dv-foot{flex-direction:column;align-items:center;text-align:center}
+  .dv-foot nav{justify-content:center}
+}
+@media (max-width:767px){
+  .dv-logo{top:20px}
+  .dv-logo img{width:123px;height:24px}
+  .t-h2{font-size:28px}
+  .dv-main{padding-top:48px}
+  .dv-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<a class="dv-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
+
+<main class="dv" id="dv">
+  <aside class="dv-aside" aria-hidden="true">
+    <div class="dv-photo"><img id="photo" src="assets/evenement/procope.webp" alt=""></div>
+  </aside>
+
+  <div class="dv-main">
+    <div class="dv-head">
+      <div><p class="t-cta t-eyebrow">Contact</p><h1 class="t-h2">Écrivez-nous</h1></div>
+      <p class="t-text">Une question, une demande particulière, la presse ou un partenariat&nbsp;: notre équipe vous répond sous 24&nbsp;heures ouvrées. Vous pouvez aussi nous appeler au <a href="tel:+33764070661">07&nbsp;64&nbsp;07&nbsp;06&nbsp;61</a>.</p>
+    </div>
+
+    <form class="dv-form" id="form" novalidate>
+      <section class="dv-block" aria-labelledby="b1">
+        <h2 class="t-h5" id="b1">01. Votre demande</h2>
+        <div class="fld">
+          <label for="objet">Objet</label>
+          <select id="objet" name="objet" required>
+            <option value="" selected disabled>Choisissez un objet</option>
+            <option value="evenement">Organiser un événement</option>
+            <option value="suivi">Suivi d’un événement réservé</option>
+            <option value="presse">Presse et partenariats</option>
+            <option value="facturation">Facturation</option>
+            <option value="recrutement">Recrutement</option>
+            <option value="coffrets">Coffrets cadeaux</option>
+            <option value="autre">Autre demande</option>
+          </select>
+          <span class="err">Choisissez l’objet de votre demande.</span>
+        </div>
+        <div class="ct-note" id="note" aria-live="polite"><p class="t-text" id="noteText"></p><a class="go" id="noteLink" href="devis.html"><span id="noteLabel"></span><svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></a></div>
+      </section>
+
+      <section class="dv-block" aria-labelledby="b2" data-msg>
+        <h2 class="t-h5" id="b2">02. Vos coordonnées</h2>
+        <div class="dv-row">
+          <div class="fld"><label for="prenom">Prénom</label><input id="prenom" name="prenom" autocomplete="given-name" required><span class="err">Indiquez votre prénom.</span></div>
+          <div class="fld"><label for="nom">Nom</label><input id="nom" name="nom" autocomplete="family-name" required><span class="err">Indiquez votre nom.</span></div>
+          <div class="fld"><label for="email">E-mail</label><input id="email" name="email" type="email" autocomplete="email" required><span class="err">Indiquez une adresse e-mail valide.</span></div>
+          <div class="fld"><label for="tel">Téléphone (facultatif)</label><input id="tel" name="tel" type="tel" autocomplete="tel"></div>
+        </div>
+        <div class="fld"><label for="societe">Société (facultatif)</label><input id="societe" name="societe" autocomplete="organization"></div>
+      </section>
+
+      <section class="dv-block" aria-labelledby="b3" data-msg>
+        <h2 class="t-h5" id="b3">03. Votre message</h2>
+        <div class="fld">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" required></textarea>
+          <span class="err">Écrivez votre message.</span>
+        </div>
+        <label class="chk" id="rgpdChk"><input type="checkbox" name="rgpd" id="rgpd" required><span>J’accepte que ces informations soient utilisées par Bertrand Hospitality pour traiter ma demande. <a href="confidentialite.html" target="_blank">Politique de confidentialité</a><span class="err">Cochez cette case pour envoyer votre message.</span></span></label>
+        <button class="send" type="submit">Envoyer mon message<svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg></button>
+        <div class="dv-alt"><p class="t-text">Vous préférez en parler&nbsp;?</p><a class="ul caps" href="tel:+33764070661">07 64 07 06 61</a></div>
+      </section>
+    </form>
+  </div>
+</main>
+
+<footer class="dv-foot t-mini">
+  <span>© 2026 Bertrand Hospitality</span>
+  <nav aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="cookies.html">Cookies</a><a href="https://bertrand-hospitality.com/" target="_blank" rel="noopener">Groupe Bertrand</a><a href="https://www.digidop.com" target="_blank" rel="noopener">Site web par Digidop</a></nav>
+</footer>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const params = new URLSearchParams(location.search);
+
+  /* l'aiguillage : ces objets ont leur propre page, on la propose plutôt que d'envoyer un message */
+  const ROUTES = {
+    evenement:{text:"Pour organiser un événement, la demande de devis est plus rapide&nbsp;: elle arrive directement à notre équipe événementielle, qui vous propose les lieux qui s’y prêtent sous 24&nbsp;heures ouvrées.", label:"Demander un devis", href:"devis.html"},
+    recrutement:{text:"Toutes nos offres d’emploi, en salle, en cuisine comme au siège, sont sur notre plateforme de recrutement. Vous pouvez y postuler directement.", label:"Voir les offres", href:"https://recrutement.bertrand-hospitality.com/fr", ext:true},
+    coffrets:{text:"Nos coffrets cadeaux se choisissent et s’achètent en ligne, sur la boutique du Groupe Bertrand.", label:"Voir les coffrets", href:"https://groupebertrand.bonkdo.com/fr/destinations/", ext:true},
+  };
+  const route = () => {
+    const r = ROUTES[$("objet").value];
+    $("objet").classList.toggle("is-empty", !$("objet").value);
+    $("note").classList.toggle("is-on", !!r);
+    document.querySelectorAll("[data-msg]").forEach(b => b.hidden = !!r);
+    if (!r) return;
+    $("noteText").innerHTML = r.text; $("noteLabel").textContent = r.label; $("noteLink").href = r.href;
+    r.ext ? ($("noteLink").target = "_blank", $("noteLink").rel = "noopener") : ($("noteLink").removeAttribute("target"), $("noteLink").removeAttribute("rel"));
+  };
+  if ([...$("objet").options].some(o => o.value && o.value === params.get("objet"))) $("objet").value = params.get("objet");
+  $("objet").addEventListener("change", () => { route(); check("objet"); });
+  route();
+
+  // le message grandit avec le texte
+  const msg = $("message");
+  msg.addEventListener("input", () => { msg.style.height = "auto"; msg.style.height = msg.scrollHeight + "px"; });
+
+  /* vérification simple, champ par champ, au moment d'envoyer puis à la saisie */
+  const rules = {
+    objet: el => !!el.value,
+    prenom: el => el.value.trim().length > 0,
+    nom: el => el.value.trim().length > 0,
+    email: el => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(el.value.trim()),
+    message: el => el.value.trim().length > 0,
+  };
+  const check = id => { const ok = rules[id]($(id)); $(id).closest(".fld").classList.toggle("is-bad", !ok); $(id).setAttribute("aria-invalid", !ok); return ok; };
+  $("rgpd").addEventListener("change", () => $("rgpdChk").classList.toggle("is-bad", !$("rgpd").checked));
+  Object.keys(rules).forEach(id => $(id).addEventListener("input", () => { if ($(id).closest(".fld").classList.contains("is-bad")) check(id); }));
+
+  $("form").addEventListener("submit", e => {
+    e.preventDefault();
+    if (ROUTES[$("objet").value]) return;   // la note propose déjà la bonne page
+    const bad = Object.keys(rules).filter(id => !check(id));
+    const rgpd = $("rgpd").checked; $("rgpdChk").classList.toggle("is-bad", !rgpd);
+    if (bad.length || !rgpd) { (bad.length ? $(bad[0]) : $("rgpd")).focus(); return; }
+    // POC : pas d'envoi réel. En production : une boîte dédiée (ou Make), puis la page de remerciement, version contact
+    const btn = e.submitter || document.querySelector(".send");
+    btn.disabled = true;
+    // le prénom suit dans la session de l'onglet (jamais dans l'adresse), pour dire « Merci, Claire » sur la page suivante
+    try { sessionStorage.setItem("bh-prenom", $("prenom").value.trim()); } catch (err) {}
+    setTimeout(() => { location.href = "merci.html?demande=contact"; }, 400);
+  });
+})();
+</script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="js/motion.js?v=4"></script>
+<script src="js/typo.js?v=5"></script>
+</body>
+</html>
