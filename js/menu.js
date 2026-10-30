@@ -8,12 +8,12 @@
 (() => {
   const ARROW = '<svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h15M11 1l4 4-4 4" stroke="currentColor"/></svg>';
   const ITEMS = [
-    {label:"Nos lieux", href:"lieux.html", img:"assets/menu/nos-lieux.webp"},
-    {label:"Événements", href:"offres.html", img:"assets/menu/evenements.webp"},
-    {label:"Nous connaître", href:"nous-connaitre.html", img:"assets/menu/nous-connaitre.webp"},
-    {label:"Engagement RSE", href:"engagement.html", img:"assets/menu/engagement-rse.webp"},
-    {label:"Hôtels", href:"hotels.html", img:"assets/menu/hotels.webp"},
-    {label:"Journal", href:"blog.html", img:"assets/menu/journal.webp"},
+    {label:"Nos lieux", href:"lieux.html", img:"assets/menu/nos-lieux.webp?v=2"},
+    {label:"Événements", href:"offres.html", img:"assets/menu/evenements.webp?v=2"},
+    {label:"Nous connaître", href:"nous-connaitre.html", img:"assets/menu/nous-connaitre.webp?v=2"},
+    {label:"Engagement RSE", href:"engagement.html", img:"assets/menu/engagement-rse.webp?v=2"},
+    {label:"Hôtels", href:"hotels.html", img:"assets/menu/hotels.webp?v=2"},
+    {label:"Journal", href:"blog.html", img:"assets/menu/journal.webp?v=2"},
   ];
   // deux lignes de liens, comme dans le Figma
   const SECONDARY = [[["FAQ", "faq.html"], ["Coffrets cadeaux", "https://groupebertrand.bonkdo.com/fr/destinations/"]], [["Nous rejoindre", "https://recrutement.bertrand-hospitality.com/fr"], ["Bertrand Hospitality", "https://bertrand-hospitality.com/"]]];
