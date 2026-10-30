@@ -2,14 +2,46 @@
   "redirects": [
     {
       "source": "/",
-      "has": [{ "type": "host", "value": "bertrand-hospitality-poc.vercel.app" }],
-      "destination": "https://evenements-bertrand-hospitality.vercel.app/",
+      "has": [
+        {
+          "type": "host",
+          "value": "bertrand-hospitality-poc.vercel.app"
+        }
+      ],
+      "destination": "https://evenement-bertrand-hospitality.vercel.app/",
       "permanent": false
     },
     {
       "source": "/:path+",
-      "has": [{ "type": "host", "value": "bertrand-hospitality-poc.vercel.app" }],
-      "destination": "https://evenements-bertrand-hospitality.vercel.app/:path+",
+      "has": [
+        {
+          "type": "host",
+          "value": "bertrand-hospitality-poc.vercel.app"
+        }
+      ],
+      "destination": "https://evenement-bertrand-hospitality.vercel.app/:path+",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "evenements-bertrand-hospitality.vercel.app"
+        }
+      ],
+      "destination": "https://evenement-bertrand-hospitality.vercel.app/",
+      "permanent": false
+    },
+    {
+      "source": "/:path+",
+      "has": [
+        {
+          "type": "host",
+          "value": "evenements-bertrand-hospitality.vercel.app"
+        }
+      ],
+      "destination": "https://evenement-bertrand-hospitality.vercel.app/:path+",
       "permanent": false
     }
   ]
