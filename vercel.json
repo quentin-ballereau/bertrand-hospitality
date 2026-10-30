@@ -1,9 +1,15 @@
 {
   "redirects": [
     {
-      "source": "/:path*",
+      "source": "/",
       "has": [{ "type": "host", "value": "bertrand-hospitality-poc.vercel.app" }],
-      "destination": "https://evenements-bertrand-hospitality.vercel.app/:path*",
+      "destination": "https://evenements-bertrand-hospitality.vercel.app/",
+      "permanent": false
+    },
+    {
+      "source": "/:path+",
+      "has": [{ "type": "host", "value": "bertrand-hospitality-poc.vercel.app" }],
+      "destination": "https://evenements-bertrand-hospitality.vercel.app/:path+",
       "permanent": false
     }
   ]
