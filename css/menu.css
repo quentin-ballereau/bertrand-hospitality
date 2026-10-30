@@ -42,7 +42,7 @@
 .mnu-quote:hover{background:var(--ink)}
 .mnu-quote svg{transition:transform .4s var(--ease)}
 .mnu-quote:hover svg{transform:translateX(4px)}
-.mnu-tel{display:flex;align-items:center;justify-content:center;gap:16px}
+.mnu-tel{display:flex;align-items:baseline;justify-content:center;gap:16px}   /* le texte et le numéro sur la même ligne de base, le trait du lien en dessous */
 /* « Ou appelez-nous » au style du texte courant, le numéro en lien secondaire (comme « Vous préférez en parler ? » du devis) */
 .mnu-tel span{font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink);text-box:trim-both cap alphabetic}
 .mnu-tel a{font-size:14px;color:var(--taupe)}
