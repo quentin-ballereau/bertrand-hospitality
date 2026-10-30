@@ -10,9 +10,9 @@
 :root{
   --ink:#1d1d1b;            /* noir du Figma */
   --ink-soft:#4a4744;
-  --muted:#8a8480;
+  --muted:#77716e;          /* gris des textes secondaires : #8A8480 du Figma assombri pour un contraste de 4,5:1 */
   --cream:#faf8f7;          /* crème du Figma */
-  --taupe:#8d7974;          /* beige des boutons et liens d'action */
+  --taupe:#806e69;          /* beige des boutons et liens d’action : #8D7974 du Figma assombri de 9 % pour un contraste de 4,5:1 (texte et boutons) */
   --cream-2:#f3efeb;
   --line:#e6e1dd;
   --white:#fff;

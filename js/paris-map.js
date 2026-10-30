@@ -93,7 +93,7 @@ BH.parisMap = (box, opts = {}) => {
       <div class="pm-pins"></div>
     </div>
     <div class="pm-frame" aria-hidden="true"></div>
-    <a class="pm-zone-tip" href="#" tabindex="-1"></a>
+    <a class="pm-zone-tip" href="#" tabindex="-1" aria-hidden="true"></a>
     <div class="pm-ctrl">
       <button type="button" data-zoom="in" aria-label="Zoomer"><svg viewBox="0 0 14 14"><path d="M7 1v12M1 7h12"/></svg></button>
       <button type="button" data-zoom="out" aria-label="Dézoomer"><svg viewBox="0 0 14 14"><path d="M1 7h12"/></svg></button>

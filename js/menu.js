@@ -21,7 +21,7 @@
   const link = ([l, h]) => `<a class="ul" href="${h}"${/^http/.test(h) ? ' target="_blank" rel="noopener"' : ""}>${l}</a>`;
 
   const root = document.createElement("div");
-  root.className = "mnu"; root.setAttribute("aria-hidden", "true");
+  root.className = "mnu"; root.setAttribute("aria-hidden", "true"); root.inert = true;   // fermé, le menu n’est ni lu ni atteignable au clavier
   root.innerHTML = `
     <div class="mnu-veil"></div>
     <div class="mnu-media" aria-hidden="true">${ITEMS.map((it, i) => `<img data-src="${it.img}" alt="" data-i="${i}">`).join("")}</div>
@@ -103,7 +103,7 @@
     if (open) return; open = true;
     imgs.forEach(im => { if (!im.src) im.src = im.dataset.src; });   // photos chargées à la première ouverture seulement
     placeButton();
-    root.classList.add("is-open"); root.setAttribute("aria-hidden", "false");
+    root.classList.add("is-open"); root.setAttribute("aria-hidden", "false"); root.inert = false;
     if (trigger) { trigger.style.visibility = "hidden"; trigger.setAttribute("aria-expanded", "true"); }
     lockScroll(true);
     requestAnimationFrame(() => btn.classList.add("is-x"));   // la croix et le passage au noir : transitions CSS de 0,4 s
@@ -127,7 +127,7 @@
     const last = anim(veil, [{opacity:0}], 500, "ease", 200);
     Promise.all([last.finished, back.finished]).then(() => {   // le bouton cloné reste jusqu'à la fin du fondu de « menu »
       if (open) return;
-      root.classList.remove("is-open"); root.setAttribute("aria-hidden", "true"); lockScroll(false);
+      root.classList.remove("is-open"); root.setAttribute("aria-hidden", "true"); root.inert = true; lockScroll(false);
       if (trigger) { trigger.style.visibility = ""; trigger.setAttribute("aria-expanded", "false"); trigger.focus({preventScroll:true}); }
     }).catch(() => {});
   }
