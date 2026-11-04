@@ -32,11 +32,11 @@ html,body{background:var(--cream)}
 .lg-part li + li{margin-top:6px}
 /* les coordonnées : une ligne par information, le libellé à gauche */
 .lg-part dl{display:grid;grid-template-columns:240px 1fr;gap:10px 24px;margin:0}
-.lg-part dt{font-family:var(--caps);font-size:12px;letter-spacing:.14em;text-transform:uppercase;line-height:1.9;color:var(--taupe)}
+.lg-part dt{font-family:var(--caps);font-size:12px;letter-spacing:.11em;text-transform:uppercase;line-height:1.9;color:var(--taupe)}
 /* les tableaux (cookies) */
 .lg-table{width:100%;border-collapse:collapse}
 .lg-table th,.lg-table td{padding:14px 16px 14px 0;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:14px;font-weight:300;line-height:1.5;color:var(--ink-soft)}
-.lg-table th{font-family:var(--caps);font-size:12px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--taupe)}
+.lg-table th{font-family:var(--caps);font-size:12px;font-weight:400;letter-spacing:.11em;text-transform:uppercase;color:var(--taupe)}
 /* à compléter par le client : bien visible tant que l'information manque */
 .lg-todo{padding:1px 6px;background:rgba(141,121,116,.14);color:var(--ink);font-style:normal}
 
@@ -57,6 +57,6 @@ html,body{background:var(--cream)}
   .lg-table thead{display:none}
   .lg-table tr{display:block;padding:12px 0;border-bottom:1px solid var(--line)}
   .lg-table td{display:block;padding:4px 0;border:0}
-  .lg-table td::before{content:attr(data-th);display:block;font-family:var(--caps);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--taupe)}
+  .lg-table td::before{content:attr(data-th);display:block;font-family:var(--caps);font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--taupe)}
 }
 @media (prefers-reduced-motion:reduce){.js .lg-fade{opacity:1;translate:none}}

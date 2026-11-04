@@ -6,7 +6,7 @@
 .t-h2{font-size:40px}
 .t-h2,.t-h3,.t-h4{text-wrap:balance}   /* titres sur plusieurs lignes : des lignes de longueur égale, jamais un mot seul en dessous */
 .t-h3{font-size:32px}
-.t-cta,.t-mini{font-family:var(--caps);font-weight:400;text-transform:uppercase;letter-spacing:.14em;line-height:1.3;text-box:trim-both cap alphabetic}
+.t-cta,.t-mini{font-family:var(--caps);font-weight:400;text-transform:uppercase;letter-spacing:.11em;line-height:1.3;text-box:trim-both cap alphabetic}
 .t-cta{font-size:14px}
 .t-mini{font-size:12px}
 .t-text{font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink-soft);text-box:trim-both cap alphabetic}   /* Text Main du Figma, rogné aux capitales */
@@ -136,7 +136,7 @@
 .foot-main{display:flex;flex-direction:column;align-items:center;gap:64px;width:100%;padding:96px var(--gutter) 0;border-top:1px solid rgba(29,29,27,.12)}
 .foot-links{display:flex;align-items:center;justify-content:center;gap:108px}
 .foot-group{display:flex;gap:16px}
-.foot-col{display:flex;flex-direction:column;align-items:center;gap:16px;width:184px;font-family:var(--caps);font-size:12px;letter-spacing:.14em;line-height:1.3;text-transform:uppercase;text-align:center}
+.foot-col{display:flex;flex-direction:column;align-items:center;gap:16px;width:184px;font-family:var(--caps);font-size:12px;letter-spacing:.11em;line-height:1.3;text-transform:uppercase;text-align:center}
 .foot-col a{color:var(--ink-soft);text-box:trim-both cap alphabetic;transition:color .35s var(--ease)}
 .foot-col a:hover{color:var(--ink)}
 .foot-sep{align-self:stretch;width:1px;height:96px;background:rgba(29,29,27,.12)}
