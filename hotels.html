@@ -55,11 +55,13 @@ html,body{background:var(--cream)}
 
 
 /* les quatre hôtels (Figma 6670-626) : cartes 784 × 440 dans le carrousel 3D des lieux, 64 px au-dessus, 128 px en dessous ;
-   32 px entre la photo et le logo (48 px de haut), 24 px entre le logo et le texte */
+   même écart que sous le carrousel des lieux (≈ 51 px) entre la photo et le logo, pour que l'ombre ne touche pas le logo ;
+   24 px entre le logo et le texte */
 .ht-car{padding:64px 0 128px;overflow:hidden;overflow:clip}
-.ht-car .stage{flex:none;height:calc(var(--ch, 440px) + 24px)}
+.ht-car .stage{flex:none;height:calc(var(--ch, 440px) + 60px)}
 .ht-car .lcard{background:var(--cream-2)}
-.ht-info{width:min(584px,calc(100% - 2 * var(--gutter)));margin-top:20px;min-height:0;gap:24px}
+.ht-car .lcard.is-active{box-shadow:0 22px 36px -30px rgba(29,29,27,.22)}   /* ombre plus légère que celle des lieux */
+.ht-info{width:min(584px,calc(100% - 2 * var(--gutter)));margin-top:21px;min-height:0;gap:24px}
 .ht-info-logo{display:block;height:48px;width:auto}
 .ht-info .t-text{min-height:calc(3 * 1.4em);text-wrap:pretty}
 
@@ -275,7 +277,7 @@ html,body{background:var(--cream)}
       <img data-src="assets/hotels/carrousel/${h.id}-${small ? 800 : 1600}.webp" alt="${h.alt}" draggable="false"><span class="lcard-veil"></span></div>`,
     fill:(h, field) => {
       const logo = field("logo");
-      logo.src = `assets/hotels/carrousel/logo-${h.id}.svg`; logo.alt = h.name;
+      logo.src = `assets/hotels/carrousel/logo-${h.id}.svg?v=2`; logo.alt = h.name;
       field("desc").textContent = h.desc;
     },
   });
