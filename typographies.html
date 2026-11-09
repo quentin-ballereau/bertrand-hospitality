@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Typographies : trois options — Bertrand Hospitality</title>
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/base.css?v=23">
+<link rel="stylesheet" href="css/home.css?v=35">
+<style>
+/* Page de comparaison des typographies, pour le client : trois colonnes, chacune montre les vrais composants du site
+   (typo-specimen.html?typo=a|b|c) et ouvre le site entier dans cette option (js/typo-variante.js) */
+html,body{background:var(--cream)}
+.tp{max-width:1320px;margin:0 auto;padding:96px var(--gutter) 128px}
+.tp-head{display:flex;flex-direction:column;align-items:center;gap:24px;max-width:616px;margin:0 auto 80px;text-align:center}
+.tp-head .t-text{max-width:520px}
+.tp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:start}
+.tp-col{display:flex;flex-direction:column;gap:24px}
+.tp-meta{display:flex;flex-direction:column;align-items:center;gap:16px;min-height:212px;padding:0 8px;text-align:center}
+.tp-meta .t-h3{font-size:28px}
+.tp-meta .t-text{max-width:340px}
+.tp-fonts{font-size:12px;line-height:1.5;color:var(--muted)}
+.tp-pref{display:inline-block;padding:6px 10px 5px;border:1px solid var(--taupe);color:var(--taupe);font-size:11px}
+.tp-frame{display:block;width:100%;height:1500px;border:0;background:var(--cream);box-shadow:0 0 0 1px var(--line)}
+.tp-links{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 24px}
+.tp-links a{color:var(--taupe)}
+@media (max-width:1023px){
+  .tp-grid{grid-template-columns:1fr;gap:80px}
+  .tp-meta{min-height:0}
+  .tp{padding-top:64px}
+}
+</style>
+</head>
+<body>
+<main class="tp">
+  <header class="tp-head">
+    <p class="t-cta t-eyebrow">Bertrand Hospitality · Site événementiel</p>
+    <h1 class="t-h2">Trois options typographiques</h1>
+    <p class="t-text">Les mêmes éléments du site, à leur taille réelle, dans chacune des options. Chaque lien ouvre le site entier dans l’option choisie&nbsp;; une pastille en bas à gauche permet ensuite de passer de l’une à l’autre.</p>
+  </header>
+
+  <div class="tp-grid">
+    <article class="tp-col">
+      <div class="tp-meta">
+        <p class="t-cta t-eyebrow">Option A</p>
+        <h2 class="t-h3">Actuelle</h2>
+        <p class="t-text">Le site tel qu’il est aujourd’hui, sans aucune modification.</p>
+        <p class="tp-fonts">Ivar Display · Copperplate · Helvetica LT Std Light</p>
+      </div>
+      <iframe class="tp-frame" src="typo-specimen.html?typo=a" title="Option A : typographies actuelles" loading="lazy"></iframe>
+      <nav class="tp-links caps t-mini" aria-label="Voir le site en option A">
+        <a class="ul" href="index.html?typo=a">Accueil</a><a class="ul" href="lieux.html?typo=a">Lieux</a><a class="ul" href="hotels.html?typo=a">Hôtels</a><a class="ul" href="nous-connaitre.html?typo=a">Nous connaître</a>
+      </nav>
+    </article>
+
+    <article class="tp-col">
+      <div class="tp-meta">
+        <p class="t-cta t-eyebrow">Option B</p>
+        <h2 class="t-h3">Retouchée</h2>
+        <p class="t-text">Les mêmes polices, plus lisibles&nbsp;: textes plus grands et moins serrés, petites capitales plus grandes et plus aérées.</p>
+        <p class="tp-fonts">Ivar Display · Copperplate · Helvetica LT Std</p>
+        <span class="tp-pref caps">Notre préférence</span>
+      </div>
+      <iframe class="tp-frame" src="typo-specimen.html?typo=b" title="Option B : typographies actuelles retouchées" loading="lazy"></iframe>
+      <nav class="tp-links caps t-mini" aria-label="Voir le site en option B">
+        <a class="ul" href="index.html?typo=b">Accueil</a><a class="ul" href="lieux.html?typo=b">Lieux</a><a class="ul" href="hotels.html?typo=b">Hôtels</a><a class="ul" href="nous-connaitre.html?typo=b">Nous connaître</a>
+      </nav>
+    </article>
+
+    <article class="tp-col">
+      <div class="tp-meta">
+        <p class="t-cta t-eyebrow">Option C</p>
+        <h2 class="t-h3">Google Fonts</h2>
+        <p class="t-text">Deux polices libres, avec les tailles de l’option B&nbsp;: un serif classique pour les titres, une linéale contemporaine pour le reste.</p>
+        <p class="tp-fonts">Cormorant Garamond · Instrument Sans</p>
+      </div>
+      <iframe class="tp-frame" src="typo-specimen.html?typo=c" title="Option C : Google Fonts" loading="lazy"></iframe>
+      <nav class="tp-links caps t-mini" aria-label="Voir le site en option C">
+        <a class="ul" href="index.html?typo=c">Accueil</a><a class="ul" href="lieux.html?typo=c">Lieux</a><a class="ul" href="hotels.html?typo=c">Hôtels</a><a class="ul" href="nous-connaitre.html?typo=c">Nous connaître</a>
+      </nav>
+    </article>
+  </div>
+</main>
+<script>
+// chaque échantillon prend la hauteur de son contenu ; les trois restent alignés sur le plus haut
+const frames = [...document.querySelectorAll(".tp-frame")];
+const fit = () => {
+  const hs = frames.map(f => { try { return f.contentDocument.documentElement.scrollHeight; } catch { return 0; } });
+  const h = Math.max(...hs); if (h > 200) frames.forEach(f => f.style.height = h + "px");
+};
+frames.forEach(f => f.addEventListener("load", () => { fit(); setTimeout(fit, 600); setTimeout(fit, 1500); }));
+addEventListener("resize", () => setTimeout(fit, 300));
+</script>
+</body>
+</html>
