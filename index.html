@@ -25,7 +25,7 @@
 <link rel="preload" as="image" href="assets/home/hero/coupole-1536.webp" imagesrcset="assets/home/hero/coupole-1280.webp 1280w, assets/home/hero/coupole-1536.webp 1536w" imagesizes="100vw" fetchpriority="high">
 <link rel="stylesheet" href="css/base.css?v=23">
 <link rel="stylesheet" href="css/menu.css?v=18">
-<link rel="stylesheet" href="css/coverflow.css?v=10">
+<link rel="stylesheet" href="css/coverflow.css?v=11">
 <link rel="stylesheet" href="css/home.css?v=35">
 <link rel="stylesheet" href="css/paris-map.css?v=7">
 <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css">
@@ -86,7 +86,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 /* Figma : 48 px sous l'en-tête, scène de 398 px, 32 px avant la fiche. La scène fait ici 420 px pour que la carte centrale
    garde ses 640 × 360 ; les 11 px de plus de chaque côté sont repris sur les écarts (38 = 48 − 11 + 1 d’arrondi du texte). */
 .venues .cf{height:auto;margin-top:38px}
-.venues .stage{flex:none;height:420px}
+.venues .stage{flex:none;height:calc(min(61.25vw, 980px) * 9 / 16 + 60px)}   /* la carte (js/coverflow.js) et 30 px d'air de chaque côté */
 .venues .info{margin-top:21px;min-height:0}
 .venues .v-head > *{opacity:0;transform:translateY(14px)}
 
@@ -95,7 +95,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 .leave.is-on{opacity:1}
 
 @media (prefers-reduced-motion:reduce){.hero-bg,.hero-title .wi,.nav,.finder{transition:none!important;transform:none!important;translate:none!important;opacity:1!important;filter:none!important}}
-@media (max-width:767px){ .hero .finder{bottom:16px} .hero-title{font-size:30px;bottom:178px} .venues{padding:120px 0} .v-title{font-size:24px} .v-sub{font-size:13px} .venues .cf{margin-top:24px} .venues .stage{height:240px} .venues .info{margin-top:16px} }
+@media (max-width:767px){ .hero .finder{bottom:16px} .hero-title{font-size:30px;bottom:178px} .venues{padding:120px 0} .v-title{font-size:24px} .v-sub{font-size:13px} .venues .cf{margin-top:24px} .venues .stage{height:calc(74vw * 9 / 16 + 60px)} .venues .info{margin-top:16px} }
 </style>
 </head>
 <body>
@@ -280,7 +280,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 <script src="js/data.js?v=10"></script>
 <script src="js/menu.js?v=24"></script>
 <script src="js/finder.js?v=9"></script>
-<script src="js/coverflow.js?v=12"></script>
+<script src="js/coverflow.js?v=13"></script>
 <script src="js/paris-map.js?v=15"></script>
 <script>
 /* ----- intro : le titre se révèle ligne par ligne, puis la navigation et la recherche ----- */

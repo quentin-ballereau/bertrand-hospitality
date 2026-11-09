@@ -8,7 +8,7 @@
 .lcard img{position:absolute;top:0;left:-8%;width:116%;height:100%;object-fit:cover;display:block;pointer-events:none;will-change:transform}
 .lcard-veil{position:absolute;inset:0;background:var(--cream);pointer-events:none}
 .stage-veil{position:absolute;inset:-40px 0;background:var(--cream);pointer-events:none;z-index:200;opacity:1}
-.lcard.is-active{box-shadow:0 36px 60px -46px rgba(29,29,27,.45)}
+.lcard.is-active{box-shadow:0 22px 36px -30px rgba(29,29,27,.22)}   /* ombre discrète, reprise de la page hôtels */
 
 /* fiche du lieu au centre (Figma « Frame 4 » de la home) : Mini tag 10 beige, H3 32, Text Main 14, CTA 12 ;
    24 px entre le lieu et le nom, puis 32 px ; textes rognés aux capitales comme dans le Figma */

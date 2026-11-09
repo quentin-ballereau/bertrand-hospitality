@@ -25,7 +25,7 @@
 <link rel="stylesheet" href="css/base.css?v=23">
 <link rel="stylesheet" href="css/menu.css?v=18">
 <link rel="stylesheet" href="css/home.css?v=35">
-<link rel="stylesheet" href="css/coverflow.css?v=10">
+<link rel="stylesheet" href="css/coverflow.css?v=11">
 <style>
 /* Nos hôtels (lot 3 · 13) : à quoi servent nos quatre hôtels quand on organise un événement. Hero, repères, les quatre hôtels
    (un écran chacun, Figma 6617-7063), ce qu'ils apportent à un événement, les maisons voisines (photo et texte), les questions
@@ -58,11 +58,11 @@ html,body{background:var(--cream)}
    même écart que sous le carrousel des lieux (≈ 51 px) entre la photo et le logo, pour que l'ombre ne touche pas le logo ;
    24 px entre le logo et le texte */
 .ht-car{padding:64px 0 128px;overflow:hidden;overflow:clip}
-.ht-car .stage{flex:none;height:calc(var(--ch, 440px) + 60px)}
+.ht-car .stage{flex:none;height:calc(min(61.25vw, 980px) * 9 / 16 + 60px)}   /* comme sur la home : la carte et 30 px d'air de chaque côté */
 .ht-car .lcard{background:var(--cream-2)}
-.ht-car .lcard.is-active{box-shadow:0 22px 36px -30px rgba(29,29,27,.22)}   /* ombre plus légère que celle des lieux */
 .ht-info{width:min(584px,calc(100% - 2 * var(--gutter)));margin-top:21px;min-height:0;gap:24px}
 .ht-info-logo{display:block;height:48px;width:auto}
+.ht-info-logo[data-h="relais-christine"]{height:56px}   /* son lettrage fin paraît plus petit que les autres */
 .ht-info .t-text{min-height:calc(3 * 1.4em);text-wrap:pretty}
 
 /* pour votre événement : trois cas, numérotés, chacun sous un filet (Figma 6617-7299) */
@@ -110,7 +110,9 @@ html,body{background:var(--cream)}
   .nc-fig .t-num{font-size:36px}
   .nc-figs .fig-sep{display:none}
   .ht-car{padding:40px 0 100px}
+  .ht-car .stage{height:calc(74vw * 9 / 16 + 60px)}
   .ht-info-logo{height:40px}
+  .ht-info-logo[data-h="relais-christine"]{height:46px}
   .ht-info{gap:20px}
   .ht-uses{padding:100px var(--gutter);gap:48px}
   .ht-near{grid-template-columns:1fr;min-height:0}
@@ -246,7 +248,7 @@ html,body{background:var(--cream)}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="js/data.js?v=10"></script>
 <script src="js/menu.js?v=24"></script>
-<script src="js/coverflow.js?v=12"></script>
+<script src="js/coverflow.js?v=13"></script>
 <script>
 (() => {
   const $ = id => document.getElementById(id);
@@ -271,13 +273,11 @@ html,body{background:var(--cream)}
   const small = innerWidth < 768;
   const htCf = BH.coverflow($("htCf"), {
     wheel:"x", loop:true,
-    // un peu plus large que le carrousel des lieux : 784 px comme dans le Figma
-    width:() => innerWidth < 768 ? innerWidth * 0.74 : Math.min(innerWidth * 0.62, 784),
     card:(h, i) => `<div class="lcard" data-i="${i}" role="group" aria-roledescription="diapositive" aria-label="${h.name}"${i >= HOTELS.length ? ' aria-hidden="true"' : ""}>
       <img data-src="assets/hotels/carrousel/${h.id}-${small ? 800 : 1600}.webp" alt="${h.alt}" draggable="false"><span class="lcard-veil"></span></div>`,
     fill:(h, field) => {
       const logo = field("logo");
-      logo.src = `assets/hotels/carrousel/logo-${h.id}.svg?v=2`; logo.alt = h.name;
+      logo.src = `assets/hotels/carrousel/logo-${h.id}.svg?v=2`; logo.alt = h.name; logo.dataset.h = h.id;
       field("desc").textContent = h.desc;
     },
   });

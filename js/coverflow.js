@@ -25,8 +25,10 @@ BH.coverflow = (root, opts = {}) => {
   /* ---------- géométrie ---------- */
   function measure() {
     const r = stage.getBoundingClientRect();
-    // assez large pour l'image, assez étroit pour que les voisines inclinées restent visibles
-    W = opts.width ? opts.width() : mobile() ? innerWidth * 0.62 : Math.min(innerWidth * 0.5, r.height * 0.86 * 16 / 9, 980);
+    // assez large pour l'image, assez étroit pour que les voisines inclinées restent visibles :
+    // 61,25 % de l'écran, soit 784 px à 1280 px comme dans le Figma 6670-626 de la page hôtels, 980 px au plus ; sur la page lieux, qui ne défile pas, la hauteur de la scène décide :
+    // 30 px d'air au-dessus et en dessous, 5 % seulement quand la scène est basse
+    W = opts.width ? opts.width() : mobile() ? innerWidth * 0.74 : Math.min(innerWidth * 0.6125, 980, Math.max(r.height - 60, r.height * 0.9) * 16 / 9);
     root.style.setProperty("--cw", W + "px");
     root.style.setProperty("--ch", W * 9 / 16 + "px");
     // la corde entre deux cartes voisines = largeur + un blanc : R découle de l'angle choisi
