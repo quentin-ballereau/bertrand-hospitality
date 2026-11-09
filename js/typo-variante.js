@@ -19,10 +19,10 @@
   html.dataset.typo = v;
 
   /* ---------- tables de l'option B (et C) ---------- */
-  // Helvetica LT (textes) : +1,5 à +2 px sous 17 px, interlettrage négatif supprimé, Light remplacé par Roman sous 15 px, interligne 1,55
+  // Helvetica LT (textes) : +1,5 à +2 px sous 17 px, interlettrage −1 % (au lieu de −2 %), Light remplacé par Roman sous 15 px, interligne 1,55
   const SANS = s => s <= 11.5 ? s + 2 : s <= 12.5 ? 13.5 : s <= 13.5 ? 14.5 : s <= 14.5 ? 16 : s <= 16.5 ? 17 : s <= 19 ? s + 1 : s;
-  // Copperplate (tags, boutons, liens en capitales) : +1,5 px, interlettrage .15em, jamais en Light
-  const CAPS = s => s <= 10.5 ? 12 : s <= 14.5 ? s + 1.5 : s + 1;
+  // Copperplate (tags, boutons, liens en capitales) : +2,5 px (+1,5 au-delà de 15 px), interlettrage .15em, jamais en Light
+  const CAPS = s => s <= 10.5 ? 13 : s <= 14.5 ? s + 2.5 : s + 1.5;
   // Ivar Display (titres) : les petits titres gagnent 1 à 2 px, les grands ne bougent pas ; interlettrage .03em
   const SERIF = s => s <= 22 ? s + 2 : s <= 26 ? s + 1 : s;
 
@@ -82,7 +82,7 @@
       if (v === "c" && fam === "serif") n *= 1.08;   // Cormorant dessine ses capitales plus petites qu'Ivar
       const set = {"font-size": n.toFixed(1) + "px"};
       if (fam === "sans") {
-        if (ls < 0) set["letter-spacing"] = "0em";
+        if (ls < 0) set["letter-spacing"] = "-.01em";
         if (fw === 300 && n < 15) set["font-weight"] = "400";
         if (lh && lh >= 1.3 && lh <= 1.47) set["line-height"] = "1.55";
       } else if (fam === "caps") {
