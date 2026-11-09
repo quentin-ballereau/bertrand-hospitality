@@ -21,14 +21,14 @@ Ne jamais l'appeler « POC » : c'est la maquette finale.
   `npm_config_cache=/tmp/npmcache npx vercel@latest deploy --prod --yes --scope digidop`
 - Pousser : `GIT_TERMINAL_PROMPT=0 git push -q origin main`
 - À chaque modification CSS/JS, incrémenter le `?v=` dans toutes les pages, ainsi que dans `../outils/pages-legales/build.py`, qui génère mentions-legales, confidentialite et cookies.html.
-  Versions au 09/11/2026 : base.css 23, home.css 35, menu.css 18, menu.js 24, motion.js 6, paris-map.js 15, legal.css 2, pages.css 4, coverflow.css 11, coverflow.js 13, typo-variante.js 2.
+  Versions au 09/11/2026 : base.css 23, home.css 35, menu.css 18, menu.js 24, motion.js 6, paris-map.js 15, legal.css 2, pages.css 4, coverflow.css 11, coverflow.js 13, typo-variante.js 3.
 
 ## Architecture
 - `css/base.css` : variables, navigation, barre de recherche. `css/home.css` : home et pied de page commun. `css/menu.css` + `js/menu.js` : menu plein écran et navigation.
 - Navigation (`js/menu.js`) : déplacée à la racine du `<body>`. Elle défile avec la page, puis, passé 60 % de l'écran, revient fixée sur fond crème en glissant depuis le haut (`.is-stuck`, `.is-leaving`, inspiration discoverylandco.com). Sur les pages à héros sombre, la page déclare `.nav{color:#fff}` et le logo blanc `logo-bh.svg` ; le logo foncé lui est superposé (`.logo-alt`).
 - `js/motion.js` : Lenis (lerp .12), parallaxe des images cadrées (échelle 1.1, ±5 %), apparitions `.mo-rv`.
 - `js/coverflow.js` + `css/coverflow.css` : carrousel 3D, commun à la home, à la page lieux et à la page hôtels (options `card`, `fill`, `width`, `loop`). Cartes à 61,25 % de l’écran (784 px à 1280, 980 px au plus ; 74 % sur mobile ; limitées par la hauteur sur la page lieux), ombre discrète. Hôtels : cartes sans lien, liste doublée pour boucler.
-- `js/typo-variante.js` (chargé juste après base.css sur toutes les pages) : comparaison des typographies, `?typo=a` actuelle, `b` retouchée (mêmes polices, tables SANS/CAPS/SERIF en tête du fichier), `c` Google Fonts (Cormorant Garamond, Instrument Sans). Choix retenu dans la session, pastille en bas à gauche ; sans paramètre, rien ne change. Page client : `typographies.html` (échantillons `typo-specimen.html`).
+- `js/typo-variante.js` (chargé juste après base.css sur toutes les pages) : comparaison des typographies, `?typo=a` actuelle, `b` retouchée (site actuel ; seuls le texte Light, +1 px et un trait de 0,2 px, et les petites capitales, +1 px sous 13 px, changent), `c` Google Fonts (Cormorant Garamond, Instrument Sans). Choix retenu dans la session, pastille en bas à gauche ; sans paramètre, rien ne change. Page client : `typographies.html` (échantillons `typo-specimen.html`).
 - `js/data.js` : données des lieux. `lieu.html` est une page immersive qui ne défile pas.
 - `js/journal.js` : blog et article, pagination. `.vercelignore` exclut les images HD et `.audit`.
 - Pages : index, lieux, lieu, offres, offre, secteur, landing, devis, contact, merci, nous-connaitre, engagement, hotels, blog, article, faq, 404, pages légales.

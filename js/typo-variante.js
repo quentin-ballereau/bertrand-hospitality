@@ -1,6 +1,7 @@
 /* Comparaison des typographies : trois options sur le même site, pour les montrer au client.
    ?typo=a  A · actuelle : rien ne change
-   ?typo=b  B · retouchée : les mêmes polices (Ivar Display, Copperplate, Helvetica LT), tailles, graisses et interlettrages revus
+   ?typo=b  B · retouchée : le site actuel, à deux détails près : le texte courant (Helvetica Light) un peu plus grand
+            et un peu plus nourri, les petites capitales (mini-tags surtout) un peu plus grandes ; le reste ne bouge pas
    ?typo=c  C · Google Fonts : Cormorant Garamond (titres) et Instrument Sans (textes et capitales), avec les tailles de B
    Le choix suit la navigation (sessionStorage) ; une pastille en bas à gauche permet de passer de l'une à l'autre.
    Sans paramètre ni choix dans la session, ce script ne fait rien.
@@ -18,13 +19,13 @@
   const html = document.documentElement;
   html.dataset.typo = v;
 
-  /* ---------- tables de l'option B (et C) ---------- */
-  // Helvetica LT (textes) : +1,5 à +2 px sous 17 px, interlettrage −1 % (au lieu de −2 %), Light remplacé par Roman sous 15 px, interligne 1,55
-  const SANS = s => s <= 11.5 ? s + 2 : s <= 12.5 ? 13.5 : s <= 13.5 ? 14.5 : s <= 14.5 ? 16 : s <= 16.5 ? 17 : s <= 19 ? s + 1 : s;
-  // Copperplate (tags, boutons, liens en capitales) : +2,5 px (+1,5 au-delà de 15 px), interlettrage .15em, jamais en Light
-  const CAPS = s => s <= 10.5 ? 13 : s <= 14.5 ? s + 2.5 : s + 1.5;
-  // Ivar Display (titres) : les petits titres gagnent 1 à 2 px, les grands ne bougent pas ; interlettrage .03em
-  const SERIF = s => s <= 22 ? s + 2 : s <= 26 ? s + 1 : s;
+  /* ---------- réglages de l'option B (et C) ---------- */
+  // texte courant, Helvetica LT Light seulement : +1 px (12 → 13, 13 → 14, 14 → 15), au-delà rien ne change
+  const SANS = s => s <= 14.5 ? s + 1 : s;
+  // un trait de 0,2 px autour des lettres : le Light gagne un peu de corps sans passer au Roman, plus lourd
+  const STROKE = ".2px";
+  // petites capitales Copperplate : les mini-tags (12 px et moins) +1 px, les tags de 13–14 px +0,5 px ; interlettrage inchangé
+  const CAPS = s => s <= 12.5 ? s + 1 : s <= 14.5 ? s + .5 : s;
 
   if (v === "a") { ui(); return; }
 
@@ -39,10 +40,6 @@
     st.textContent = `:root{--serif:"BHSerif","Cormorant Garamond",Georgia,serif;--caps:"BHCaps","Instrument Sans",Helvetica,sans-serif;--sans:"BHSans","Instrument Sans",Helvetica,sans-serif}`;
     document.head.appendChild(st);
   }
-  // la barre de recherche a une largeur fixe : un peu plus large pour ses libellés agrandis (« Tous formats »)
-  const bar = document.createElement("style");
-  bar.textContent = "@media (min-width:768px){:root{--bar-w:640px}}";
-  document.head.appendChild(bar);
   // pendant le premier réglage, la page reste masquée (au plus 1,2 s)
   const hide = document.createElement("style");
   hide.textContent = "html[data-typo] body{opacity:0}";
@@ -58,7 +55,7 @@
     return null;
   };
   const touched = new Set();
-  const SKIP = "script,style,svg *,[data-tv-ui],[data-tv-ui] *";
+  const SKIP = "script,style,svg *,[data-tv-ui],[data-tv-ui] *,.seg-value";   // la barre de recherche a des cases de largeur fixe
 
   function adjust(root) {
     const els = root.nodeType === 1 ? [root, ...root.querySelectorAll("*")] : [...root.querySelectorAll("*")];
@@ -77,21 +74,17 @@
     for (const [el, fsS, lsS, fwS, lhS, fam] of plan) {
       const s = parseFloat(fsS), ls = lsS === "normal" ? 0 : parseFloat(lsS) / s, fw = +fwS;
       const lh = lhS === "normal" ? null : parseFloat(lhS) / s;
-      let n = fam === "sans" ? SANS(s) : fam === "caps" ? CAPS(s) : SERIF(s);
-      if (el.matches(".seg-value") && innerWidth < 768) n = Math.min(n, s + 1);   // barre de recherche du mobile : pas de place pour plus
-      if (v === "c" && fam === "serif") n *= 1.08;   // Cormorant dessine ses capitales plus petites qu'Ivar
-      const set = {"font-size": n.toFixed(1) + "px"};
+      const set = {};
       if (fam === "sans") {
-        if (ls < 0) set["letter-spacing"] = "-.01em";
-        if (fw === 300 && n < 15) set["font-weight"] = "400";
-        if (lh && lh >= 1.3 && lh <= 1.47) set["line-height"] = "1.55";
-      } else if (fam === "caps") {
-        if (ls >= .06) set["letter-spacing"] = v === "c" ? ".14em" : ".15em";
-        if (fw < 400) set["font-weight"] = "400";
-        if (v === "c") set["font-weight"] = "500";
+        if (fw === 300 && SANS(s) !== s) { set["font-size"] = SANS(s) + "px"; set["-webkit-text-stroke"] = STROKE + " currentColor"; }
+        else if (fw !== 300) set["-webkit-text-stroke"] = "0";   // un mot en Roman ou en gras dans le texte reste tel quel
       } else {
-        if (ls > .005 && ls < .035) set["letter-spacing"] = ".03em";
-        if (v === "c") set["font-weight"] = "500";
+        set["-webkit-text-stroke"] = "0";   // un tag ou un titre posé dans un texte n'hérite pas du trait
+        if (fam === "caps" && CAPS(s) !== s) set["font-size"] = CAPS(s) + "px";
+        if (v === "c") {
+          set["font-weight"] = "500";
+          if (fam === "serif") set["font-size"] = (s * 1.08).toFixed(1) + "px";   // Cormorant dessine ses capitales plus petites qu'Ivar
+        }
       }
       el._tvOld = {};
       for (const k in set) { el._tvOld[k] = el.style.getPropertyValue(k); el.style.setProperty(k, set[k]); }
