@@ -18,9 +18,9 @@
 .sec-head-txt{display:flex;flex-direction:column;align-items:center;gap:24px}
 .hlink{color:var(--taupe)}
 
-/* ---------- accompagnement (Figma 6668-382) : le texte centré, 128 px sous la section précédente, puis la photo 984 × 499, 64 px plus bas ---------- */
+/* ---------- accompagnement (Figma 6668-382) : le texte centré, 32 px sous la section précédente (qui a déjà 200 px d'air en bas), puis la photo 984 × 499, 64 px plus bas ---------- */
 .care{background:var(--cream)}
-.care-txt{display:flex;flex-direction:column;align-items:center;gap:32px;max-width:calc(616px + 2 * var(--gutter));margin:0 auto;padding:128px var(--gutter) 0;text-align:center}
+.care-txt{display:flex;flex-direction:column;align-items:center;gap:32px;max-width:calc(616px + 2 * var(--gutter));margin:0 auto;padding:32px var(--gutter) 0;text-align:center}
 .care-img{position:relative;overflow:hidden;margin:64px auto 0;aspect-ratio:984/499;width:min(984px,calc(100% - 2 * var(--gutter)))}
 .care-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 77%;display:block}   /* le cadrage du Figma : les tables, sous les suspensions */
 .care-head{display:flex;flex-direction:column;align-items:center;gap:24px;max-width:584px}
@@ -160,7 +160,7 @@
 
 @media (max-width:1023px){
   .care-img{aspect-ratio:16/9}
-  .care-txt{padding-top:100px}
+  .care-txt{padding-top:32px}
   .faq{flex-direction:column;gap:48px}
   .faq-head{flex:none}
   .formats-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 16px}
@@ -175,7 +175,7 @@
   .evts{padding:80px 24px;gap:40px}
   .t-h4{font-size:20px}
   .care-img{aspect-ratio:4/3;margin-top:48px}
-  .care-txt{padding-top:80px}
+  .care-txt{padding-top:24px}
   .figures{padding-top:48px;padding-bottom:48px} .figs-row{flex-wrap:wrap;gap:40px 0;padding:32px 0}
   .fig{flex:0 0 50%}
   .fig .t-eyebrow{white-space:normal;text-wrap:balance}
