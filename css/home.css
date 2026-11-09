@@ -18,11 +18,11 @@
 .sec-head-txt{display:flex;flex-direction:column;align-items:center;gap:24px}
 .hlink{color:var(--taupe)}
 
-/* ---------- accompagnement (Figma 6666-377) : la photo en bandeau pleine largeur (1280 × 499), puis le texte centré, 128 px au-dessus ---------- */
+/* ---------- accompagnement (Figma 6668-382) : le texte centré, 128 px sous la section précédente, puis la photo 984 × 499, 64 px plus bas ---------- */
 .care{background:var(--cream)}
-.care-img{position:relative;overflow:hidden;margin:0;aspect-ratio:1280/499;max-height:80svh;width:100%}
-.care-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 87%;display:block}   /* le cadrage du Figma : les tables, sous les suspensions */
 .care-txt{display:flex;flex-direction:column;align-items:center;gap:32px;max-width:calc(616px + 2 * var(--gutter));margin:0 auto;padding:128px var(--gutter) 0;text-align:center}
+.care-img{position:relative;overflow:hidden;margin:64px auto 0;aspect-ratio:984/499;width:min(984px,calc(100% - 2 * var(--gutter)))}
+.care-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 77%;display:block}   /* le cadrage du Figma : les tables, sous les suspensions */
 .care-head{display:flex;flex-direction:column;align-items:center;gap:24px;max-width:584px}
 /* l'équipe : cinq petits tirages bordés de blanc, légèrement inclinés et qui se chevauchent */
 .team{list-style:none;display:flex;justify-content:center}
@@ -32,8 +32,8 @@
 .team li:last-child{margin-right:0}
 .team img{width:100%;height:100%;object-fit:cover;display:block}
 
-/* ---------- repères chiffrés (Figma 6666-377) : sous l'accompagnement, 64 px plus bas, entre deux filets, sur 984 px ---------- */
-.figures{padding:64px var(--gutter) 0;background:var(--cream)}
+/* ---------- repères chiffrés (Figma 6668-382) : sous la photo, 64 px plus bas, entre deux filets, sur 984 px ---------- */
+.figures{padding:64px var(--gutter);background:var(--cream)}
 .figs-row{display:flex;align-items:stretch;justify-content:center;gap:48px;max-width:984px;margin:0 auto;padding:32px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .fig{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
 .fig .t-num{font-size:48px}
@@ -174,9 +174,9 @@
   .t-h3{font-size:24px}
   .evts{padding:80px 24px;gap:40px}
   .t-h4{font-size:20px}
-  .care-img{aspect-ratio:4/3}
+  .care-img{aspect-ratio:4/3;margin-top:48px}
   .care-txt{padding-top:80px}
-  .figures{padding-top:56px} .figs-row{flex-wrap:wrap;gap:40px 0;padding:32px 0}
+  .figures{padding-top:48px;padding-bottom:48px} .figs-row{flex-wrap:wrap;gap:40px 0;padding:32px 0}
   .fig{flex:0 0 50%}
   .fig .t-eyebrow{white-space:normal;text-wrap:balance}
   .fig-sep{display:none}

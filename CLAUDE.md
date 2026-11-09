@@ -21,7 +21,7 @@ Ne jamais l'appeler « POC » : c'est la maquette finale.
   `npm_config_cache=/tmp/npmcache npx vercel@latest deploy --prod --yes --scope digidop`
 - Pousser : `GIT_TERMINAL_PROMPT=0 git push -q origin main`
 - À chaque modification CSS/JS, incrémenter le `?v=` dans toutes les pages, ainsi que dans `../outils/pages-legales/build.py`, qui génère mentions-legales, confidentialite et cookies.html.
-  Versions au 09/11/2026 : base.css 23, home.css 33, menu.css 18, menu.js 24, motion.js 6, paris-map.js 15, legal.css 2, pages.css 4.
+  Versions au 09/11/2026 : base.css 23, home.css 34, menu.css 18, menu.js 24, motion.js 6, paris-map.js 15, legal.css 2, pages.css 4.
 
 ## Architecture
 - `css/base.css` : variables, navigation, barre de recherche. `css/home.css` : home et pied de page commun. `css/menu.css` + `js/menu.js` : menu plein écran et navigation.
