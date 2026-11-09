@@ -18,13 +18,12 @@
 .sec-head-txt{display:flex;flex-direction:column;align-items:center;gap:24px}
 .hlink{color:var(--taupe)}
 
-/* ---------- accompagnement (Figma « Frame 5 ») : photo pleine hauteur à gauche, texte centré à droite ---------- */
-.care{display:grid;grid-template-columns:1fr 1fr;height:100svh;min-height:640px;background:var(--cream)}   /* une hauteur d'écran, la photo sur la moitié */
-.care-img{position:relative;overflow:hidden;margin:0}
-.care-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.care-txt{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;padding:0 var(--gutter);text-align:center}
-.care-head{display:flex;flex-direction:column;align-items:center;gap:24px;max-width:448px}
-.care-foot{display:flex;flex-direction:column;align-items:center;gap:32px;max-width:396px}   /* largeur du texte dans le Figma */
+/* ---------- accompagnement (Figma 6666-377) : la photo en bandeau pleine largeur (1280 × 499), puis le texte centré, 128 px au-dessus ---------- */
+.care{background:var(--cream)}
+.care-img{position:relative;overflow:hidden;margin:0;aspect-ratio:1280/499;max-height:80svh;width:100%}
+.care-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 87%;display:block}   /* le cadrage du Figma : les tables, sous les suspensions */
+.care-txt{display:flex;flex-direction:column;align-items:center;gap:32px;max-width:calc(616px + 2 * var(--gutter));margin:0 auto;padding:128px var(--gutter) 0;text-align:center}
+.care-head{display:flex;flex-direction:column;align-items:center;gap:24px;max-width:584px}
 /* l'équipe : cinq petits tirages bordés de blanc, légèrement inclinés et qui se chevauchent */
 .team{list-style:none;display:flex;justify-content:center}
 .team li{width:59.64px;height:80px;flex:0 0 auto;margin-right:-12px;border:4px solid #fff;overflow:hidden;transform:rotate(-2deg);
@@ -33,12 +32,14 @@
 .team li:last-child{margin-right:0}
 .team img{width:100%;height:100%;object-fit:cover;display:block}
 
-/* ---------- repères chiffrés (Figma « Frame 6 ») : 200 px au-dessus, 100 px en dessous, filets verticaux #E6E1DD ---------- */
-/* chiffres clés : un bandeau tenu par deux filets, 100 px d'air au-dessus (les formats ouvrent ensuite avec leurs propres 100 px) */
-.figures{padding:100px var(--gutter) 0;background:var(--cream)}
-.figs-row{display:flex;align-items:stretch;justify-content:center;gap:48px;max-width:1184px;margin:0 auto;padding:56px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+/* ---------- repères chiffrés (Figma 6666-377) : sous l'accompagnement, 64 px plus bas, entre deux filets, sur 984 px ---------- */
+.figures{padding:64px var(--gutter) 0;background:var(--cream)}
+.figs-row{display:flex;align-items:stretch;justify-content:center;gap:48px;max-width:984px;margin:0 auto;padding:32px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .fig{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
 .fig .t-num{font-size:48px}
+.fig .t-eyebrow{white-space:nowrap}
+/* sous 1100 px, les libellés ne tiennent plus sur une ligne à quatre de front : deux par deux */
+@media (max-width:1099px){.figs-row{flex-wrap:wrap;gap:40px 0}.fig{flex:0 0 50%}.fig-sep{display:none}}
 .fig-sep{flex:0 0 1px;width:1px;background:var(--line)}
 
 /* ---------- formats (Figma « Frame 7 ») : 100 px au-dessus et en dessous, quatre portraits 82 × 110 à 16 px d'écart ---------- */
@@ -158,10 +159,8 @@
 .js .rv.is-in{opacity:1;transform:none}
 
 @media (max-width:1023px){
-  .figures{padding-top:80px} .figs-row{gap:24px;padding:48px 0}
-  .care{grid-template-columns:1fr;height:auto;min-height:0}
-  .care-img{aspect-ratio:4/3}
-  .care-txt{padding:120px var(--gutter)}
+  .care-img{aspect-ratio:16/9}
+  .care-txt{padding-top:100px}
   .faq{flex-direction:column;gap:48px}
   .faq-head{flex:none}
   .formats-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 16px}
@@ -175,8 +174,11 @@
   .t-h3{font-size:24px}
   .evts{padding:80px 24px;gap:40px}
   .t-h4{font-size:20px}
-  .figures{padding-top:64px} .figs-row{flex-wrap:wrap;gap:40px 0;padding:40px 0}
+  .care-img{aspect-ratio:4/3}
+  .care-txt{padding-top:80px}
+  .figures{padding-top:56px} .figs-row{flex-wrap:wrap;gap:40px 0;padding:32px 0}
   .fig{flex:0 0 50%}
+  .fig .t-eyebrow{white-space:normal;text-wrap:balance}
   .fig-sep{display:none}
   .fig .t-num{font-size:36px}
   .gh-hotel{padding:48px 24px}
