@@ -23,10 +23,10 @@
 <link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" href="assets/home/hero/coupole-1536.webp" imagesrcset="assets/home/hero/coupole-1280.webp 1280w, assets/home/hero/coupole-1536.webp 1536w" imagesizes="100vw" fetchpriority="high">
-<link rel="stylesheet" href="css/base.css?v=21">
+<link rel="stylesheet" href="css/base.css?v=22">
 <link rel="stylesheet" href="css/menu.css?v=18">
 <link rel="stylesheet" href="css/coverflow.css?v=10">
-<link rel="stylesheet" href="css/home.css?v=30">
+<link rel="stylesheet" href="css/home.css?v=31">
 <link rel="stylesheet" href="css/paris-map.css?v=7">
 <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css">
 <script>/* loader à l’entrée sur le site ; on le saute quand on revient d’une autre page du site */try{var r=document.referrer&&new URL(document.referrer);if(r&&r.origin===location.origin&&r.pathname!==location.pathname)document.documentElement.classList.add("no-loader")}catch(e){}</script>
@@ -116,7 +116,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
     <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
     <div class="nav-right">
       <div class="nav-quote">
-        <a class="nav-cta ul caps" href="devis.html"><span class="cta-long">Demander un </span>devis</a>
+        <a class="nav-cta caps" href="devis.html"><span class="cta-long">Demander un </span>devis</a>
         <div class="nav-quote-pop"><span>Ou appelez-nous</span><a class="ul caps" href="tel:+33764070661">07 64 07 06 61</a></div>
       </div>
     </div>
@@ -203,7 +203,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
     <div class="gh-group" aria-labelledby="grpTitle">
       <div class="gh-group-bg" role="img" aria-label="La grande salle de La Coupole, boulevard du Montparnasse"></div>
       <div class="gh-card" id="ghCard">
-        <img class="gh-logo" src="assets/logo-groupe-bertrand.svg" alt="Groupe Bertrand" width="73" height="51">
+        <img class="gh-logo" src="assets/logo-bh-dark.svg" alt="Bertrand Hospitality" width="164" height="32">
         <h2 class="t-h3" id="grpTitle">La force d’un grand groupe</h2>
         <span class="gh-slot" id="ghSlot" aria-hidden="true"></span>
         <p class="t-text">Bertrand Hospitality est la maison art de vivre du Groupe Bertrand, premier groupe français indépendant de restauration et d’hôtellerie.</p>
@@ -252,7 +252,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 <footer class="foot">
   <div class="foot-brand">
     <a href="index.html" aria-label="Bertrand Hospitality, accueil"><img class="foot-logo" src="assets/logo-footer-ink.svg" alt="Bertrand Hospitality" width="184" height="36"></a>
-    <p class="t-text">Trente maisons parisiennes à privatiser, de la brasserie historique à la péniche sur la Seine, avec un seul interlocuteur pour toutes.</p>
+    <button class="foot-top" type="button" aria-label="Revenir en haut de la page"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" aria-hidden="true"><path d="M5 16V1M1 5l4-4 4 4" stroke="currentColor"/></svg></button>
   </div>
   <div class="foot-main">
     <nav class="foot-links" aria-label="Pied de page">
@@ -268,7 +268,6 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
     </nav>
     <!-- les pages secteur (en production /secteurs/[secteur]) : reliées depuis toutes les pages sans toucher au menu -->
     <nav class="foot-areas t-mini" aria-label="Nos quartiers"><a href="secteur.html?s=ouest">Champs-Élysées et Ouest</a><a href="secteur.html?s=centre">Opéra et centre</a><a href="secteur.html?s=rg">Rive gauche</a><a href="secteur.html?s=seine">Bords de Seine</a><a href="secteur.html?s=hors">Versailles et Disney Village</a></nav>
-    <p class="foot-legal">L’abus d’alcool est dangereux pour la santé, à consommer avec modération.</p>
   </div>
   <div class="foot-bottom t-mini">
     <span>© 2026 Bertrand Hospitality</span>
@@ -281,7 +280,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="js/data.js?v=10"></script>
-<script src="js/menu.js?v=22"></script>
+<script src="js/menu.js?v=23"></script>
 <script src="js/finder.js?v=9"></script>
 <script src="js/coverflow.js?v=11"></script>
 <script src="js/paris-map.js?v=15"></script>

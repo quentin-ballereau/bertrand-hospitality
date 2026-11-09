@@ -147,4 +147,27 @@
   document.addEventListener("keydown", e => { if (e.key === "Escape" && open) closeMenu(); });
   addEventListener("resize", () => { if (open) placeButton(); });
   BH.menu = {open:openMenu, close:closeMenu};
+
+  /* la navigation, toujours visible : posée à la racine de la page (hors du hero, pour rester au-dessus de toutes les sections),
+     elle prend un fond crème dès que l'on descend ; le logo blanc passe alors à l'encre */
+  const nav = document.querySelector(".nav");
+  if (nav) {
+    if (nav.parentElement !== document.body) document.body.prepend(nav);
+    const logo = nav.querySelector(".nav-logo img"), light = logo && /logo-bh\.svg/.test(logo.getAttribute("src"));
+    let stuck = null;
+    const stick = () => {
+      const on = scrollY > 24;
+      if (on === stuck) return;
+      stuck = on; nav.classList.toggle("is-stuck", on);
+      if (light) logo.src = on ? "assets/logo-bh-dark.svg" : "assets/logo-bh.svg";
+    };
+    addEventListener("scroll", stick, {passive:true});
+    stick();
+  }
+
+  // pied de page : la flèche ramène en haut de la page, en douceur
+  document.addEventListener("click", e => {
+    if (!e.target.closest(".foot-top")) return;
+    window.__lenis ? window.__lenis.scrollTo(0, {duration:1.4}) : scrollTo({top:0, behavior:matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+  });
 })();

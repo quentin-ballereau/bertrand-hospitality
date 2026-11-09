@@ -35,7 +35,10 @@ h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,
 .gcard-name,.vcard-name,.fcard-name,.mnu-link,.rv-quote,.pop-title,.empty p,.caption b,.dv-block-title,.lp-form-head .t-h4{text-wrap:balance}
 
 /* ---------- NAVIGATION ---------- */
-.nav{position:absolute;top:32px;left:var(--gutter);right:var(--gutter);display:grid;grid-template-columns:1fr auto 1fr;align-items:start;z-index:8}
+.nav{position:fixed;top:0;left:0;right:0;padding:24px var(--gutter);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;z-index:8;
+  transition:background .45s var(--ease),padding .45s var(--ease),box-shadow .45s var(--ease),color .45s var(--ease)}
+/* la navigation reste toujours visible : dès que l'on descend, elle prend un fond crème et se resserre (js/menu.js : .is-stuck) */
+.nav.is-stuck{padding-top:12px;padding-bottom:12px;background:rgba(250,248,247,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line);color:var(--ink)}
 .nav-menu{display:flex;align-items:center;gap:12px;justify-self:start;font-size:14px}
 .nav-menu img{width:17px;height:6px;display:block}
 /* icône du menu : deux traits de 17 × 6 px en couleur courante (dessin du Figma), qui forment une croix quand le menu est ouvert */
@@ -45,7 +48,11 @@ h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,
 .nav-ico::after{bottom:0}
 .nav-logo{display:block;width:164px;height:32px}
 .nav-logo img{width:164px;height:32px;display:block}
-.nav-cta{justify-self:end;font-size:14px}
+.nav-cta{justify-self:end;display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 18px;background:var(--taupe);color:#fff;font-size:13px;white-space:nowrap;transition:background .45s var(--ease)}
+/* « Demander un devis » : un vrai bouton, comme « Voir les lieux » et celui du menu ; la flèche glisse au survol */
+.nav-cta::after{content:"";width:16px;height:10px;flex:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' fill='none'%3E%3Cpath d='M0 5h15M11 1l4 4-4 4' stroke='%23fff'/%3E%3C/svg%3E") center/contain no-repeat;transition:transform .4s var(--ease)}
+.nav-cta:hover{background:var(--ink)}
+.nav-cta:hover::after{transform:translateX(4px)}
 /* à droite : la demande de devis ; au survol (ou au focus), un encart crème propose aussi le téléphone */
 .nav-right{justify-self:end;display:flex;align-items:center}
 .nav-quote{position:relative}
@@ -141,10 +148,12 @@ h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,
 
 @media (max-width:767px){
   :root{--gutter:16px;--bar-w:calc(100% - 32px)}
-  .nav{top:20px}
+  .nav{padding:16px var(--gutter)}
+  .nav.is-stuck{padding-top:10px;padding-bottom:10px}
   .nav-menu span{display:none}
   .nav-logo,.nav-logo img{width:123px;height:24px}
-  .nav-cta{font-size:12px}
+  .nav-cta{height:34px;padding:0 14px;font-size:12px}
+  .nav-cta::after{display:none}
   .nav-quote-pop{display:none}   /* sur mobile, le numéro est dans le menu */
   .cta-long{display:none}
   .finder{bottom:16px;left:16px;right:16px;width:auto;transform:none}
