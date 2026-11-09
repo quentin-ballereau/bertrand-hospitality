@@ -24,6 +24,8 @@
   const SANS = s => s <= 14.5 ? s + 1 : s;
   // un trait de 0,2 px autour des lettres : le Light gagne un peu de corps sans passer au Roman, plus lourd
   const STROKE = ".2px";
+  // interlettrage du texte courant : −1 % au lieu de −2 % (le trait épaissit les lettres, elles se rapprochaient)
+  const TRACK = "-.01em";
   // petites capitales Copperplate : les mini-tags (12 px et moins) +1 px, les tags de 13–14 px +0,5 px ; interlettrage inchangé
   const CAPS = s => s <= 12.5 ? s + 1 : s <= 14.5 ? s + .5 : s;
 
@@ -76,7 +78,7 @@
       const lh = lhS === "normal" ? null : parseFloat(lhS) / s;
       const set = {};
       if (fam === "sans") {
-        if (fw === 300 && SANS(s) !== s) { set["font-size"] = SANS(s) + "px"; set["-webkit-text-stroke"] = STROKE + " currentColor"; }
+        if (fw === 300 && SANS(s) !== s) { set["font-size"] = SANS(s) + "px"; set["-webkit-text-stroke"] = STROKE + " currentColor"; if (ls < -.012) set["letter-spacing"] = TRACK; }
         else if (fw !== 300) set["-webkit-text-stroke"] = "0";   // un mot en Roman ou en gras dans le texte reste tel quel
       } else {
         set["-webkit-text-stroke"] = "0";   // un tag ou un titre posé dans un texte n'hérite pas du trait
