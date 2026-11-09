@@ -6,7 +6,9 @@
 
    const cf = BH.coverflow(root, {wheel:"all" | "x", format:() => "cocktail" | null, query:() => "format=…"});
    cf.set(list, {intro})   affiche une liste ; cf.refresh(list) la remplace avec un fondu
-   enabled:() => bool      facultatif : quand il renvoie false, molette et clavier ne pilotent plus le carrousel */
+   enabled:() => bool      facultatif : quand il renvoie false, molette et clavier ne pilotent plus le carrousel
+   Autres contenus (page hôtels) : card:(v, i) => html de la carte, fill:(v, field) => remplit la fiche,
+   width:() => largeur de la carte (px), loop:true pour boucler même sous cinq cartes */
 BH.coverflow = (root, opts = {}) => {
   const {fmtsOf, capFor} = BH;
   // chaque lieu s'ouvre sur sa visite immersive ; la recherche en cours la suit
@@ -24,7 +26,7 @@ BH.coverflow = (root, opts = {}) => {
   function measure() {
     const r = stage.getBoundingClientRect();
     // assez large pour l'image, assez étroit pour que les voisines inclinées restent visibles
-    W = mobile() ? innerWidth * 0.62 : Math.min(innerWidth * 0.5, r.height * 0.86 * 16 / 9, 980);
+    W = opts.width ? opts.width() : mobile() ? innerWidth * 0.62 : Math.min(innerWidth * 0.5, r.height * 0.86 * 16 / 9, 980);
     root.style.setProperty("--cw", W + "px");
     root.style.setProperty("--ch", W * 9 / 16 + "px");
     // la corde entre deux cartes voisines = largeur + un blanc : R découle de l'angle choisi
@@ -59,6 +61,7 @@ BH.coverflow = (root, opts = {}) => {
   /* ---------- fiche du lieu au centre ---------- */
   const field = k => info.querySelector(`[data-k="${k}"]`);
   function fill(v) {
+    if (opts.fill) return opts.fill(v, field);
     const sel = opts.format ? opts.format() : null, fs = fmtsOf(sel);
     field("place").textContent = fs.length === 1 ? `${v.place} · ${v[fs[0].id]} invités ${fs[0].unit}` : `${v.place} · jusqu’à ${capFor(v, sel)} invités`;
     field("name").textContent = v.name;
@@ -133,7 +136,7 @@ BH.coverflow = (root, opts = {}) => {
     drag = null;
   });
   inner.addEventListener("click", e => {
-    const a = e.target.closest(".lcard"); if (!a) return;
+    const a = e.target.closest("a.lcard"); if (!a) return;   // des cartes sans lien (page hôtels) ne réagissent pas au clic
     if (stage.dataset.justDragged) { e.preventDefault(); return; }
     const i = +a.dataset.i;
     if (i !== active) { e.preventDefault(); goToCard(i); }   // une voisine : on l'amène au centre
@@ -162,9 +165,9 @@ BH.coverflow = (root, opts = {}) => {
     gsap.fromTo(info, {opacity:0, y:12}, {opacity:1, y:0, duration:1.2, ease:"expo.out", delay:intro ? 0.55 : 0.35});
   }
   function set(next, {intro = false} = {}) {
-    list = next; n = list.length; loop = n >= 5;
+    list = next; n = list.length; loop = opts.loop || n >= 5;
     info.style.visibility = n ? "visible" : "hidden";
-    inner.innerHTML = list.map((v, i) =>
+    inner.innerHTML = list.map((v, i) => opts.card ? opts.card(v, i) :
       `<a class="lcard" data-i="${i}" href="${hrefOf(v)}" draggable="false" aria-label="${v.name}, ${v.place}">
          <img data-src="assets/lieux/${v.slug}.jpg" alt="" draggable="false"><span class="lcard-veil"></span></a>`).join("");
     cards = [...inner.children].map(el => ({el, img:el.querySelector("img"), veil:el.querySelector(".lcard-veil")}));
