@@ -134,9 +134,7 @@
 .foot-brand{display:flex;flex-direction:column;align-items:center;gap:32px;width:min(584px,100% - 2 * var(--gutter));text-align:center}
 .foot-logo{width:184px;height:36px;display:block}
 .foot-top{position:absolute;top:56px;right:var(--gutter);display:grid;place-items:center;width:48px;height:48px;border:1px solid rgba(29,29,27,.2);border-radius:50%;color:var(--ink);transition:background .35s var(--ease),color .35s var(--ease),border-color .35s var(--ease)}
-.foot-top svg{transition:transform .4s var(--expo)}
-.foot-top:hover{background:var(--ink);border-color:var(--ink);color:#fff}
-.foot-top:hover svg{transform:translateY(-3px)}
+.foot-top:hover{background:var(--taupe);border-color:var(--taupe);color:#fff}
 .foot-brand .t-text{max-width:432px;color:var(--ink-soft)}
 .foot-main{display:flex;flex-direction:column;align-items:center;gap:40px;width:100%;padding:0 var(--gutter)}
 .foot-links{display:flex;align-items:center;justify-content:center;gap:108px}

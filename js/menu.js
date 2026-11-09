@@ -149,17 +149,27 @@
   BH.menu = {open:openMenu, close:closeMenu};
 
   /* la navigation, toujours visible : posée à la racine de la page (hors du hero, pour rester au-dessus de toutes les sections),
-     elle prend un fond crème dès que l'on descend ; le logo blanc passe alors à l'encre */
+     elle défile d'abord avec la page, puis revient fixée sur fond crème, logo à l'encre */
   const nav = document.querySelector(".nav");
   if (nav) {
     if (nav.parentElement !== document.body) document.body.prepend(nav);
     const logo = nav.querySelector(".nav-logo img"), light = logo && /logo-bh\.svg/.test(logo.getAttribute("src"));
-    let stuck = null;
+    if (light) {   // le logo foncé, superposé au blanc, pour la barre fixée sur fond crème
+      const alt = logo.cloneNode();
+      alt.src = "assets/logo-bh-dark.svg"; alt.alt = ""; alt.className = "logo-alt";
+      logo.after(alt);
+    }
+    // passé ~60 % de l'écran, la barre revient fixée en glissant depuis le haut ; en remontant, elle repart vers le haut
+    let stuck = false, t;
+    const unstick = () => { clearTimeout(t); stuck || nav.classList.remove("is-stuck", "is-leaving"); };
     const stick = () => {
-      const on = scrollY > 24;
-      if (on === stuck) return;
-      stuck = on; nav.classList.toggle("is-stuck", on);
-      if (light) logo.src = on ? "assets/logo-bh-dark.svg" : "assets/logo-bh.svg";
+      const on = scrollY > innerHeight * .6;
+      if (on !== stuck) {
+        stuck = on;
+        if (on) { clearTimeout(t); nav.classList.remove("is-leaving"); nav.classList.add("is-stuck"); }
+        else if (scrollY > nav.offsetHeight && !matchMedia("(prefers-reduced-motion:reduce)").matches) { nav.classList.add("is-leaving"); t = setTimeout(unstick, 520); }
+        else unstick();
+      } else if (!on && scrollY <= nav.offsetHeight) unstick();   // revenu tout en haut avant la fin du glissement
     };
     addEventListener("scroll", stick, {passive:true});
     stick();
