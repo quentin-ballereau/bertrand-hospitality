@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Tags et CTA : alternatives Google — Bertrand Hospitality</title>
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/base.css?v=23">
+<link rel="stylesheet" href="css/home.css?v=35">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Inter:wght@300&family=Spectral:wght@500&family=Montaga&family=Tenor+Sans&family=Cinzel:wght@500&family=Forum&family=Bellefair&family=Josefin+Sans:wght@500&family=Cormorant+SC:wght@600&family=Federo&family=Questrial&family=Didact+Gothic&family=Gotu&family=Philosopher&display=swap">
+<style>
+/* Planche de choix de la police des tags et CTA (option C de typographies.html) : chaque police dans le même bloc
+   que sur le site (mini-tag, titre en Playfair Display, texte en Inter Light, CTA souligné), ramenée à des capitales
+   un peu plus hautes que celles de Copperplate (version B), comme dans l'option C */
+html,body{background:var(--cream)}
+.tt{max-width:1200px;margin:0 auto;padding:88px var(--gutter) 128px}
+.tt-head{display:flex;flex-direction:column;align-items:center;gap:24px;max-width:640px;margin:0 auto 72px;text-align:center}
+.tt-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.card{display:flex;flex-direction:column;align-items:center;gap:24px;padding:44px 32px 40px;background:#fff;box-shadow:0 0 0 1px var(--line);text-align:center}
+.card.is-ref{background:var(--cream-2)}
+.card-label{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:8px}
+.card-label b{font:400 12px/1.3 Helvetica,Arial,sans-serif;letter-spacing:.04em;color:var(--ink)}
+.card-label span{font:300 12px/1.4 Helvetica,Arial,sans-serif;color:var(--muted);max-width:360px}
+.tg{text-transform:uppercase;color:var(--taupe);line-height:1.3;font-variant-numeric:lining-nums;white-space:nowrap}
+.tg-cta{position:relative;padding-bottom:6px}
+.tg-cta::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform:scaleY(.6)}
+.sp-h{font-family:"Playfair Display",serif;font-weight:400;font-size:32px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);font-variant-numeric:lining-nums}
+.sp-t{font-family:Inter,sans-serif;font-weight:300;font-size:14.5px;line-height:1.4;letter-spacing:-.01em;color:var(--ink-soft);max-width:380px}
+.is-ref .sp-h{font-family:var(--serif)}
+.is-ref .sp-t{font-family:var(--sans);font-size:15px}
+@media (max-width:899px){
+  .tt-grid{grid-template-columns:1fr}
+  .card{padding:36px 16px}
+  .sp-h{font-size:26px}
+  .tg{white-space:normal}
+}
+</style>
+</head>
+<body>
+<main class="tt">
+  <header class="tt-head">
+    <p class="t-cta t-eyebrow">Option C · Tags et CTA</p>
+    <h1 class="t-h2">Les alternatives à Copperplate</h1>
+    <p class="t-text">Chaque police dans le même bloc que sur le site&nbsp;: mini-tag, titre en Playfair Display, texte en Inter Light et lien souligné. Toutes sont ramenées à la même hauteur de capitales, un peu au-dessus de Copperplate. La première carte montre le site actuel (version B).</p>
+  </header>
+  <div class="tt-grid" id="grid"></div>
+</main>
+<script>
+// [nom, poids, interlettrage, description]
+const FONTS = [
+  ["Copperplate", 400, .11, "Référence · la police actuelle des tags (version B)"],
+  ["Spectral", 500, .13, "Utilisée aujourd’hui dans l’option C : petits empattements, lettres larges, la plus proche de Copperplate"],
+  ["Montaga", 400, .13, "Même esprit, un peu plus classique et plus doux"],
+  ["Tenor Sans", 400, .14, "Sans empattements, fine et élégante, plus contemporaine"],
+  ["Cinzel", 500, .12, "Capitales romaines gravées, solennelles"],
+  ["Cormorant SC", 600, .12, "Petites capitales Garamond, raffinées mais fines"],
+  ["Forum", 400, .13, "Capitales d’inscription, étroites et anciennes"],
+  ["Bellefair", 400, .13, "Fine et aérienne, très légère à petite taille"],
+  ["Josefin Sans", 500, .14, "Géométrique années 1920, assez marquée"],
+  ["Federo", 400, .13, "Art déco, étroite et graphique"],
+  ["Questrial", 400, .14, "Sans empattements simple et ronde, neutre"],
+  ["Didact Gothic", 400, .14, "Sans empattements, régulière et scolaire"],
+  ["Gotu", 400, .13, "Sans empattements, contraste léger, chaleureuse"],
+  ["Philosopher", 400, .12, "Formes plus libres, petits renflements"],
+];
+const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+document.getElementById("grid").innerHTML = FONTS.map(([f, w, ls, d], i) => {
+  const st = `font-family:'${f}';font-weight:${w};letter-spacing:${ls}em`;
+  return `<article class="card${i ? "" : " is-ref"}" data-f="${esc(f)}" data-w="${w}">
+    <div class="card-label"><b>${i ? String(i).padStart(2, "0") + " · " : ""}${esc(f)}${w !== 400 ? " " + w : ""}</b><span>${esc(d)}</span></div>
+    <p class="tg tg-mini" style="${st}">Saint-Germain-des-Prés · jusqu’à 300 invités</p>
+    <h2 class="sp-h">Le Procope</h2>
+    <p class="sp-t">Le plus ancien café de Paris, où se croisaient Voltaire et Benjamin Franklin&nbsp;: ses salons du XVIIIe siècle s’ouvrent à vos dîners.</p>
+    <span class="tg tg-cta" style="${st}">Découvrir le lieu</span>
+  </article>`;
+}).join("");
+
+// tailles : Copperplate en version B (mini-tag 13,5 px, CTA 14,5 px) ; les autres à des capitales 10 % plus hautes
+(async () => {
+  await document.fonts.ready;
+  await Promise.all(FONTS.map(([f, w]) => document.fonts.load(`${w} 40px "${f}"`, "SAINT").catch(() => 0)));
+  const c = document.createElement("canvas").getContext("2d");
+  const cap = (f, w) => { c.font = `${w} 100px "${f}"`; return c.measureText("H").actualBoundingBoxAscent; };
+  const ref = cap("Copperplate", 400);
+  document.querySelectorAll(".card").forEach((card, i) => {
+    const k = i ? ref / cap(card.dataset.f, card.dataset.w) * 1.1 : 1;
+    card.querySelector(".tg-mini").style.fontSize = (13.5 * k).toFixed(1) + "px";
+    card.querySelector(".tg-cta").style.fontSize = (14.5 * k).toFixed(1) + "px";
+  });
+})();
+</script>
+</body>
+</html>
