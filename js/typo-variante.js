@@ -3,8 +3,9 @@
    ?typo=b  B · retouchée : le site actuel, à deux détails près : le texte courant (Helvetica Light) un peu plus grand
             et un peu plus nourri, les petites capitales (mini-tags surtout) un peu plus grandes ; le reste ne bouge pas
    ?typo=c  C · Google Fonts, une police pour chaque rôle des polices actuelles, calée sur leurs proportions :
-            Playfair Display (titres, Didone comme Ivar, même hauteur de capitales), Playfair Display Medium en capitales espacées
-            (petites capitales, à la place de Copperplate), Inter Light (texte, grotesque simple proche d'Helvetica), avec les tailles de B
+            Playfair Display (titres, Didone comme Ivar, même hauteur de capitales), Spectral Medium en capitales
+            (tags et CTA : petits empattements et chasse large, le plus proche de Copperplate), Inter Light (texte, proche d'Helvetica),
+            avec les tailles de B
    Le choix suit la navigation (sessionStorage) ; une pastille en bas à gauche permet de passer de l'une à l'autre.
    Sans paramètre ni choix dans la session, ce script ne fait rien.
 
@@ -46,10 +47,10 @@
   if (v === "c") {
     const l = document.createElement("link");
     l.rel = "stylesheet";
-    l.href = "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Inter:wght@300;400;500;700&display=swap";
+    l.href = "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Spectral:wght@500;600&family=Inter:wght@300;400;500;700&display=swap";
     document.head.appendChild(l);
     const st = document.createElement("style");
-    st.textContent = `:root{--serif:"BHSerif","Playfair Display",Georgia,serif;--caps:"BHCaps","Playfair Display",Georgia,serif;--sans:"BHSans","Inter",Helvetica,sans-serif}`;
+    st.textContent = `:root{--serif:"BHSerif","Playfair Display",Georgia,serif;--caps:"BHCaps","Spectral",Georgia,serif;--sans:"BHSans","Inter",Helvetica,sans-serif}`;
     document.head.appendChild(st);
   }
   // pendant le premier réglage, la page reste masquée (au plus 1,2 s)
@@ -91,16 +92,16 @@
         // proportions mesurées (hauteur des capitales et des minuscules, à corps égal) :
         // Playfair Display = Ivar (capitales 1 % plus hautes, 4 % plus larges : rien à corriger) ;
         // Inter a un œil 6 % plus grand et une chasse 4 % plus large qu'Helvetica : ×0,97 ;
-        // en petites capitales, Playfair a des capitales bien plus hautes que Copperplate : ×0,88 (un peu plus grandes que l'actuel),
-        // en Medium (le 400 est trop fin à cette taille), espacées de 16 % et en chiffres alignés (300, pas 3oo)
+        // en tags, Spectral a des capitales bien plus hautes que Copperplate : ×0,9, soit des capitales un peu plus hautes que celles de Copperplate,
+        // en Medium pour approcher l’épaisseur de Copperplate, espacées de 13 % et en chiffres alignés (300, pas 3oo)
         if (fam === "sans") {
           set["font-size"] = ((fw === 300 ? SANS(s) : s) * .97).toFixed(1) + "px";
           if (fw === 300 && ls < -.012) set["letter-spacing"] = "-.01em";
         } else if (fam === "caps") {
-          set["font-size"] = (CAPS(s) * .88).toFixed(1) + "px";
+          set["font-size"] = (CAPS(s) * .9).toFixed(1) + "px";
           set["font-weight"] = "500";
           set["font-variant-numeric"] = "lining-nums";
-          if (ls >= .06) set["letter-spacing"] = ".16em";
+          if (ls >= .06) set["letter-spacing"] = ".13em";
         } else {
           set["font-variant-numeric"] = "lining-nums";   // chiffres des titres et des repères alignés, comme avec Ivar
         }
