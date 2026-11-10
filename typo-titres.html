@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Titres : sélection de serifs Google — Bertrand Hospitality</title>
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/base.css?v=23">
+<link rel="stylesheet" href="css/home.css?v=35">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Bodoni+Moda:opsz@6..96&family=Libre+Bodoni&family=Playfair+Display&family=Prata&family=Noto+Serif+Display:wdth,wght@62.5..100,400&family=Libre+Caslon+Display&family=Newsreader:opsz@6..72&family=Gloock&family=Instrument+Serif&family=DM+Serif+Display&family=Italiana&family=Bellefair&family=Marcellus&family=Cinzel&display=swap">
+<style>
+/* Planche de choix de la police des titres (option C de typographies.html) : chaque serif Google montré en capitales,
+   interlettrage 2 % comme Ivar, et ramené à la même hauteur de capitales qu'Ivar pour une comparaison juste.
+   Sous chaque titre, le texte et le tag actuels du site, pour juger l'accord. */
+html,body{background:var(--cream)}
+.tt{max-width:1200px;margin:0 auto;padding:88px var(--gutter) 128px}
+.tt-head{display:flex;flex-direction:column;align-items:center;gap:24px;max-width:640px;margin:0 auto 72px;text-align:center}
+.tt-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.card{display:flex;flex-direction:column;align-items:center;gap:24px;padding:48px 40px 44px;background:#fff;box-shadow:0 0 0 1px var(--line);text-align:center}
+.card.is-ref{background:var(--cream-2)}
+.card-label{display:flex;flex-direction:column;align-items:center;gap:10px}
+.card-label b{font-family:var(--caps);font-weight:400;font-size:13px;letter-spacing:.11em;text-transform:uppercase;color:var(--taupe)}
+.card-label span{font-size:12px;font-weight:300;line-height:1.4;color:var(--muted);max-width:380px}
+.sp-h{font-weight:400;font-size:40px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);text-wrap:balance;max-width:460px;margin:8px 0 0}
+.sp-h3{font-weight:400;font-size:28px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;color:var(--ink)}
+.card .t-text{max-width:400px}
+.sp-num{display:flex;gap:40px;align-items:baseline}
+.sp-num span{font-weight:400;font-size:44px;line-height:1;color:var(--ink)}
+@media (max-width:899px){
+  .tt-grid{grid-template-columns:1fr}
+  .card{padding:40px 20px}
+  .sp-h{font-size:30px}
+  .sp-h3{font-size:24px}
+}
+</style>
+</head>
+<body>
+<main class="tt">
+  <header class="tt-head">
+    <p class="t-cta t-eyebrow">Option C · Police des titres</p>
+    <h1 class="t-h2">Quinze serifs Google</h1>
+    <p class="t-text">Chaque police est montrée en capitales, avec l’interlettrage d’Ivar Display, et ramenée à la même hauteur de capitales pour une comparaison juste. Le texte et le tag sous chaque titre sont ceux du site actuel. La première carte, Ivar Display, sert de référence.</p>
+  </header>
+  <div class="tt-grid" id="grid"></div>
+</main>
+<script>
+const FONTS = [
+  ["Ivar Display", "Référence · la police actuelle du site"],
+  ["Gilda Display", "Didone douce et lumineuse, très proche d’Ivar"],
+  ["Bodoni Moda", "Didone de haute couture, contrastes très marqués, esprit maison de mode"],
+  ["Libre Bodoni", "Bodoni plus sage et plus robuste, à l’aise en petite taille"],
+  ["Prata", "Didone aux formes rondes, chaleureuse, élégante en capitales"],
+  ["Noto Serif Display", "Didone contemporaine, fine et nette, très sobre"],
+  ["Playfair Display", "La Didone la plus connue de Google, sûre et très lisible ; utilisée aujourd’hui dans l’option C"],
+  ["Libre Caslon Display", "Caslon anglais, classique et littéraire, contraste élevé"],
+  ["Newsreader", "Serif éditorial au dessin fin, raffiné et très lisible"],
+  ["Gloock", "Contraste fort et empattements nets, plus affirmée"],
+  ["Instrument Serif", "Serif étroit et contemporain, très en vogue dans le luxe"],
+  ["DM Serif Display", "Contrastée et généreuse, plus ronde et plus grasse"],
+  ["Italiana", "Très fine, d’inspiration mode, réservée aux grands titres"],
+  ["Bellefair", "Fine et aérienne, capitales élancées"],
+  ["Marcellus", "Capitales lapidaires, inspirées des inscriptions romaines"],
+  ["Cinzel", "Capitales romaines classiques, solennelles"],
+];
+const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+document.getElementById("grid").innerHTML = FONTS.map(([f, d], i) => `
+  <article class="card${i ? "" : " is-ref"}" data-f="${esc(f)}">
+    <div class="card-label"><b>${i ? String(i).padStart(2, "0") + " · " : ""}${esc(f)}</b><span>${esc(d)}</span></div>
+    <h2 class="sp-h" style="font-family:'${f}'">Recevoir vos invités comme les nôtres</h2>
+    <p class="t-cta t-eyebrow">Saint-Germain-des-Prés · 300 invités</p>
+    <h3 class="sp-h3" style="font-family:'${f}'">Le Procope</h3>
+    <p class="t-text">Le plus ancien café de Paris, où se croisaient Voltaire et Benjamin Franklin&nbsp;: ses salons du XVIIIe siècle s’ouvrent à vos dîners.</p>
+    <div class="sp-num" style="font-family:'${f}'"><span>30</span><span>600</span></div>
+  </article>`).join("");
+
+// même hauteur de capitales qu'Ivar Display : chaque police est mise à l'échelle
+(async () => {
+  await document.fonts.ready;
+  await Promise.all(FONTS.map(([f]) => document.fonts.load(`400 40px "${f}"`, "RECEVOIR").catch(() => 0)));
+  const c = document.createElement("canvas").getContext("2d");
+  const cap = f => { c.font = `400 100px "${f}"`; return c.measureText("H").actualBoundingBoxAscent; };
+  const ref = cap("Ivar Display");
+  document.querySelectorAll(".card").forEach(card => {
+    const k = ref / cap(card.dataset.f);
+    if (!isFinite(k) || Math.abs(k - 1) < .02) return;
+    card.querySelectorAll(".sp-h, .sp-h3, .sp-num span").forEach(el => {
+      el.style.fontSize = (parseFloat(getComputedStyle(el).fontSize) * k).toFixed(1) + "px";
+    });
+  });
+})();
+</script>
+</body>
+</html>
