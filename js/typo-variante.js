@@ -28,8 +28,8 @@
   const STROKE = ".2px";
   // interlettrage du texte courant : −1 % au lieu de −2 % (le trait épaissit les lettres, elles se rapprochaient)
   const TRACK = "-.01em";
-  // petites capitales Copperplate : les mini-tags (12 px et moins) +1 px, les tags de 13–14 px +0,5 px ; interlettrage inchangé
-  const CAPS = s => s <= 12.5 ? s + 1 : s <= 14.5 ? s + .5 : s;
+  // petites capitales Copperplate : les mini-tags (12 px et moins) +1,5 px (12 → 13,5), les tags de 13–14 px +0,5 px ; interlettrage inchangé
+  const CAPS = s => s <= 12.5 ? s + 1.5 : s <= 14.5 ? s + .5 : s;
 
   // dans la page de présentation, les liens du site gardent l'option choisie
   if (embedded) document.addEventListener("click", e => {
