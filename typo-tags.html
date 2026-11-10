@@ -11,11 +11,13 @@
 <link rel="stylesheet" href="css/home.css?v=35">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Inter:wght@300&family=Spectral:wght@500&family=Montaga&family=Tenor+Sans&family=Cinzel:wght@500&family=Forum&family=Bellefair&family=Josefin+Sans:wght@500&family=Cormorant+SC:wght@600&family=Federo&family=Questrial&family=Didact+Gothic&family=Gotu&family=Philosopher&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Inter:wght@300&family=Spectral:wght@600&family=Montaga&family=Tenor+Sans&family=Cinzel:wght@600&family=Forum&family=Bellefair&family=Josefin+Sans:wght@600&family=Cormorant+SC:wght@700&family=Federo&family=Questrial&family=Didact+Gothic&family=Gotu&family=Philosopher:wght@700&display=swap">
 <style>
 /* Planche de choix de la police des tags et CTA (option C de typographies.html) : chaque police dans le même bloc
    que sur le site (mini-tag, titre en Playfair Display, texte en Inter Light, CTA souligné), ramenée à des capitales
-   un peu plus hautes que celles de Copperplate (version B), comme dans l'option C */
+   un peu plus hautes que celles de Copperplate (version B), comme dans l'option C.
+   Graisse : Copperplate est plus nourrie que les autres ; on prend la graisse au-dessus quand elle existe,
+   et un trait autour des lettres (comme pour le texte de l'option B) pour les polices qui n'ont qu'une graisse */
 html,body{background:var(--cream)}
 .tt{max-width:1200px;margin:0 auto;padding:88px var(--gutter) 128px}
 .tt-head{display:flex;flex-direction:column;align-items:center;gap:24px;max-width:640px;margin:0 auto 72px;text-align:center}
@@ -45,33 +47,33 @@ html,body{background:var(--cream)}
   <header class="tt-head">
     <p class="t-cta t-eyebrow">Option C · Tags et CTA</p>
     <h1 class="t-h2">Les alternatives à Copperplate</h1>
-    <p class="t-text">Chaque police dans le même bloc que sur le site&nbsp;: mini-tag, titre en Playfair Display, texte en Inter Light et lien souligné. Toutes sont ramenées à la même hauteur de capitales, un peu au-dessus de Copperplate. La première carte montre le site actuel (version B).</p>
+    <p class="t-text">Chaque police dans le même bloc que sur le site&nbsp;: mini-tag, titre en Playfair Display, texte en Inter Light et lien souligné. Toutes sont ramenées à la même hauteur de capitales, un peu au-dessus de Copperplate, et épaissies pour approcher sa graisse&nbsp;: graisse supérieure quand elle existe, sinon un léger trait autour des lettres. La première carte montre le site actuel (version B).</p>
   </header>
   <div class="tt-grid" id="grid"></div>
 </main>
 <script>
-// [nom, poids, interlettrage, description]
+// [nom, poids, interlettrage, trait autour des lettres (px), description]
 const FONTS = [
-  ["Copperplate", 400, .11, "Référence · la police actuelle des tags (version B)"],
-  ["Spectral", 500, .13, "Utilisée aujourd’hui dans l’option C : petits empattements, lettres larges, la plus proche de Copperplate"],
-  ["Montaga", 400, .13, "Même esprit, un peu plus classique et plus doux"],
-  ["Tenor Sans", 400, .14, "Sans empattements, fine et élégante, plus contemporaine"],
-  ["Cinzel", 500, .12, "Capitales romaines gravées, solennelles"],
-  ["Cormorant SC", 600, .12, "Petites capitales Garamond, raffinées mais fines"],
-  ["Forum", 400, .13, "Capitales d’inscription, étroites et anciennes"],
-  ["Bellefair", 400, .13, "Fine et aérienne, très légère à petite taille"],
-  ["Josefin Sans", 500, .14, "Géométrique années 1920, assez marquée"],
-  ["Federo", 400, .13, "Art déco, étroite et graphique"],
-  ["Questrial", 400, .14, "Sans empattements simple et ronde, neutre"],
-  ["Didact Gothic", 400, .14, "Sans empattements, régulière et scolaire"],
-  ["Gotu", 400, .13, "Sans empattements, contraste léger, chaleureuse"],
-  ["Philosopher", 400, .12, "Formes plus libres, petits renflements"],
+  ["Copperplate", 400, .11, 0, "Référence · la police actuelle des tags (version B)"],
+  ["Spectral", 600, .13, 0, "Petits empattements, lettres larges, la plus proche de Copperplate"],
+  ["Montaga", 400, .13, .35, "Même esprit, un peu plus classique et plus doux"],
+  ["Tenor Sans", 400, .14, .35, "Sans empattements, élégante, plus contemporaine"],
+  ["Cinzel", 600, .12, 0, "Capitales romaines gravées, solennelles"],
+  ["Cormorant SC", 700, .12, 0, "Petites capitales Garamond, raffinées"],
+  ["Forum", 400, .13, .35, "Capitales d’inscription, étroites et anciennes"],
+  ["Bellefair", 400, .13, .4, "Fine et aérienne"],
+  ["Josefin Sans", 600, .14, 0, "Géométrique années 1920, assez marquée"],
+  ["Federo", 400, .13, .3, "Art déco, étroite et graphique"],
+  ["Questrial", 400, .14, .3, "Sans empattements simple et ronde, neutre"],
+  ["Didact Gothic", 400, .14, .35, "Sans empattements, régulière et scolaire"],
+  ["Gotu", 400, .13, .3, "Sans empattements, contraste léger, chaleureuse"],
+  ["Philosopher", 700, .12, 0, "Formes plus libres, petits renflements"],
 ];
 const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
-document.getElementById("grid").innerHTML = FONTS.map(([f, w, ls, d], i) => {
-  const st = `font-family:'${f}';font-weight:${w};letter-spacing:${ls}em`;
+document.getElementById("grid").innerHTML = FONTS.map(([f, w, ls, k, d], i) => {
+  const st = `font-family:'${f}';font-weight:${w};letter-spacing:${ls}em${k ? `;-webkit-text-stroke:${k}px currentColor` : ""}`;
   return `<article class="card${i ? "" : " is-ref"}" data-f="${esc(f)}" data-w="${w}">
-    <div class="card-label"><b>${i ? String(i).padStart(2, "0") + " · " : ""}${esc(f)}${w !== 400 ? " " + w : ""}</b><span>${esc(d)}</span></div>
+    <div class="card-label"><b>${i ? String(i).padStart(2, "0") + " · " : ""}${esc(f)}${w !== 400 ? " " + w : ""}${k ? " + trait " + String(k).replace(".", ",") + " px" : ""}</b><span>${esc(d)}</span></div>
     <p class="tg tg-mini" style="${st}">Saint-Germain-des-Prés · jusqu’à 300 invités</p>
     <h2 class="sp-h">Le Procope</h2>
     <p class="sp-t">Le plus ancien café de Paris, où se croisaient Voltaire et Benjamin Franklin&nbsp;: ses salons du XVIIIe siècle s’ouvrent à vos dîners.</p>
