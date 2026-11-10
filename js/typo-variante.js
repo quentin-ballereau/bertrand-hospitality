@@ -29,6 +29,14 @@
   // petites capitales Copperplate : les mini-tags (12 px et moins) +1 px, les tags de 13–14 px +0,5 px ; interlettrage inchangé
   const CAPS = s => s <= 12.5 ? s + 1 : s <= 14.5 ? s + .5 : s;
 
+  // dans la page de présentation, les liens du site gardent l'option choisie
+  if (embedded) document.addEventListener("click", e => {
+    const a = e.target.closest?.("a[href]"); if (!a || a.target === "_blank") return;
+    const u = new URL(a.href, location.href);
+    if (u.origin !== location.origin || !/\.html$|\/$/.test(u.pathname)) return;
+    u.searchParams.set("typo", v); a.href = u.pathname + u.search + u.hash;
+  }, true);
+
   if (v === "a") { ui(); return; }
 
   /* ---------- option C : les polices Google ---------- */
