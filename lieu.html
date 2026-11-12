@@ -119,7 +119,7 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 
 /* espaces */
 .spaces{display:grid;grid-template-columns:1fr 1fr;gap:20px 14px}
-.space{text-align:left}
+.space{display:flex;flex-direction:column;justify-content:flex-start;align-self:start;text-align:left}   /* un bouton centre son contenu en hauteur : quand la voisine a deux lignes de capacités, la photo descendait */
 .space-img{aspect-ratio:4/3;overflow:hidden;background:var(--cream-2);outline:1px solid transparent;outline-offset:4px;transition:outline-color .4s}
 .space-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.2s var(--expo)}
 .space:hover .space-img img{transform:scale(1.05)}
