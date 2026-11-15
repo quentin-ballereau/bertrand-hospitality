@@ -65,6 +65,9 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 .music .w{fill:none;stroke:#fff;stroke-width:1.1;animation:wave 1.8s linear infinite;animation-play-state:paused}
 .music.is-playing .amp{transform:scaleY(1)}
 .music.is-playing .w{animation-play-state:running}
+.music{padding:8px 0;white-space:nowrap}
+.music .music-off{opacity:.7}
+.music.is-playing .music-off,.music:not(.is-playing) .music-on{display:none}
 @keyframes wave{to{transform:translateX(-12px)}}
 .yt{position:fixed;left:-9999px;top:0;width:1px;height:1px;overflow:hidden}
 
@@ -270,10 +273,10 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
   <button class="caps" type="button" data-mode="day" aria-pressed="false">En journée</button>
   <button class="caps" type="button" data-mode="night" aria-pressed="false">En soirée</button></div>
 <div class="corner">
-  <button class="music" id="music" type="button" aria-pressed="false" hidden>
-    <svg viewBox="0 0 30 12" aria-hidden="true"><g class="amp"><path class="w" d="M0 6 Q3 3.5 6 6 T12 6 T18 6 T24 6 T30 6 T36 6 T42 6"/></g></svg><span class="caps">Musique</span></button>
   <button class="ul caps" id="svOpen" type="button" hidden>Vue 360°</button>
   <a class="ul caps" href="lieux.html" id="allLink">Tous les lieux</a>
+  <button class="music" id="music" type="button" aria-pressed="false" hidden>
+    <svg viewBox="0 0 30 12" aria-hidden="true"><g class="amp"><path class="w" d="M0 6 Q3 3.5 6 6 T12 6 T18 6 T24 6 T30 6 T36 6 T42 6"/></g></svg><span class="caps music-on">Son</span><span class="caps music-off">Son coupé</span></button>
 </div>
 <div class="yt" id="yt" aria-hidden="true"></div>
 <div class="sv" id="sv" aria-hidden="true"><button class="ul caps" id="svClose" type="button">Fermer la vue 360°</button></div>
@@ -584,33 +587,50 @@ function setMode(m) { mode = m; applyMode(m); }
 $("mode").addEventListener("click", e => { const b = e.target.closest("[data-mode]"); if (b) setMode(b.dataset.mode); });
 addEventListener("resize", () => { if (!$("mode").hidden) placeKnob(); });
 
-/* ---------- musique d'ambiance : jamais en lecture automatique, montée et descente en fondu ---------- */
-if (D.music) {
-  const btn = $("music"), VOL = 40;
-  let player = null, playing = false;
+/* ---------- musique d'ambiance : active d'office, à faible volume, coupée d'un clic sur l'onde en bas à droite ----------
+   Les navigateurs interdisent le son avant toute action du visiteur : la musique démarre muette, puis le son monte
+   en fondu au premier geste (clic, glisser pour regarder autour, touche). Le choix « coupé » est retenu d'un lieu à l'autre.
+   Les lieux sans morceau propre reprennent celui de Polpo (démo, sous droits : à remplacer par des fichiers sous licence). */
+{
+  const music = D.music || {youtube:"-s89Shtq_pI"};
+  const btn = $("music"), VOL = 18, KEY = "bh-music";
+  let player = null, ready = false, playing = false, gestured = !!navigator.userActivation?.hasBeenActive;
+  try { playing = localStorage.getItem(KEY) !== "off"; } catch { playing = true; }
   const vol = {v:0};
   btn.hidden = false;
+  const paint = () => {
+    btn.classList.toggle("is-playing", playing); btn.setAttribute("aria-pressed", playing);
+    btn.setAttribute("aria-label", playing ? "Couper la musique" : "Mettre la musique");
+    btn.title = playing ? "Couper la musique (M)" : "Mettre la musique (M)";
+  };
   const loadApi = () => new Promise(res => {
     if (window.YT && YT.Player) return res();
     window.onYouTubeIframeAPIReady = res;
     const tag = document.createElement("script"); tag.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(tag);
   });
-  const fadeTo = (to, done) => gsap.to(vol, {v:to, duration:to ? 2.2 : 1.2, ease:"power1.inOut", overwrite:true,
-    onUpdate:() => player && player.setVolume(Math.round(vol.v)), onComplete:done});
-  async function toggle() {
-    playing = !playing;
-    btn.classList.toggle("is-playing", playing); btn.setAttribute("aria-pressed", playing);
-    if (!player) {
-      await loadApi();
-      const id = D.music.youtube;
-      player = new YT.Player("yt", {videoId:id, playerVars:{autoplay:1, controls:0, loop:1, playlist:id, playsinline:1},
-        events:{onReady:e => { e.target.setVolume(0); if (playing) { e.target.playVideo(); fadeTo(VOL); } }}});
-      return;
-    }
-    if (playing) { player.playVideo(); fadeTo(VOL); } else fadeTo(0, () => player.pauseVideo());
+  const fadeTo = (to, done) => gsap.to(vol, {v:to, duration:to ? 2.4 : 1, ease:"power1.inOut", overwrite:true,
+    onUpdate:() => player && ready && player.setVolume(Math.round(vol.v)), onComplete:done});
+  // le son monte : on lève la sourdine (possible seulement après un geste du visiteur)
+  const sound = () => { if (!player || !ready || !playing) return; player.unMute(); player.playVideo(); fadeTo(VOL); };
+  async function create() {
+    await loadApi();
+    player = new YT.Player("yt", {videoId:music.youtube,
+      playerVars:{autoplay:1, mute:1, controls:0, loop:1, playlist:music.youtube, playsinline:1},
+      events:{onReady:e => { ready = true; e.target.setVolume(0); if (playing) { e.target.playVideo(); if (gestured) sound(); } }}});
   }
-  btn.addEventListener("click", toggle);
-  addEventListener("keydown", e => { if ((e.key === "m" || e.key === "M") && !e.target.closest("input")) toggle(); });
+  // premier geste n'importe où sur la page : le son arrive
+  const first = () => { gestured = true; ["pointerdown", "keydown", "touchend"].forEach(t => removeEventListener(t, first, true)); sound(); };
+  ["pointerdown", "keydown", "touchend"].forEach(t => addEventListener(t, first, true));
+  function toggle() {
+    playing = !playing; paint();
+    try { localStorage.setItem(KEY, playing ? "on" : "off"); } catch {}
+    if (!player) { create(); return; }
+    if (playing) sound(); else fadeTo(0, () => player.pauseVideo());
+  }
+  btn.addEventListener("click", e => { e.stopPropagation(); toggle(); });
+  addEventListener("keydown", e => { if ((e.key === "m" || e.key === "M") && !e.target.closest("input,textarea")) toggle(); });
+  paint();
+  if (playing) create();
 }
 
 /* ---------- arrivée ---------- */
