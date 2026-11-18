@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nos hôtels : accueillir vos invités à Paris — Bertrand Hospitality</title>
-<meta name="description" content="Quatre hôtels cinq étoiles à Paris, dont trois Relais & Châteaux, pour accueillir les invités de votre séminaire, de votre mariage ou de votre soirée, à deux pas de nos maisons.">
+<meta name="description" content="Deux hôtels cinq étoiles près de l’Étoile, le Saint James Paris et l’Hôtel Balzac, pour accueillir les invités de votre séminaire, de votre mariage ou de votre soirée, à deux pas de nos maisons.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Bertrand Hospitality">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:title" content="Nos hôtels : accueillir vos invités à Paris — Bertrand Hospitality">
-<meta property="og:description" content="Quatre hôtels cinq étoiles à Paris, dont trois Relais & Châteaux, pour accueillir les invités de votre séminaire, de votre mariage ou de votre soirée, à deux pas de nos maisons.">
+<meta property="og:description" content="Deux hôtels cinq étoiles près de l’Étoile, le Saint James Paris et l’Hôtel Balzac, pour accueillir les invités de votre séminaire, de votre mariage ou de votre soirée, à deux pas de nos maisons.">
 <meta property="og:url" content="https://evenement-bertrand-hospitality.vercel.app/hotels.html">
 <meta property="og:image" content="https://evenement-bertrand-hospitality.vercel.app/assets/og.png">
 <meta property="og:image:width" content="1200">
@@ -26,10 +26,9 @@
 <link rel="stylesheet" href="css/base.css?v=24">
 <link rel="stylesheet" href="css/menu.css?v=19">
 <link rel="stylesheet" href="css/home.css?v=36">
-<link rel="stylesheet" href="css/coverflow.css?v=12">
 <style>
-/* Nos hôtels (lot 3 · 13) : à quoi servent nos quatre hôtels quand on organise un événement. Hero, repères, les quatre hôtels
-   (un écran chacun, Figma 6617-7063), ce qu'ils apportent à un événement, les maisons voisines (photo et texte), les questions
+/* Nos hôtels (lot 3 · 13) : à quoi servent nos deux hôtels quand on organise un événement. Hero, repères, les deux hôtels
+   côte à côte, ce qu'ils apportent à un événement, les maisons voisines (photo et texte), les questions
    fréquentes, l'appel final ; pied de page commun au site. Hôtels et chiffres : groupe-bertrand.com ; photos : images-hotels/sources.md.
    Le Saint James n'existe en ligne qu'en 1 200 px : demander l'original au client. */
 html,body{background:var(--cream)}
@@ -55,15 +54,14 @@ html,body{background:var(--cream)}
 .nc-figs .fig-sep{flex:0 0 1px;background:var(--line)}
 
 
-/* les quatre hôtels (Figma 6670-626) : cartes 784 × 440 dans le carrousel 3D des lieux, 64 px au-dessus, 128 px en dessous ;
-   même écart que sous le carrousel des lieux (≈ 51 px) entre la photo et le nom ; le nom en texte, comme pour les lieux,
-   32 px au-dessus du texte */
-.ht-car{padding:64px 0 128px;overflow:hidden;overflow:clip}
-.ht-car .stage{flex:none;height:calc(min(61.25vw, 980px) * 9 / 16 + 60px)}   /* comme sur la home : la carte et 30 px d'air de chaque côté */
-.ht-car .lcard{background:var(--cream-2)}
-.ht-info{width:min(584px,calc(100% - 2 * var(--gutter)));margin-top:21px;min-height:0;gap:24px}
-.ht-info .info-name{margin:0 0 8px}
-.ht-info .t-text{min-height:calc(3 * 1.4em);text-wrap:pretty}
+/* les deux hôtels côte à côte : une photo en portrait, le quartier, le nom, deux lignes ; centrés, comme les fiches des lieux */
+.ht-duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:64px;width:min(1184px,calc(100% - 2 * var(--gutter)));margin:0 auto;padding:64px 0 128px}
+.ht-hotel{display:flex;flex-direction:column;align-items:center;text-align:center;margin:0}
+.ht-hotel figure{position:relative;overflow:hidden;width:100%;aspect-ratio:4/5;margin:0 0 48px;background:var(--cream-2)}
+.ht-hotel figure img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ht-hotel .info-place{font-size:10.8px;color:var(--taupe)}
+.ht-hotel .info-name{margin:24px 0 32px;font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
+.ht-hotel .t-text{max-width:440px;text-wrap:pretty}
 
 /* pour votre événement : trois cas, numérotés, chacun sous un filet (Figma 6617-7299) */
 .ht-uses{display:flex;flex-direction:column;align-items:center;gap:64px;padding:128px var(--gutter)}
@@ -83,7 +81,6 @@ html,body{background:var(--cream)}
 .ht-near .sec-head-txt{max-width:544px}
 .ht-near .t-text{max-width:544px;color:var(--ink-soft)}
 .ht-near .t-text a{color:var(--ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
-.ht-near--r figure{order:2}
 
 /* questions fréquentes : la mise en page de la home (css/home.css) */
 .nc-faq{padding:128px var(--gutter)}
@@ -109,13 +106,12 @@ html,body{background:var(--cream)}
   .nc-fig{flex:0 0 50%}
   .nc-fig .t-num{font-size:36px}
   .nc-figs .fig-sep{display:none}
-  .ht-car{padding:40px 0 100px}
-  .ht-car .stage{height:calc(74vw * 9 / 16 + 60px)}
-  .ht-info{gap:20px}
+  .ht-duo{grid-template-columns:1fr;gap:72px;padding:40px 0 100px}
+  .ht-hotel figure{aspect-ratio:4/3;margin-bottom:32px}
+  .ht-hotel .info-name{margin:20px 0 24px;font-size:26px}
   .ht-uses{padding:100px var(--gutter);gap:48px}
   .ht-near{grid-template-columns:1fr;min-height:0}
   .ht-near figure{aspect-ratio:4/3}
-  .ht-near--r figure{order:0}
   .ht-near > div{padding:56px var(--gutter)}
   .nc-faq{padding:100px var(--gutter)}
 }
@@ -137,10 +133,10 @@ html,body{background:var(--cream)}
 
 <main>
   <section class="nc-hero" aria-labelledby="htTitle">
-    <img src="assets/hotels/norman-1920.webp" srcset="assets/hotels/norman-1280.webp 1280w, assets/hotels/norman-1920.webp 1920w, assets/hotels/norman-2560.webp 2560w" sizes="100vw" alt="Le restaurant de l’hôtel Norman, près des Champs-Élysées" fetchpriority="high">
+    <img src="assets/hotels/balzac-1920.webp" srcset="assets/hotels/balzac-1280.webp 1280w, assets/hotels/balzac-1920.webp 1920w, assets/hotels/balzac-2560.webp 2560w" sizes="100vw" alt="Une suite de l’Hôtel Balzac, la tour Eiffel à la fenêtre" fetchpriority="high">
     <p class="t-mini nc-fade">Nos hôtels</p>
     <h1 class="nc-title nc-fade" id="htTitle">Prolonger l’événement</h1>
-    <p class="nc-intro nc-fade">Quatre hôtels cinq étoiles au cœur de Paris, pour accueillir vos invités le temps d’une nuit, d’un séminaire ou d’un mariage.</p>
+    <p class="nc-intro nc-fade">Deux hôtels cinq étoiles près de l’Étoile, pour accueillir vos invités le temps d’une nuit, d’un séminaire ou d’un mariage.</p>
   </section>
 
   <section class="nc-philo" aria-label="Nos hôtels en quelques chiffres">
@@ -151,19 +147,20 @@ html,body{background:var(--cream)}
     <div class="nc-figs nc-fade" id="figures"></div>
   </section>
 
-  <!-- les quatre hôtels (Figma 6670-626) : le carrousel 3D des lieux (js/coverflow.js), un peu plus large ;
-       sous la photo, le nom puis deux lignes. Rien n'est cliquable : on fait défiler au trackpad ou en glissant -->
-  <section class="ht-car" aria-label="Nos hôtels">
-    <div class="cf" id="htCf">
-      <div class="stage" aria-roledescription="carrousel" aria-label="Nos quatre hôtels">
-        <div class="stage-inner"></div>
-        <div class="stage-veil"></div>
-      </div>
-      <div class="info ht-info" aria-live="polite">
-        <h3 class="info-name" data-k="name"></h3>
-        <p class="t-text" data-k="desc"></p>
-      </div>
-    </div>
+  <!-- les deux hôtels, côte à côte (un carrousel n'a pas de sens pour deux) -->
+  <section class="ht-duo" aria-label="Nos hôtels">
+    <article class="ht-hotel nc-fade">
+      <figure><img src="assets/hotels/carrousel/saint-james-1600.webp" srcset="assets/hotels/carrousel/saint-james-800.webp 800w, assets/hotels/carrousel/saint-james-1600.webp 1600w" sizes="(max-width:767px) 100vw, 50vw" alt="Le château du Saint James Paris à la tombée du jour, sa fontaine éclairée" loading="lazy"></figure>
+      <p class="info-place caps">Étoile · Paris 16e</p>
+      <h2 class="info-name">Saint James Paris</h2>
+      <p class="t-text">Un château au cœur de Paris, entouré de son jardin&nbsp;: salons, bibliothèque-bar et terrasse pour recevoir en petit comité, à deux pas de l’Étoile.</p>
+    </article>
+    <article class="ht-hotel nc-fade">
+      <figure><img src="assets/hotels/carrousel/balzac-1600.webp" srcset="assets/hotels/carrousel/balzac-800.webp 800w, assets/hotels/carrousel/balzac-1600.webp 1600w" sizes="(max-width:767px) 100vw, 50vw" alt="Une suite de l’Hôtel Balzac, la tour Eiffel à la fenêtre" loading="lazy" style="object-position:44% 50%"></figure>
+      <p class="info-place caps">Champs-Élysées · Paris 8e</p>
+      <h2 class="info-name">Hôtel Balzac</h2>
+      <p class="t-text">Une adresse élégante dans une rue calme du 8e arrondissement, à quelques minutes de l’Arc de Triomphe et de nos maisons des Champs-Élysées.</p>
+    </article>
   </section>
 
   <section class="ht-uses" aria-labelledby="uTitle">
@@ -176,18 +173,10 @@ html,body{background:var(--cream)}
     </ol>
   </section>
 
-  <section class="ht-near" aria-labelledby="nTitle1">
-    <figure><img src="assets/evenement/procope.webp" srcset="assets/evenement/procope-1280.webp 1280w, assets/evenement/procope.webp 1536w" sizes="(max-width:767px) 100vw, 50vw" alt="La façade illuminée du Procope, rue de l’Ancienne-Comédie" loading="lazy"></figure>
-    <div>
-      <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Rive gauche</p><h2 class="t-h2" id="nTitle1">Le Relais Christine, voisin du Procope</h2></div>
-      <p class="t-text nc-fade" id="near-rg"></p>
-    </div>
-  </section>
-
-  <section class="ht-near ht-near--r" aria-labelledby="nTitle2">
+  <section class="ht-near" aria-labelledby="nTitle2">
     <figure><img src="assets/evenement/auteuil.webp" srcset="assets/evenement/auteuil-1280.webp 1280w, assets/evenement/auteuil.webp 1536w" sizes="(max-width:767px) 100vw, 50vw" alt="Un dîner à Auteuil Brasserie" loading="lazy"></figure>
     <div>
-      <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Champs-Élysées et Ouest</p><h2 class="t-h2" id="nTitle2">Trois hôtels près de l’Étoile</h2></div>
+      <div class="sec-head-txt nc-fade"><p class="t-cta t-eyebrow">Champs-Élysées et Ouest</p><h2 class="t-h2" id="nTitle2">Deux hôtels près de l’Étoile</h2></div>
       <p class="t-text nc-fade" id="near-ouest"></p>
     </div>
   </section>
@@ -246,46 +235,19 @@ html,body{background:var(--cream)}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="js/data.js?v=10"></script>
 <script src="js/menu.js?v=24"></script>
-<script src="js/coverflow.js?v=13"></script>
 <script>
 (() => {
   const $ = id => document.getElementById(id);
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const {VENUES, SECTORS} = BH;
 
-  // les chiffres (groupe-bertrand.com) : 48 + 50 + 37 + 58 chambres et suites ; spas Guerlain du Saint James et du Relais Christine
-  $("figures").innerHTML = [[4, "hôtels cinq étoiles"], [3, "Relais & Châteaux"], [193, "chambres et suites"], [2, "spas Guerlain"]]
+  // les chiffres : nombre de chambres et suites à confirmer avec le client
+  $("figures").innerHTML = [[2, "hôtels cinq étoiles"], [1, "spa Guerlain"]]
     .map(([v, l]) => `<div class="nc-fig"><span class="t-num">${v}</span><span class="t-cta">${l}</span></div>`).join('<span class="fig-sep" aria-hidden="true"></span>');
-
-  // les quatre hôtels : le carrousel des lieux, deux tours de piste pour qu'il boucle sans trou de chaque côté
-  const HOTELS = [
-    {id:"saint-james", name:"Saint James Paris", alt:"Le château du Saint James Paris à la tombée du jour, sa fontaine éclairée",
-     desc:"Un château au cœur de Paris, entouré de son jardin\u00a0: salons, bibliothèque-bar et terrasse pour recevoir en petit comité, à deux pas de l’Étoile."},
-    {id:"norman", name:"Hôtel Norman", alt:"Une chambre de l’hôtel Norman et son salon",
-     desc:"Un hôtel intime à deux pas des Champs-Élysées, où la cheffe Thiou signe une table thaïe et son patio, à privatiser pour vos dîners."},
-    {id:"balzac", name:"Hôtel Balzac", alt:"Une suite de l’hôtel Balzac, la tour Eiffel à la fenêtre",
-     desc:"Une adresse élégante dans une rue calme du 8e arrondissement, à quelques minutes de l’Arc de Triomphe et de nos maisons des Champs-Élysées."},
-    {id:"relais-christine", name:"Relais Christine", alt:"La cour pavée du Relais Christine, gardée par deux lions de pierre",
-     desc:"Un hôtel particulier caché derrière sa cour pavée, en plein Saint-Germain-des-Prés\u00a0: le calme d’une maison, à quelques pas de la Seine et des brasseries de la Rive gauche."},
-  ];
-  const small = innerWidth < 768;
-  const htCf = BH.coverflow($("htCf"), {
-    wheel:"x", loop:true,
-    card:(h, i) => `<div class="lcard" data-i="${i}" role="group" aria-roledescription="diapositive" aria-label="${h.name}"${i >= HOTELS.length ? ' aria-hidden="true"' : ""}>
-      <img data-src="assets/hotels/carrousel/${h.id}-${small ? 800 : 1600}.webp" alt="${h.alt}" draggable="false"><span class="lcard-veil"></span></div>`,
-    fill:(h, field) => {
-      field("name").textContent = h.name;
-      field("desc").textContent = h.desc;
-    },
-  });
-  // les photos apparaissent quand le carrousel arrive à l'écran
-  const htIo = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { htIo.disconnect(); htCf.set([...HOTELS, ...HOTELS], {intro:true}); } }, {rootMargin:"0px 0px -15% 0px"});
-  htIo.observe($("htCf"));
 
   // les maisons voisines, tirées des données du site : un lien vers chacune
   const link = slug => { const v = VENUES.find(x => x.slug === slug); return v ? `<a href="lieu.html?l=${v.slug}">${v.name}</a>` : ""; };
-  $("near-rg").innerHTML = `En plein Saint-Germain-des-Prés, le Relais Christine est à quelques minutes à pied du ${link("procope").replace(">Le ", ">")} et de la ${link("lipp")}&nbsp;: un dîner dans une maison historique, puis une nuit au calme de sa cour pavée. <a href="secteur.html?s=rg">Toutes nos maisons de la Rive gauche</a>.`;
-  $("near-ouest").innerHTML = `Le Norman et le Balzac, à deux pas des Champs-Élysées, et le Saint James, près de l’Étoile&nbsp;: vos invités logent à quelques minutes de ${link("flora-danica")}, du ${link("sirwinston")} ou d’${link("auteuil-brasserie")}. <a href="secteur.html?s=ouest">Toutes nos maisons de l’Ouest parisien</a>.`;
+  $("near-ouest").innerHTML = `Le Balzac, à deux pas des Champs-Élysées, et le Saint James, près de l’Étoile&nbsp;: vos invités logent à quelques minutes de ${link("flora-danica")}, du ${link("sirwinston")} ou d’${link("auteuil-brasserie")}. <a href="secteur.html?s=ouest">Toutes nos maisons de l’Ouest parisien</a>.`;
 
   // questions fréquentes propres à cette page ; les conditions restent générales, en attendant celles du client
   const FAQ = [
