@@ -16,7 +16,7 @@
 
 /* ligne du haut : la place du bouton à gauche, FR / EN à droite (recalée par le script sur le bouton) */
 .mnu-top{display:flex;align-items:center;justify-content:flex-end;min-height:32px;margin-top:var(--cy,0)}
-.mnu-lang{display:flex;gap:8px;font-size:12px;color:var(--muted)}
+.mnu-lang{display:flex;gap:8px;font-size:10.8px;color:var(--muted)}
 .mnu-lang b{font-weight:400;color:var(--ink)}
 
 /* le bouton « menu / Fermer » : posé exactement sur le bouton de la page, au-dessus du panneau */
@@ -36,16 +36,16 @@
 
 /* pied du panneau (Figma) : deux lignes de liens en CTA & TAG beige, 24 px d'écart, filet de 0,6 px à 6 px sous le texte */
 .mnu-foot{display:flex;flex-direction:column;gap:24px;padding-top:24px;border-top:1px solid var(--line)}
-.mnu-sec{display:flex;align-items:flex-start;gap:24px;font-size:14px;color:var(--taupe)}
+.mnu-sec{display:flex;align-items:flex-start;gap:24px;font-size:11.6px;color:var(--taupe)}
 .mnu-sec a{text-box:trim-both cap alphabetic}   /* texte rogné aux capitales : filet à 6 px, comme le CTA du Figma */
-.mnu-quote{display:flex;align-items:center;justify-content:center;gap:12px;height:52px;padding:0 24px;background:var(--taupe);color:#fff;font-size:14px;transition:background .45s var(--ease)}
+.mnu-quote{display:flex;align-items:center;justify-content:center;gap:12px;height:52px;padding:0 24px;background:var(--taupe);color:#fff;font-size:11.6px;transition:background .45s var(--ease)}
 .mnu-quote:hover{background:var(--ink)}
 .mnu-quote svg{transition:transform .4s var(--ease)}
 .mnu-quote:hover svg{transform:translateX(4px)}
 .mnu-tel{display:flex;align-items:baseline;justify-content:center;gap:16px}   /* le texte et le numéro sur la même ligne de base, le trait du lien en dessous */
 /* « Ou appelez-nous » au style du texte courant, le numéro en lien secondaire (comme « Vous préférez en parler ? » du devis) */
-.mnu-tel span{font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--ink);text-box:trim-both cap alphabetic}
-.mnu-tel a{font-size:14px;color:var(--taupe)}
+.mnu-tel span{font-size:14.5px;font-weight:300;line-height:1.4;letter-spacing:-.015em;color:var(--ink);text-box:trim-both cap alphabetic}
+.mnu-tel a{font-size:11.6px;color:var(--taupe)}
 
 /* photo de la rubrique survolée : tout le reste de l'écran, à droite du panneau */
 .mnu-media{position:absolute;top:0;bottom:0;right:0;left:var(--mnu-w);overflow:hidden;pointer-events:none}

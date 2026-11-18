@@ -20,12 +20,12 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/base.css?v=23">
-<script src="js/typo-variante.js?v=11"></script>
-<link rel="stylesheet" href="css/menu.css?v=18">
-<link rel="stylesheet" href="css/home.css?v=35">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Josefin+Sans:wght@600&family=Inter:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="css/base.css?v=24">
+<link rel="stylesheet" href="css/menu.css?v=19">
+<link rel="stylesheet" href="css/home.css?v=36">
 <style>
 /* Page Engagement RSE (lot 3 · 10), d'après Figma 6610-4845 : hero, ce qui nous guide et nos repères, trois engagements
    (dans l'assiette, pour votre événement, les femmes et les hommes : photo d'un côté, titre et liste de l'autre), autour de la table
@@ -42,7 +42,7 @@ html,body{background:var(--cream)}
 .nc-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(29,29,27,.8) 20%,rgba(29,29,27,0) 40%,rgba(29,29,27,0) 80%,rgba(29,29,27,.8) 100%)}
 .nc-hero .t-mini{color:rgba(255,255,255,.85)}
 .nc-title{max-width:640px;font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
-.nc-intro{max-width:560px;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;text-box:trim-both cap alphabetic}
+.nc-intro{max-width:560px;font-size:14.5px;font-weight:300;line-height:1.4;letter-spacing:-.015em;text-box:trim-both cap alphabetic}
 
 /* ce qui nous guide : la phrase, puis trois repères entre deux filets (comme les chiffres de « Nous connaître ») */
 .nc-philo{display:flex;flex-direction:column;align-items:center;gap:64px;padding:128px var(--gutter)}
@@ -72,7 +72,7 @@ html,body{background:var(--cream)}
 .eg-cols li > span{flex:0 0 32px;font-family:var(--serif);font-size:24px;line-height:1.1;letter-spacing:.02em;color:var(--taupe);text-box:trim-both cap alphabetic}
 .eg-cols li > div{display:flex;flex-direction:column;gap:32px;min-width:0}
 .eg-cols b{font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
-.eg-cols p{margin:0;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--muted);text-box:trim-both cap alphabetic}
+.eg-cols p{margin:0;font-size:14.5px;font-weight:300;line-height:1.4;letter-spacing:-.015em;color:var(--muted);text-box:trim-both cap alphabetic}
 
 /* les assiettes, sur toute la largeur */
 .eg-band{position:relative;width:100%;height:clamp(280px,39vw,640px);margin:0;overflow:hidden;background:var(--cream-2)}

@@ -20,14 +20,14 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/base.css?v=23">
-<script src="js/typo-variante.js?v=11"></script>
-<link rel="stylesheet" href="css/menu.css?v=18">
-<link rel="stylesheet" href="css/home.css?v=35">
-<link rel="stylesheet" href="css/paris-map.css?v=7">
-<link rel="stylesheet" href="css/pages.css?v=4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Josefin+Sans:wght@600&family=Inter:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="css/base.css?v=24">
+<link rel="stylesheet" href="css/menu.css?v=19">
+<link rel="stylesheet" href="css/home.css?v=36">
+<link rel="stylesheet" href="css/paris-map.css?v=8">
+<link rel="stylesheet" href="css/pages.css?v=5">
 <style>
 /* Page Secteur (lot 2, dynamique : en production /secteurs/[secteur], une fiche CMS par quartier), d'après Figma 6560-899 :
    le hero en photo plein écran, les lieux du quartier (filtrables par format et par nombre d'invités), deux sections photo + texte,
@@ -45,7 +45,7 @@ html.lenis,html.lenis body{height:auto}
 .is-ready .sc-hero img{transform:none}
 .sc-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(29,29,27,.8) 20%,rgba(29,29,27,0) 40%,rgba(29,29,27,0) 80%,rgba(29,29,27,.8) 100%)}   /* le dégradé du hero de la home */
 .sc-title{max-width:584px;font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
-.sc-intro{max-width:642px;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:#fff;text-box:trim-both cap alphabetic}
+.sc-intro{max-width:642px;font-size:14.5px;font-weight:300;line-height:1.4;letter-spacing:-.015em;color:#fff;text-box:trim-both cap alphabetic}
 
 /* deux sections photo + texte, en alternance, une hauteur d'écran */
 .sc-split{display:grid;grid-template-columns:1fr 1fr;min-height:100svh}

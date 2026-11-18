@@ -20,11 +20,11 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/base.css?v=23">
-<script src="js/typo-variante.js?v=11"></script>
-<link rel="stylesheet" href="css/menu.css?v=18">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Josefin+Sans:wght@600&family=Inter:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="css/base.css?v=24">
+<link rel="stylesheet" href="css/menu.css?v=19">
 <style>
 html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 .nav{color:#fff}   /* menu et « Demander un devis » en blanc sur l'image, comme sur la home */
@@ -38,27 +38,21 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
   background:linear-gradient(180deg,rgba(29,29,27,.7) 0%,rgba(29,29,27,0) 34%,rgba(29,29,27,0) 72%,rgba(29,29,27,1) 100%)}   /* bas à 100 %, comme le Figma : le nom de l'espace et les liens restent lisibles */
 
 /* points de passage d'un espace à l'autre */
-.hot{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;display:grid;place-items:center;z-index:2;cursor:pointer}
-.hot::before{content:"";width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.4)}
-.hot::after{content:"";position:absolute;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.85);animation:breathe 2.8s var(--ease) infinite}
-@keyframes breathe{0%{transform:scale(.55);opacity:0}35%{opacity:.9}100%{transform:scale(1.25);opacity:0}}
-.hot span{position:absolute;left:34px;top:50%;transform:translate(-6px,-50%);white-space:nowrap;font-size:12px;color:#fff;opacity:0;transition:opacity .35s var(--ease),transform .5s var(--expo);pointer-events:none;text-shadow:0 1px 12px rgba(0,0,0,.35)}
-.hot:hover span,.hot:focus-visible span{opacity:1;transform:translate(0,-50%)}
 
 /* bas de l'image */
 .corner{position:fixed;right:var(--gutter);bottom:30px;z-index:3;display:flex;align-items:center;gap:28px;color:#fff}
-.corner .ul{font-size:14px}
+.corner .ul{font-size:11.6px}
 
 /* lieu vide / en événement : un bloc crème glisse d'un mot à l'autre */
 .mode{position:fixed;top:96px;left:50%;transform:translateX(-50%);z-index:3;display:inline-flex;padding:3px;border:1px solid rgba(255,255,255,.5);color:#fff}
 .mode[hidden]{display:none}
 .mode button:disabled{opacity:.35;cursor:default}
-.mode button{position:relative;z-index:1;padding:9px 14px 8px;font-size:12px;color:#fff;transition:color .5s var(--ease)}
+.mode button{position:relative;z-index:1;padding:9px 14px 8px;font-size:10.8px;color:#fff;transition:color .5s var(--ease)}
 .mode button[aria-pressed="true"]{color:var(--ink)}
 .mode .knob{position:absolute;top:3px;bottom:3px;left:0;width:var(--kw,0px);background:var(--cream);transform:translateX(var(--kx,3px));transition:transform .7s var(--expo),width .7s var(--expo)}
 
 /* musique : un trait qui se met à onduler doucement */
-.music{display:inline-flex;align-items:center;gap:12px;font-size:12px;color:#fff}
+.music{display:inline-flex;align-items:center;gap:12px;font-size:10.8px;color:#fff}
 .music[hidden]{display:none}
 .music svg{width:30px;height:12px;overflow:hidden}
 .music .amp{transform:scaleY(.08);transform-origin:50% 50%;transition:transform .9s var(--expo)}
@@ -71,20 +65,17 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 @keyframes wave{to{transform:translateX(-12px)}}
 .yt{position:fixed;left:-9999px;top:0;width:1px;height:1px;overflow:hidden}
 
-/* la même vue, remplie de monde, en journée ou en soirée : images superposées, cadrage identique */
+/* la même vue, en événement : image superposée, cadrage identique */
 .layer img.evt,.space-img img.evt{opacity:0;transition:opacity 1.2s var(--ease)}
 .space-img{position:relative}
 .space-img img.evt{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.is-day .evt-day,.is-night .evt-night{opacity:1!important}
-/* mise en situation recadrée : les points de passage, placés sur la photo vide, ne correspondent plus à l'image */
-.layer .hot{transition:opacity .6s var(--ease)}
-.is-day .layer.is-reframe .hot,.is-night .layer.is-reframe .hot{opacity:0;pointer-events:none}
-.caption em{display:block;margin-top:10px;font-style:normal;font-size:12px;color:rgba(255,255,255,.7);opacity:0;transition:opacity .6s}
-.is-day .caption em,.is-night .caption em{opacity:1}
+.is-evt .evt{opacity:1!important}
+.caption em{display:block;margin-top:10px;font-style:normal;font-size:10.8px;color:rgba(255,255,255,.7);opacity:0;transition:opacity .6s}
+.is-evt .caption em{opacity:1}
 .caption{position:fixed;left:calc(24px + 400px + 40px);bottom:30px;z-index:3;color:#fff;transition:opacity .4s}
-.caption small{display:block;font-size:12px;color:rgba(255,255,255,.75)}
+.caption small{display:block;font-size:10.8px;color:rgba(255,255,255,.75)}
 .caption b{display:block;margin-top:9px;font-family:var(--serif);font-weight:400;font-size:20px;letter-spacing:.02em;text-transform:uppercase}
-.hint{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;color:#fff;font-size:12px;padding:12px 18px;background:rgba(29,29,27,.28);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);pointer-events:none;transition:opacity .6s var(--ease)}
+.hint{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;color:#fff;font-size:10.8px;padding:12px 18px;background:rgba(29,29,27,.28);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);pointer-events:none;transition:opacity .6s var(--ease)}
 .hint.is-off{opacity:0}
 
 /* ---------- LE PANNEAU ---------- */
@@ -95,14 +86,14 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 .p-close:hover{color:var(--ink)}
 .p-close svg,.reopen svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.2}
 .p-head{padding:34px 34px 0}
-.p-place{font-size:12px;color:var(--muted)}
+.p-place{font-size:10.8px;color:var(--muted)}
 .p-name{margin-top:14px;font-family:var(--serif);font-weight:400;font-size:36px;line-height:1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
-.p-tag{margin-top:14px;font-size:14px;font-weight:300;line-height:1.55;color:var(--ink-soft)}
+.p-tag{margin-top:14px;font-size:14.5px;font-weight:300;line-height:1.55;color:var(--ink-soft)}
 .p-about{overflow:hidden;height:0;transition:height .6s var(--expo)}
-.p-about p{padding-top:10px;font-size:13px;font-weight:300;line-height:1.65;color:var(--ink-soft)}
-.more{margin-top:12px;font-size:12px;color:var(--muted)}
+.p-about p{padding-top:10px;font-size:13.6px;font-weight:300;line-height:1.65;color:var(--ink-soft)}
+.more{margin-top:12px;font-size:10.8px;color:var(--muted)}
 .p-caps{display:flex;gap:20px;margin-top:22px}
-.capi{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;transition:color .4s}
+.capi{display:flex;align-items:center;gap:7px;font-size:12.1px;color:var(--muted);font-variant-numeric:tabular-nums;transition:color .4s}
 .capi svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.2}
 .capi.is-on{color:var(--ink)}
 
@@ -110,7 +101,7 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 .tabs::-webkit-scrollbar{display:none}
 .tabs.is-more{mask-image:linear-gradient(90deg,#000 80%,transparent);-webkit-mask-image:linear-gradient(90deg,#000 80%,transparent)}
 .tab{flex:0 0 auto}
-.tab{position:relative;padding:0 0 14px;font-size:12px;color:var(--muted);transition:color .3s}
+.tab{position:relative;padding:0 0 14px;font-size:10.8px;color:var(--muted);transition:color .3s}
 .tab:hover{color:var(--ink)}
 .tab::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--expo)}
 .tab[aria-selected="true"]{color:var(--ink)}
@@ -127,8 +118,8 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 .space-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.2s var(--expo)}
 .space:hover .space-img img{transform:scale(1.05)}
 .space.is-on .space-img{outline-color:var(--ink)}
-.space-name{margin-top:10px;font-size:13px}
-.space-cap{margin-top:5px;font-size:12px;font-weight:300;color:var(--muted)}
+.space-name{margin-top:10px;font-size:12.6px}
+.space-cap{margin-top:5px;font-size:12.6px;font-weight:300;color:var(--muted)}
 
 /* galerie : deux colonnes de photos verticales ; un clic ouvre la visionneuse plein écran */
 .gal{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -140,13 +131,13 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 .lb.is-on{opacity:1;visibility:visible;transition:opacity .5s var(--ease)}
 .lb-img{max-width:calc(100vw - 200px);max-height:calc(100svh - 160px);object-fit:contain;transition:opacity .45s var(--ease)}
 .lb-img.is-out{opacity:0}
-.lb-bar{position:absolute;left:32px;right:32px;top:28px;display:flex;justify-content:space-between;align-items:center;color:#fff;font-size:12px}
+.lb-bar{position:absolute;left:32px;right:32px;top:28px;display:flex;justify-content:space-between;align-items:center;color:#fff;font-size:10.8px}
 .lb-close{color:#fff}
 .lb-nav{position:absolute;top:50%;width:56px;height:56px;margin-top:-28px;display:flex;align-items:center;justify-content:center;color:#fff;opacity:.7;transition:opacity .3s}
 .lb-nav:hover{opacity:1}
 .lb-nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1}
 .lb-prev{left:24px}.lb-next{right:24px}
-.lb-cap{position:absolute;left:0;right:0;bottom:28px;text-align:center;color:rgba(255,255,255,.7);font-size:13px;font-weight:300}
+.lb-cap{position:absolute;left:0;right:0;bottom:28px;text-align:center;color:rgba(255,255,255,.7);font-size:13.6px;font-weight:300}
 @media (max-width:767px){.lb-img{max-width:100vw;max-height:calc(100svh - 140px)}.lb-nav{top:auto;bottom:12px;margin:0}.lb-prev{left:8px}.lb-next{right:8px}.lb-cap{bottom:70px;padding:0 24px}.lb-bar{left:20px;right:20px}}
 
 /* capacités */
@@ -154,44 +145,44 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 .fmts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
 .fmt2{display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 4px 12px;background:var(--white);border:1px solid transparent;transition:border-color .3s}
 .fmt2 svg{width:24px;height:24px;stroke:var(--ink);fill:none;stroke-width:1.1}
-.fmt2 span{font-size:12px;text-align:center;line-height:1.3;white-space:nowrap}
+.fmt2 span{font-size:10.8px;text-align:center;line-height:1.3;white-space:nowrap}
 .fmt2:hover{border-color:var(--line)}
 .fmt2[aria-pressed="true"]{border-color:var(--ink)}
 @media (max-width:359px){.fmts{grid-template-columns:1fr}.fmt2{flex-direction:row;justify-content:center;padding:14px 12px}}   /* très petits écrans : un format par ligne, le pictogramme à gauche */
 .guests2{display:flex;align-items:center;gap:16px;margin:22px 0 6px}
 .guests2 output{font-family:var(--serif);font-size:30px;letter-spacing:.02em;min-width:2.4ch;font-variant-numeric:tabular-nums}
-.guests2 small{font-size:12px;color:var(--muted);font-weight:300}
+.guests2 small{font-size:12.6px;color:var(--muted);font-weight:300}
 .guests2 .range{flex:1}
 .fits{margin-top:18px}
-.fit{display:flex;justify-content:space-between;align-items:baseline;width:100%;padding:13px 0;border-top:1px solid var(--line);font-size:13.5px;text-align:left;transition:color .3s,padding .4s var(--expo)}
+.fit{display:flex;justify-content:space-between;align-items:baseline;width:100%;padding:13px 0;border-top:1px solid var(--line);font-size:13.1px;text-align:left;transition:color .3s,padding .4s var(--expo)}
 .fit:last-child{border-bottom:1px solid var(--line)}
-.fit small{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.fit small{font-size:11.6px;color:var(--muted);font-variant-numeric:tabular-nums}
 .fit:hover{padding-left:8px}
 .fit.is-out{color:var(--muted)}
 .fit.is-out small{opacity:.6}
 
 /* offres */
 .offer-group + .offer-group{margin-top:22px}
-.offer-group h3{font-size:12px;color:var(--muted);font-weight:400;margin-bottom:8px}
-.offer{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-top:1px solid var(--line);font-size:13.5px}
-.offer small{display:block;margin-top:4px;font-size:12px;font-weight:300;color:var(--muted)}
+.offer-group h3{font-size:10.8px;color:var(--muted);font-weight:400;margin-bottom:8px}
+.offer{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-top:1px solid var(--line);font-size:13.1px}
+.offer small{display:block;margin-top:4px;font-size:12.6px;font-weight:300;color:var(--muted)}
 .offer .price{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 .offer .price small{margin-top:4px}
-.legal{margin-top:22px;font-size:12px;font-weight:300;color:var(--muted);line-height:1.5}
+.legal{margin-top:22px;font-size:12.6px;font-weight:300;color:var(--muted);line-height:1.5}
 
 /* infos */
 .info-block + .info-block{margin-top:24px}
-.info-block h3{font-size:12px;color:var(--muted);font-weight:400;margin-bottom:10px}
-.info-block p{font-size:13.5px;line-height:1.6}
-.info-block p.soft{font-weight:300;color:var(--ink-soft)}
+.info-block h3{font-size:10.8px;color:var(--muted);font-weight:400;margin-bottom:10px}
+.info-block p{font-size:13.1px;line-height:1.6}
+.info-block p.soft{font-weight:300;font-size:14.1px;color:var(--ink-soft)}
 .info-links{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
-.info-links a{display:inline-flex;align-items:center;gap:10px;font-size:13.5px}
+.info-links a{display:inline-flex;align-items:center;gap:10px;font-size:13.1px}
 .info-links svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.2}
-.empty-note{font-size:13.5px;font-weight:300;line-height:1.6;color:var(--ink-soft)}
+.empty-note{font-size:14.1px;font-weight:300;line-height:1.6;color:var(--ink-soft)}
 
 .p-foot{display:flex;align-items:center;gap:16px;padding:18px 24px 24px;border-top:1px solid var(--line)}
 .p-foot .go{flex:1 0 auto;height:48px;margin:0}   /* 24 px de part et d’autre du texte, comme tous les boutons */
-.p-foot .ul{font-size:14px}
+.p-foot .ul{font-size:11.6px}
 
 /* panneau replié */
 .reopen{position:fixed;left:24px;top:96px;z-index:6;display:flex;align-items:center;gap:14px;height:46px;padding:0 18px 0 20px;background:var(--cream);color:var(--ink);
@@ -203,7 +194,7 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 .sv{position:fixed;inset:0;z-index:20;background:var(--ink);opacity:0;pointer-events:none;transition:opacity .5s var(--ease)}
 .sv.is-on{opacity:1;pointer-events:auto}
 .sv iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.sv button{position:absolute;right:var(--gutter);top:28px;color:#fff;font-size:12px;z-index:2}
+.sv button{position:absolute;right:var(--gutter);top:28px;color:#fff;font-size:10.8px;z-index:2}
 
 /* intro */
 .js .panel{opacity:0}
@@ -223,7 +214,7 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
   .caption{left:20px;bottom:auto;top:84px}
   .corner{right:16px;bottom:auto;top:84px;gap:16px}
   .mode{top:76px;max-width:calc(100% - 2*var(--gutter))}
-  .mode button{white-space:nowrap;padding:9px 9px 8px;letter-spacing:.06em}   /* les trois choix sur une ligne */
+  .mode button{white-space:nowrap;padding:9px 9px 8px;letter-spacing:.14em}   /* les deux choix sur une ligne */
   .caption{top:136px}
   .corner #svOpen,.corner #allLink,.music span{display:none}
   .hint{top:34%}
@@ -270,8 +261,7 @@ html,body{height:100%;overflow:hidden;overflow:clip;background:var(--ink)}
 <div class="hint caps" id="hint">Glissez pour regarder autour</div>
 <div class="mode" id="mode" role="group" aria-label="Affichage" hidden><span class="knob" aria-hidden="true"></span>
   <button class="caps" type="button" data-mode="vide" aria-pressed="true">Lieu vide</button>
-  <button class="caps" type="button" data-mode="day" aria-pressed="false">En journée</button>
-  <button class="caps" type="button" data-mode="night" aria-pressed="false">En soirée</button></div>
+  <button class="caps" type="button" data-mode="evt" aria-pressed="false">En événement</button></div>
 <div class="corner">
   <button class="ul caps" id="svOpen" type="button" hidden>Vue 360°</button>
   <a class="ul caps" href="lieux.html" id="allLink">Tous les lieux</a>
@@ -343,9 +333,11 @@ const ICON = {
   phone:'<svg viewBox="0 0 16 16"><path d="M5.5 2h-2A1.5 1.5 0 0 0 2 3.5C2 9.3 6.7 14 12.5 14a1.5 1.5 0 0 0 1.5-1.5v-2l-3-1-1.5 1.5a8 8 0 0 1-4-4L7 5.5Z"/></svg>',
   mail:'<svg viewBox="0 0 16 16"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4 5.5 4.5L13.5 4"/></svg>',
 };
-// les photos en situation d'un espace : de jour et de soirée, posées sur la photo vide (vignette ou vue plein écran)
-const evtImgs = (s, name, lazy) => (s.dayOk ? `<img class="evt evt-day" src="${s.day}" alt="${name ? name + ", en journée" : ""}"${lazy ? ' loading="lazy"' : ""}>` : "")
-  + (s.eventOk ? `<img class="evt evt-night" src="${s.event}" alt="${name ? name + ", en soirée" : ""}"${lazy ? ' loading="lazy"' : ""}>` : "");
+// la photo en situation d'un espace, posée sur la photo vide (vignette ou vue plein écran) : celle de soirée, sinon celle de journée
+const evtImgs = (s, name, lazy) => {
+  const src = s.eventOk ? s.event : s.dayOk ? s.day : null;
+  return src ? `<img class="evt" src="${src}" alt="${name ? name + ", en événement" : ""}"${lazy ? ' loading="lazy"' : ""}>` : "";
+};
 const TABS = [
   {id:"espaces", label:"Espaces", show:D.scenes.length > 1, html:() =>
     `<div class="spaces">${D.scenes.map(s => `<button class="space" type="button" data-go="${s.id}">
@@ -369,7 +361,7 @@ const TABS = [
        <a href="${D.site.url}" target="_blank" rel="noopener">${ICON.link}${D.site.label}</a>
        <a href="${D.instagram.url}" target="_blank" rel="noopener">${ICON.insta}${D.instagram.label}</a></div></div>`
      : `<p class="empty-note">Toutes les informations pratiques de ${venue.name} sont sur sa fiche actuelle, en attendant leur intégration ici.</p>
-        <div class="info-links" style="margin-top:16px"><a class="ul caps" href="${D.page}" target="_blank" rel="noopener" style="font-size:14px">Voir la fiche actuelle</a></div>`},
+        <div class="info-links" style="margin-top:16px"><a class="ul caps" href="${D.page}" target="_blank" rel="noopener" style="font-size:11.6px">Voir la fiche actuelle</a></div>`},
   {id:"avis", label:"Avis", show:true, html:() =>
     `<p class="empty-note">Les retours de vos clients, issus des questionnaires de satisfaction, s’afficheront ici, lieu par lieu.</p>`},
   {id:"galerie", label:"Galerie", show:!!(D.gallery && D.gallery.length), html:() =>
@@ -470,10 +462,7 @@ function show(id, first) {
   current = s.id;
   const el = document.createElement("div");
   el.className = "layer" + (s.reframe ? " is-reframe" : "");
-  el.innerHTML = `<img src="${s.img}" alt="${s.name}">` + evtImgs(s, s.name) + s.hot.map(h => {
-    const to = byId(h.to);
-    return `<button class="hot" type="button" style="left:${h.x}%;top:${h.y}%" data-go="${to.id}" aria-label="${to.name}"><span class="caps">${to.name}</span></button>`;
-  }).join("");
+  el.innerHTML = `<img src="${s.img}" alt="${s.name}">` + evtImgs(s, s.name);   // on change d'espace depuis le panneau
   if (s.pos) el.querySelectorAll("img").forEach(i => i.style.objectPosition = s.pos);   // cadrage propre à l'espace (photo en hauteur)
   scene.appendChild(el);
   const old = layer; layer = el;
@@ -491,7 +480,7 @@ function show(id, first) {
   syncMode(s);
   document.querySelectorAll(".space").forEach(b => b.classList.toggle("is-on", b.dataset.go === s.id));
 }
-// tout ce qui porte data-go (points de passage, vignettes, lignes de capacité) mène à un espace
+// tout ce qui porte data-go (vignettes, lignes de capacité) mène à un espace
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-go]"); if (!b || dragged) return;
   show(b.dataset.go);
@@ -545,9 +534,9 @@ if (D.streetview) {
   addEventListener("keydown", e => { if (e.key === "Escape") $("svClose").click(); });
 }
 
-/* ---------- en situation : la même vue, remplie de monde, en journée ou en soirée ----------
-   Chaque espace peut avoir ses photos « day » et « event » (soirée) au même cadrage. On vérifie lesquelles existent :
-   le sélecteur n'apparaît que s'il y en a au moins une ; un espace sans la sienne garde sa photo. */
+/* ---------- en événement : la même vue, remplie de monde ----------
+   Chaque espace peut avoir ses photos « day » et « event » (soirée) au même cadrage ; on montre celle de soirée, sinon
+   celle de journée. Le sélecteur n'apparaît que s'il y en a au moins une ; un espace sans la sienne garde sa photo. */
 const probe = src => new Promise(res => { const i = new Image(); i.onload = () => res(true); i.onerror = () => res(false); i.src = src; });
 Promise.all(D.scenes.flatMap(sc => [sc.day ? probe(sc.day).then(ok => sc.dayOk = ok) : 0, sc.event ? probe(sc.event).then(ok => sc.eventOk = ok) : 0])).then(() => {
   probed = true;
@@ -565,11 +554,11 @@ Promise.all(D.scenes.flatMap(sc => [sc.day ? probe(sc.day).then(ok => sc.dayOk =
 let probed = false, mode = "vide";
 function syncMode(s) {
   if (!probed) return;
-  const has = {vide:s.empty !== false, day:!!s.dayOk || s.empty === false, night:!!s.eventOk};
+  const has = {vide:s.empty !== false, evt:true};
   $("mode").hidden = !(s.dayOk || s.eventOk);
   if ($("mode").hidden) { applyMode("vide"); return; }
   $("mode").querySelectorAll("button").forEach(b => b.disabled = !has[b.dataset.mode]);
-  applyMode(has[mode] ? mode : (has.day ? "day" : "night"));
+  applyMode(has[mode] ? mode : "evt");
 }
 function placeKnob() {
   const on = $("mode").querySelector('[aria-pressed="true"]');
@@ -578,8 +567,7 @@ function placeKnob() {
 }
 // le choix de la personne est gardé d'un espace à l'autre (mode) ; l'affichage suit ce que l'espace permet (applyMode)
 function applyMode(m) {
-  document.body.classList.toggle("is-day", m === "day");
-  document.body.classList.toggle("is-night", m === "night");
+  document.body.classList.toggle("is-evt", m === "evt");
   $("mode").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === m));
   if (!$("mode").hidden) placeKnob();
 }

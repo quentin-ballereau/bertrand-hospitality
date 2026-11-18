@@ -20,12 +20,12 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/base.css?v=23">
-<script src="js/typo-variante.js?v=11"></script>
-<link rel="stylesheet" href="css/menu.css?v=18">
-<link rel="stylesheet" href="css/home.css?v=35">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Josefin+Sans:wght@600&family=Inter:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="css/base.css?v=24">
+<link rel="stylesheet" href="css/menu.css?v=19">
+<link rel="stylesheet" href="css/home.css?v=36">
 <style>
 /* Article du journal (lot 3 · 12), dans le style du zoning Figma 6615-6014 : hero avec la date et le titre, puis l'article
    (chapô, parties numérotées sous un filet, sous-parties, liste, citation, encadré, conclusion et appel à demander un devis),
@@ -47,7 +47,7 @@ html,body{background:var(--cream)}
 .ar-body{display:flex;flex-direction:column;align-items:center;gap:80px;padding:96px var(--gutter)}
 .ar-lead{width:min(584px,100%);display:flex;flex-direction:column;gap:24px}
 .ar-lead p{margin:0;font-family:var(--serif);font-size:24px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);text-box:trim-both cap alphabetic;text-wrap:balance}   /* style H4, comme la citation de « Nous connaître » */
-.ar-meta{font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-family:var(--caps);color:var(--taupe)}
+.ar-meta{font-size:10.8px;letter-spacing:.14em;text-transform:uppercase;font-family:var(--caps);color:var(--taupe)}
 .ar-part{display:flex;flex-direction:column;gap:24px;width:min(584px,100%);padding-top:80px;border-top:1px solid var(--line)}
 /* juste après une photo, pas de filet : la photo sépare déjà les parties */
 .ar-pic + .ar-body > .ar-part:first-child{padding-top:0;border-top:0}
@@ -55,7 +55,7 @@ html,body{background:var(--cream)}
 .ar-part h2{font-size:32px;margin-bottom:8px}
 .ar-part h3{font-size:24px;margin-top:24px}
 .ar-part h4{font-size:18px}
-.ar-part p,.ar-part li{margin:0;font-size:14px;font-weight:300;line-height:1.6;letter-spacing:-.01em;color:var(--ink-soft)}
+.ar-part p,.ar-part li{margin:0;font-size:14.5px;font-weight:300;line-height:1.6;letter-spacing:-.01em;color:var(--ink-soft)}
 .ar-part strong{font-weight:400;color:var(--ink)}
 .ar-part ul{margin:0;padding:0;list-style:none;border-bottom:1px solid var(--line)}
 .ar-part li{position:relative;padding:14px 0 14px 28px;border-top:1px solid var(--line)}
@@ -66,7 +66,7 @@ html,body{background:var(--cream)}
 .ar-end{display:flex;flex-direction:column;align-items:flex-start;gap:32px;width:min(584px,100%);padding-top:80px;border-top:1px solid var(--line)}
 .ar-end{gap:24px}
 .ar-end h2{margin:0;font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);text-box:trim-both cap alphabetic}
-.ar-end p{margin:0 0 8px;font-size:14px;font-weight:300;line-height:1.6;letter-spacing:-.01em;color:var(--ink-soft)}
+.ar-end p{margin:0 0 8px;font-size:14.5px;font-weight:300;line-height:1.6;letter-spacing:-.01em;color:var(--ink-soft)}
 
 /* les photos entre les parties, sur toute la largeur du contenu */
 .ar-pic{width:min(1184px,calc(100% - 2 * var(--gutter)));aspect-ratio:16/9;margin:0 auto;overflow:hidden;background:var(--cream-2)}

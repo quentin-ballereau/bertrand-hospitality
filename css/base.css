@@ -1,11 +1,9 @@
 /* Socle commun : polices, couleurs, navigation et barre de recherche */
-@font-face{font-family:"Ivar Display";src:url(../fonts/IvarDisplay-Regular.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
-@font-face{font-family:"Ivar Display";src:url(../fonts/IvarDisplay-Italic.woff2) format("woff2");font-weight:400;font-style:italic;font-display:swap}
-@font-face{font-family:"Copperplate";src:url(../fonts/Copperplate.woff2) format("woff2");font-weight:400;font-display:swap}
-@font-face{font-family:"Copperplate";src:url(../fonts/Copperplate-Light.woff2) format("woff2");font-weight:300;font-display:swap}
-@font-face{font-family:"Helvetica LT";src:url(../fonts/HelveticaLTStd-Light.woff2) format("woff2");font-weight:300;font-display:swap}
-@font-face{font-family:"Helvetica LT";src:url(../fonts/HelveticaLTStd-Roman.woff2) format("woff2");font-weight:400;font-display:swap}
-@font-face{font-family:"Helvetica LT";src:url(../fonts/HelveticaLTStd-Bold.woff2) format("woff2");font-weight:700;font-display:swap}
+/* Polices Google (chargées dans le <head> de chaque page) :
+   Playfair Display 400 pour les titres, Josefin Sans SemiBold 600 pour les capitales (tags, CTA ; seule graisse chargée,
+   elle sert aussi là où le CSS demande 400), Inter Light 300 pour le texte (400, 500 et 700 pour les mots en relief).
+   Tailles calées sur les proportions des anciennes polices : capitales Josefin à 80 % de l'ancienne taille Copperplate
+   (mini-tags 13,5 → 10,8 px, CTA 14,5 → 11,6 px), texte Inter à 97 %, interlettrage des capitales 14 %, du texte −1,5 %. */
 
 :root{
   --ink:#1d1d1b;            /* noir du Figma */
@@ -16,19 +14,19 @@
   --cream-2:#f3efeb;
   --line:#e6e1dd;
   --white:#fff;
-  --serif:"Ivar Display", "Times New Roman", serif;   /* règle de marque : toujours en capitales, interlettrage 2 % */
-  --caps:"Copperplate", "Copperplate Gothic", serif;
-  --sans:"Helvetica LT", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --serif:"Playfair Display", Georgia, "Times New Roman", serif;   /* règle de marque : toujours en capitales, interlettrage 2 % */
+  --caps:"Josefin Sans", Helvetica, Arial, sans-serif;
+  --sans:"Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --ease:cubic-bezier(.22,.61,.36,1);
   --expo:cubic-bezier(.16,1,.3,1);
   --gutter:48px;
   --bar-w:584px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+html,body{color:var(--ink);font-family:var(--sans);font-variant-numeric:lining-nums;-webkit-font-smoothing:antialiased}   /* chiffres alignés (Playfair et Josefin ont des chiffres elzéviriens par défaut) */
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 a{color:inherit;text-decoration:none}
-.caps{font-family:var(--caps);font-weight:400;text-transform:uppercase;letter-spacing:.11em;line-height:1.3;text-box:trim-both cap alphabetic}
+.caps{font-family:var(--caps);font-weight:400;text-transform:uppercase;letter-spacing:.14em;line-height:1.3;text-box:trim-both cap alphabetic}
 /* titres, sur tout le site : jamais un mot seul sur la dernière ligne, des lignes de longueur équilibrée
    (le navigateur répartit les mots ; sans effet sur les titres d'une seule ligne) */
 h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,.lp-title,.sc-title,.of-title,.headline,.info-name,.p-name,
@@ -45,7 +43,7 @@ h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,
 @keyframes nav-in{from{transform:translateY(-100%)}}
 @keyframes nav-out{to{transform:translateY(-100%)}}
 @media (prefers-reduced-motion:reduce){.nav.is-stuck{animation:none}}
-.nav-menu{display:flex;align-items:center;gap:12px;justify-self:start;font-size:14px}
+.nav-menu{display:flex;align-items:center;gap:12px;justify-self:start;font-size:11.6px}
 .nav-menu img{width:17px;height:6px;display:block}
 /* icône du menu : deux traits de 17 × 6 px en couleur courante (dessin du Figma), qui forment une croix quand le menu est ouvert */
 .nav-ico{position:relative;display:block;width:17px;height:6px;flex:0 0 17px}
@@ -58,7 +56,7 @@ h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,
 .nav-logo .logo-alt{position:absolute;inset:0;opacity:0}
 .nav.is-stuck .logo-alt{opacity:1}
 .nav.is-stuck img:has(+ .logo-alt){opacity:0}
-.nav-cta{justify-self:end;display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 18px;background:var(--taupe);color:#fff;font-size:13px;white-space:nowrap;transition:background .45s var(--ease)}
+.nav-cta{justify-self:end;display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 18px;background:var(--taupe);color:#fff;font-size:10.8px;white-space:nowrap;transition:background .45s var(--ease)}
 /* « Demander un devis » : un vrai bouton, comme « Voir les lieux » et celui du menu ; la flèche glisse au survol */
 .nav-cta::after{content:"";width:16px;height:10px;flex:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' fill='none'%3E%3Cpath d='M0 5h15M11 1l4 4-4 4' stroke='%23fff'/%3E%3C/svg%3E") center/contain no-repeat;transition:transform .4s var(--ease)}
 .nav-cta:hover{background:var(--ink)}
@@ -69,8 +67,8 @@ h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,
 .nav-quote-pop{position:absolute;top:calc(100% + 14px);right:0;display:flex;flex-direction:column;align-items:flex-end;gap:14px;padding:20px 24px;background:var(--cream);color:var(--ink);white-space:nowrap;
   box-shadow:0 18px 40px -24px rgba(0,0,0,.35);opacity:0;visibility:hidden;translate:0 -6px;transition:opacity .35s var(--ease),translate .45s var(--expo),visibility 0s .45s}
 .nav-quote-pop::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:16px}   /* pont invisible : l'encart reste ouvert quand la souris descend */
-.nav-quote-pop > span{font-family:var(--sans);font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;text-transform:none;color:var(--ink)}
-.nav-quote-pop a{font-size:14px;color:var(--taupe)}   /* le numéro en lien secondaire, comme dans le menu */
+.nav-quote-pop > span{font-family:var(--sans);font-size:14.5px;font-weight:300;line-height:1.4;letter-spacing:-.015em;text-transform:none;color:var(--ink)}
+.nav-quote-pop a{font-size:11.6px;color:var(--taupe)}   /* le numéro en lien secondaire, comme dans le menu */
 .nav-quote:hover .nav-quote-pop,.nav-quote:focus-within .nav-quote-pop{opacity:1;visibility:visible;translate:0 0;transition:opacity .35s var(--ease),translate .45s var(--expo),visibility 0s}
 
 /* ---------- SOULIGNEMENT (un seul, partout) ----------
@@ -83,7 +81,7 @@ h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,
   45%{transform:scale(0,.6);transform-origin:right bottom}
   46%{transform:scale(0,.6);transform-origin:left bottom}
   100%{transform:scale(1,.6);transform-origin:left bottom}}
-.cta{font-size:14px;color:var(--taupe)}
+.cta{font-size:11.6px;color:var(--taupe)}
 
 /* ---------- RECHERCHE (le cadre du Figma) ---------- */
 /* boutons pleins, partout : 24 px de marge de part et d'autre du texte (Figma 6565-1962, « CTA main ») */
@@ -93,10 +91,10 @@ h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,
 .seg + .seg::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:1px;background:var(--line)}
 .seg:hover,.seg[aria-expanded="true"]{background:var(--white)}
 .seg[aria-expanded="true"]::before,.seg[aria-expanded="true"] + .seg::before{opacity:0}
-.seg-label{font-size:12px;color:var(--muted)}
+.seg-label{font-size:10.8px;color:var(--muted)}
 .seg-value{font-size:14px;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-block:.3em;margin-block:-.3em;color:var(--ink)}   /* la marge intérieure laisse la place aux accents et aux jambages : jamais de lettre rognée */
 .seg-value.is-empty{color:var(--muted);font-weight:300}
-.go{flex:0 0 auto;min-width:184px;margin-left:6px;padding:0 24px;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:12px;background:var(--taupe);color:var(--white);font-size:14px;transition:background .45s var(--ease)}
+.go{flex:0 0 auto;min-width:184px;margin-left:6px;padding:0 24px;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:12px;background:var(--taupe);color:var(--white);font-size:11.6px;transition:background .45s var(--ease)}
 .go:hover{background:var(--ink)}
 /* un bouton tient toujours sur une ligne, sur tout le site */
 .go,.go-end,.btn,.mnu-quote,.pop-go,.send,.lp-send,.lp-sticky,a.ul,button.ul{white-space:nowrap}
@@ -115,13 +113,13 @@ h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,
 .pop.is-open{opacity:1;visibility:visible;transform:none;transition:opacity .35s var(--ease),transform .45s var(--ease),visibility 0s}
 .pop-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:22px}
 .pop-title{font-family:var(--serif);font-size:19px;line-height:1.1;font-weight:400;text-transform:uppercase;letter-spacing:.02em}
-.pop-hint{font-size:12px;color:var(--muted);font-weight:300}
+.pop-hint{font-size:12.6px;color:var(--muted);font-weight:300}
 
 /* formats : deux colonnes égales, libellés toujours sur une ligne (« Soirée dansante » ne tient pas dans un quart de largeur) */
 .formats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .fmt{display:flex;flex-direction:column;align-items:center;gap:14px;padding:22px 8px 18px;background:var(--white);border:1px solid transparent;transition:border-color .3s var(--ease),background .3s}
 .fmt svg{width:30px;height:30px;stroke:var(--ink);fill:none;stroke-width:1.1}
-.fmt span{font-size:12px;white-space:nowrap}
+.fmt span{font-size:10.8px;white-space:nowrap}
 @media (max-width:359px){.formats{grid-template-columns:1fr}.fmt{flex-direction:row;justify-content:center;padding:14px 12px}}   /* très petits écrans : un format par ligne, le pictogramme à gauche */
 .fmt:hover{border-color:var(--line)}
 .fmt[aria-pressed="true"]{border-color:var(--ink)}
@@ -131,7 +129,7 @@ h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,
 .stepper button{width:32px;height:32px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;font-size:16px;line-height:1;background:var(--white);transition:border-color .3s}
 .stepper button:hover{border-color:var(--ink)}
 .g-num{font-family:var(--serif);font-size:44px;line-height:1;letter-spacing:.02em;text-transform:uppercase;min-width:2.6ch;text-align:center;font-variant-numeric:tabular-nums}
-.g-unit{font-size:12px;color:var(--muted);font-weight:300;display:block;text-align:center;margin-top:6px}
+.g-unit{font-size:12.6px;color:var(--muted);font-weight:300;display:block;text-align:center;margin-top:6px}
 .range{-webkit-appearance:none;appearance:none;width:100%;height:20px;background:transparent}
 .range::-webkit-slider-runnable-track{height:1px;background:linear-gradient(90deg,var(--ink) var(--p,20%),var(--line) var(--p,20%))}
 .range::-moz-range-track{height:1px;background:var(--line)}
@@ -139,17 +137,17 @@ h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,
 .range::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--ink);margin-top:-7px;border:3px solid var(--cream);box-shadow:0 0 0 1px var(--ink)}
 .range::-moz-range-thumb{width:11px;height:11px;border-radius:50%;background:var(--ink);border:3px solid var(--cream);box-shadow:0 0 0 1px var(--ink)}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
-.chip{font-size:12px;padding:8px 12px;background:var(--white);border:1px solid transparent;transition:border-color .3s}
+.chip{font-size:11.6px;padding:8px 12px;background:var(--white);border:1px solid transparent;transition:border-color .3s}
 .chip:hover{border-color:var(--line)}
 .chip[aria-pressed="true"]{border-color:var(--ink)}
 
 .sectors{display:grid;grid-template-columns:1fr}
-.sec{position:relative;display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:12px 0;border-top:1px solid var(--line);text-align:left;font-size:14px;white-space:nowrap;transition:padding .35s var(--ease)}
+.sec{position:relative;display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:12px 0;border-top:1px solid var(--line);text-align:left;font-size:13.6px;white-space:nowrap;transition:padding .35s var(--ease)}
 .sec:last-child{border-bottom:1px solid var(--line)}
 .sec:hover,.sec[aria-pressed="true"]{padding-left:16px}
 .sec::before{content:"";position:absolute;left:0;top:50%;width:5px;height:5px;margin-top:-2.5px;border-radius:50%;background:var(--ink);opacity:0;transition:opacity .3s}
 .sec[aria-pressed="true"]::before{opacity:1}
-.sec small{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.sec small{font-size:11.6px;color:var(--muted);font-variant-numeric:tabular-nums}
 .sec.is-zero{color:var(--muted)}
 
 .pop-go{display:none}
@@ -162,14 +160,14 @@ h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,
   .nav.is-stuck{padding-top:10px;padding-bottom:10px}
   .nav-menu span{display:none}
   .nav-logo,.nav-logo img{width:123px;height:24px}
-  .nav-cta{height:34px;padding:0 14px;font-size:12px}
+  .nav-cta{height:34px;padding:0 14px;font-size:10.8px}
   .nav-cta::after{display:none}
   .nav-quote-pop{display:none}   /* sur mobile, le numéro est dans le menu */
   .cta-long{display:none}
   .finder{bottom:16px;left:16px;right:16px;width:auto;transform:none}
   .bar{flex-wrap:wrap;height:auto}
   .seg{flex:1 1 33%;height:58px;padding:0 10px}
-  .seg-label{letter-spacing:.08em}   /* « Événement » tient dans le tiers de barre */
+  .seg-label{letter-spacing:.14em}   /* « Événement » tient dans le tiers de barre */
   .go{flex:1 1 100%;height:50px;margin:6px 0 0}
   .pop{position:fixed;left:0;right:0;bottom:0;z-index:2;max-height:80svh;overflow:auto;padding:24px 16px 28px;transform:translateY(100%)}
   .pop.is-open{transform:none}
@@ -186,4 +184,4 @@ html.lenis,html.lenis body{height:auto}
 .lenis.lenis-stopped{overflow:hidden}
 
 /* très petits écrans (320 px) : la barre de recherche se resserre pour que libellés et valeurs tiennent en entier */
-@media (max-width:359px){.seg{padding:0 6px}.seg-label{font-size:11px;letter-spacing:.04em}.seg-value{font-size:13px}}
+@media (max-width:359px){.seg{padding:0 6px}.seg-label{font-size:10px;letter-spacing:.04em}.seg-value{font-size:13px}}

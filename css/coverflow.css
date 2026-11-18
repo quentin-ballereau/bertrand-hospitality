@@ -14,15 +14,15 @@
    24 px entre le lieu et le nom, puis 32 px ; textes rognés aux capitales comme dans le Figma */
 .info{display:flex;flex-direction:column;align-items:center;text-align:center;width:min(384px,calc(100% - 2*var(--gutter)));margin:32px auto 0;min-height:180px}
 .info > *{will-change:transform,opacity}
-.info-place{font-size:12px;color:var(--taupe)}
+.info-place{font-size:10.8px;color:var(--taupe)}
 .info-name{font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;margin:24px 0 32px;text-box:trim-both cap alphabetic}
-.info-tag{font-size:14px;line-height:1.4;font-weight:300;letter-spacing:-.02em;color:var(--ink-soft);text-box:trim-both cap alphabetic}
-.info-cta{margin-top:32px;font-size:14px}
+.info-tag{font-size:14.5px;line-height:1.4;font-weight:300;letter-spacing:-.015em;color:var(--ink-soft);text-box:trim-both cap alphabetic}
+.info-cta{margin-top:32px;font-size:11.6px}
 
 @media (max-width:767px){
   .stage{perspective:1000px}
   .info{margin-top:18px;min-height:0}
   .info-name{font-size:26px;margin:20px 0 24px}
-  .info-tag{font-size:13px}
+  .info-tag{font-size:13.6px}
   .info-cta{margin-top:24px}
 }

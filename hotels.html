@@ -20,13 +20,13 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preload" href="fonts/IvarDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/Copperplate.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/base.css?v=23">
-<script src="js/typo-variante.js?v=11"></script>
-<link rel="stylesheet" href="css/menu.css?v=18">
-<link rel="stylesheet" href="css/home.css?v=35">
-<link rel="stylesheet" href="css/coverflow.css?v=11">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Josefin+Sans:wght@600&family=Inter:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="css/base.css?v=24">
+<link rel="stylesheet" href="css/menu.css?v=19">
+<link rel="stylesheet" href="css/home.css?v=36">
+<link rel="stylesheet" href="css/coverflow.css?v=12">
 <style>
 /* Nos hôtels (lot 3 · 13) : à quoi servent nos quatre hôtels quand on organise un événement. Hero, repères, les quatre hôtels
    (un écran chacun, Figma 6617-7063), ce qu'ils apportent à un événement, les maisons voisines (photo et texte), les questions
@@ -42,7 +42,7 @@ html,body{background:var(--cream)}
 .nc-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(29,29,27,.8) 20%,rgba(29,29,27,0) 40%,rgba(29,29,27,0) 80%,rgba(29,29,27,.8) 100%)}
 .nc-hero .t-mini{color:rgba(255,255,255,.85)}
 .nc-title{max-width:640px;font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
-.nc-intro{max-width:560px;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;text-box:trim-both cap alphabetic}
+.nc-intro{max-width:560px;font-size:14.5px;font-weight:300;line-height:1.4;letter-spacing:-.015em;text-box:trim-both cap alphabetic}
 
 /* ce qui nous guide : la phrase, puis trois repères entre deux filets (comme les chiffres de « Nous connaître ») */
 .nc-philo{display:flex;flex-direction:column;align-items:center;gap:64px;padding:128px var(--gutter)}
@@ -56,14 +56,13 @@ html,body{background:var(--cream)}
 
 
 /* les quatre hôtels (Figma 6670-626) : cartes 784 × 440 dans le carrousel 3D des lieux, 64 px au-dessus, 128 px en dessous ;
-   même écart que sous le carrousel des lieux (≈ 51 px) entre la photo et le logo, pour que l'ombre ne touche pas le logo ;
-   24 px entre le logo et le texte */
+   même écart que sous le carrousel des lieux (≈ 51 px) entre la photo et le nom ; le nom en texte, comme pour les lieux,
+   32 px au-dessus du texte */
 .ht-car{padding:64px 0 128px;overflow:hidden;overflow:clip}
 .ht-car .stage{flex:none;height:calc(min(61.25vw, 980px) * 9 / 16 + 60px)}   /* comme sur la home : la carte et 30 px d'air de chaque côté */
 .ht-car .lcard{background:var(--cream-2)}
 .ht-info{width:min(584px,calc(100% - 2 * var(--gutter)));margin-top:21px;min-height:0;gap:24px}
-.ht-info-logo{display:block;height:48px;width:auto}
-.ht-info-logo[data-h="relais-christine"]{height:56px}   /* son lettrage fin paraît plus petit que les autres */
+.ht-info .info-name{margin:0 0 8px}
 .ht-info .t-text{min-height:calc(3 * 1.4em);text-wrap:pretty}
 
 /* pour votre événement : trois cas, numérotés, chacun sous un filet (Figma 6617-7299) */
@@ -74,7 +73,7 @@ html,body{background:var(--cream)}
 .ht-cols li{display:flex;flex-direction:column;align-items:flex-start;gap:32px;padding-top:24px;border-top:1px solid var(--line)}
 .ht-cols li > span{font-family:var(--serif);font-size:24px;line-height:1.1;letter-spacing:.02em;color:var(--taupe);text-box:trim-both cap alphabetic}
 .ht-cols b{font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic;text-wrap:balance}
-.ht-cols p{margin:0;font-size:14px;font-weight:300;line-height:1.4;letter-spacing:-.02em;color:var(--muted);text-box:trim-both cap alphabetic}
+.ht-cols p{margin:0;font-size:14.5px;font-weight:300;line-height:1.4;letter-spacing:-.015em;color:var(--muted);text-box:trim-both cap alphabetic}
 
 /* à deux pas de nos maisons : photo d'un côté, texte de l'autre, sur une hauteur d'écran (Figma 6617-7097) */
 .ht-near{display:grid;grid-template-columns:1fr 1fr;min-height:100svh}   /* la photo prend toute la hauteur de l’écran */
@@ -112,8 +111,6 @@ html,body{background:var(--cream)}
   .nc-figs .fig-sep{display:none}
   .ht-car{padding:40px 0 100px}
   .ht-car .stage{height:calc(74vw * 9 / 16 + 60px)}
-  .ht-info-logo{height:40px}
-  .ht-info-logo[data-h="relais-christine"]{height:46px}
   .ht-info{gap:20px}
   .ht-uses{padding:100px var(--gutter);gap:48px}
   .ht-near{grid-template-columns:1fr;min-height:0}
@@ -155,7 +152,7 @@ html,body{background:var(--cream)}
   </section>
 
   <!-- les quatre hôtels (Figma 6670-626) : le carrousel 3D des lieux (js/coverflow.js), un peu plus large ;
-       sous la photo, le logo puis deux lignes. Rien n'est cliquable : on fait défiler au trackpad ou en glissant -->
+       sous la photo, le nom puis deux lignes. Rien n'est cliquable : on fait défiler au trackpad ou en glissant -->
   <section class="ht-car" aria-label="Nos hôtels">
     <div class="cf" id="htCf">
       <div class="stage" aria-roledescription="carrousel" aria-label="Nos quatre hôtels">
@@ -163,7 +160,7 @@ html,body{background:var(--cream)}
         <div class="stage-veil"></div>
       </div>
       <div class="info ht-info" aria-live="polite">
-        <img class="ht-info-logo" data-k="logo" alt="">
+        <h3 class="info-name" data-k="name"></h3>
         <p class="t-text" data-k="desc"></p>
       </div>
     </div>
@@ -264,7 +261,7 @@ html,body{background:var(--cream)}
   const HOTELS = [
     {id:"saint-james", name:"Saint James Paris", alt:"Le château du Saint James Paris à la tombée du jour, sa fontaine éclairée",
      desc:"Un château au cœur de Paris, entouré de son jardin\u00a0: salons, bibliothèque-bar et terrasse pour recevoir en petit comité, à deux pas de l’Étoile."},
-    {id:"norman", name:"Norman", alt:"Une chambre de l’hôtel Norman et son salon",
+    {id:"norman", name:"Hôtel Norman", alt:"Une chambre de l’hôtel Norman et son salon",
      desc:"Un hôtel intime à deux pas des Champs-Élysées, où la cheffe Thiou signe une table thaïe et son patio, à privatiser pour vos dîners."},
     {id:"balzac", name:"Hôtel Balzac", alt:"Une suite de l’hôtel Balzac, la tour Eiffel à la fenêtre",
      desc:"Une adresse élégante dans une rue calme du 8e arrondissement, à quelques minutes de l’Arc de Triomphe et de nos maisons des Champs-Élysées."},
@@ -277,8 +274,7 @@ html,body{background:var(--cream)}
     card:(h, i) => `<div class="lcard" data-i="${i}" role="group" aria-roledescription="diapositive" aria-label="${h.name}"${i >= HOTELS.length ? ' aria-hidden="true"' : ""}>
       <img data-src="assets/hotels/carrousel/${h.id}-${small ? 800 : 1600}.webp" alt="${h.alt}" draggable="false"><span class="lcard-veil"></span></div>`,
     fill:(h, field) => {
-      const logo = field("logo");
-      logo.src = `assets/hotels/carrousel/logo-${h.id}.svg?v=2`; logo.alt = h.name; logo.dataset.h = h.id;
+      field("name").textContent = h.name;
       field("desc").textContent = h.desc;
     },
   });
