@@ -76,7 +76,7 @@ BH.DETAIL = {
        caps:{cocktail:100},
        hot:[{x:18, y:58, to:"babord"}, {x:67, y:52, to:"plage"}]},
       // mises en situation fournies le 28/10/2026, versions vides livrées ensuite (photos d'ambiance, non contractuelles) : capacités à confirmer avec Polpo
-      {id:"plage", name:"La Plage", pos:"50% 38%", img:"assets/polpo/plage.jpg", thumb:"assets/polpo/plage-thumb.jpg", event:"assets/polpo/plage-evenement.webp",
+      {id:"plage", name:"La Plage", pos:"50% 75%", img:"assets/polpo/plage.jpg", thumb:"assets/polpo/plage-thumb.jpg", event:"assets/polpo/plage-evenement.webp",
        desc:"Transats, sable et lanternes au bord de l’eau, sous une voile tressée : l’été sur la Seine.",
        caps:{},
        hot:[{x:52, y:44, to:"terrasse"}]},
