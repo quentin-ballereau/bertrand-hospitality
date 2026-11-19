@@ -14,7 +14,7 @@ html,body{background:var(--cream)}
 
 /* les parties : le filet à égale distance du texte d'au-dessus et de celui d'en dessous (80 px de chaque côté) */
 .lg-body{display:flex;flex-direction:column;align-items:center;gap:80px;padding:64px var(--gutter) 160px}
-.lg-toc,.lg-part{width:min(784px,100%)}
+.lg-toc,.lg-part{width:min(640px,100%)}
 .lg-toc{display:flex;flex-direction:column;gap:24px;padding:32px;background:#fff}
 .lg-toc ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 32px;margin:0;padding:0;list-style:none;counter-reset:toc}
 .lg-toc li{counter-increment:toc}

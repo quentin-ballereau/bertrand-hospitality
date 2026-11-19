@@ -22,12 +22,12 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Josefin+Sans:wght@600&family=Inter:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Inter:wght@300;400;500;700&display=swap">
 <link rel="preload" as="image" href="assets/home/hero/coupole-1536.webp" imagesrcset="assets/home/hero/coupole-1280.webp 1280w, assets/home/hero/coupole-1536.webp 1536w" imagesizes="100vw" fetchpriority="high">
-<link rel="stylesheet" href="css/base.css?v=24">
+<link rel="stylesheet" href="css/base.css?v=25">
 <link rel="stylesheet" href="css/menu.css?v=19">
 <link rel="stylesheet" href="css/coverflow.css?v=12">
-<link rel="stylesheet" href="css/home.css?v=36">
+<link rel="stylesheet" href="css/home.css?v=38">
 <link rel="stylesheet" href="css/paris-map.css?v=8">
 <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css">
 <script>/* loader à l’entrée sur le site ; on le saute quand on revient d’une autre page du site */try{var r=document.referrer&&new URL(document.referrer);if(r&&r.origin===location.origin&&r.pathname!==location.pathname)document.documentElement.classList.add("no-loader")}catch(e){}</script>
@@ -83,7 +83,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
 .v-head{text-align:center;padding:0 var(--gutter)}
 .v-eyebrow{font-size:11.6px;color:var(--taupe)}
 .v-title{text-wrap:balance;margin:32px auto 0;font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;text-box:trim-both cap alphabetic}
-.v-sub{max-width:416px;margin:24px auto 0;font-size:14.5px;font-weight:300;line-height:1.4;letter-spacing:-.015em;color:var(--ink-soft);text-box:trim-both cap alphabetic}
+.v-sub{max-width:480px;margin:24px auto 0;font-size:14.5px;font-weight:300;line-height:1.4;letter-spacing:-.015em;color:var(--ink-soft);text-box:trim-both cap alphabetic}
 /* Figma : 48 px sous l'en-tête, scène de 398 px, 32 px avant la fiche. La scène fait ici 420 px pour que la carte centrale
    garde ses 640 × 360 ; les 11 px de plus de chaque côté sont repris sur les écarts (38 = 48 − 11 + 1 d’arrondi du texte). */
 .venues .cf{height:auto;margin-top:38px}
@@ -118,7 +118,7 @@ body{overflow-x:hidden;overflow-x:clip}   /* les cartes 3D débordent de l'écra
     <a class="nav-logo" href="index.html" aria-label="Bertrand Hospitality, accueil"><img src="assets/logo-bh.svg" width="164" height="32" alt="Bertrand Hospitality"></a>
     <div class="nav-right">
       <div class="nav-quote">
-        <a class="nav-cta caps" href="devis.html"><span class="cta-long">Demander un </span>devis</a>
+        <a class="nav-cta caps" href="devis.html"><span><span class="cta-long">Demander un </span>devis</span></a>
         <div class="nav-quote-pop"><span>Ou appelez-nous</span><a class="ul caps" href="tel:+33764070661">07 64 07 06 61</a></div>
       </div>
     </div>

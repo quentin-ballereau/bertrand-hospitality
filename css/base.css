@@ -1,9 +1,17 @@
 /* Socle commun : polices, couleurs, navigation et barre de recherche */
-/* Polices Google (chargées dans le <head> de chaque page) :
+/* Polices Google (Playfair et Inter chargées dans le <head> de chaque page, Josefin hébergée ci-dessous) :
    Playfair Display 400 pour les titres, Josefin Sans SemiBold 600 pour les capitales (tags, CTA ; seule graisse chargée,
    elle sert aussi là où le CSS demande 400), Inter Light 300 pour le texte (400, 500 et 700 pour les mots en relief).
    Tailles calées sur les proportions des anciennes polices : capitales Josefin à 80 % de l'ancienne taille Copperplate
    (mini-tags 13,5 → 10,8 px, CTA 14,5 → 11,6 px), texte Inter à 97 %, interlettrage des capitales 14 %, du texte −1,5 %. */
+
+/* Josefin Sans SemiBold, hébergée ici (et non chez Google) pour corriger ses métriques : les capitales occupent
+   toute la hauteur d'ascendante (75 % / 25 %) et paraissaient remonter de 1,5 px dans les boutons, à côté des flèches.
+   Ascendante 87,5 % / descendante 12,5 % : les capitales sont centrées dans leur ligne, sans changer la hauteur de ligne. */
+@font-face{font-family:"Josefin Sans";font-style:normal;font-weight:100 900;font-display:swap;ascent-override:87.5%;descent-override:12.5%;line-gap-override:0%;
+  src:url(../fonts/JosefinSans-SemiBold-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Josefin Sans";font-style:normal;font-weight:100 900;font-display:swap;ascent-override:87.5%;descent-override:12.5%;line-gap-override:0%;
+  src:url(../fonts/JosefinSans-SemiBold-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
 
 :root{
   --ink:#1d1d1b;            /* noir du Figma */
@@ -31,6 +39,10 @@ a{color:inherit;text-decoration:none}
    (le navigateur répartit les mots ; sans effet sur les titres d'une seule ligne) */
 h1,h2,h3,h4,h5,h6,blockquote,.t-h1,.t-h2,.t-h3,.t-h4,.t-h5,.hero-title,.v-title,.lp-title,.sc-title,.of-title,.headline,.info-name,.p-name,
 .gcard-name,.vcard-name,.fcard-name,.mnu-link,.rv-quote,.pop-title,.empty p,.caption b,.dv-block-title,.lp-form-head .t-h4{text-wrap:balance}
+/* paragraphes : pas de mot seul sur la dernière ligne (le navigateur réajuste les dernières lignes) */
+p,li,dd,figcaption,.t-text{text-wrap:pretty}
+/* sous-titres et chapôs : lignes de longueur égale (même règle que les titres) */
+.v-sub,.of-sub,.nc-intro,.sc-intro,.ev-head .t-text,.dv-head .t-text,.sec-head-txt .t-text,.closing-head .t-text,.fq-head .t-text,.care-txt .t-text{text-wrap:balance}
 
 /* ---------- NAVIGATION ---------- */
 .nav{position:absolute;top:0;left:0;right:0;padding:24px var(--gutter);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;z-index:8}
